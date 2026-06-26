@@ -1,0 +1,77 @@
+<?php
+
+return [
+    'nav' => [
+        'home' => 'Home',
+        'live' => 'Live',
+        'membership' => 'Membership',
+        'contact' => 'Contact us',
+    ],
+    'pages' => [
+        'home' => 'Home',
+        'live' => 'Live',
+        'membership' => 'Membership',
+        'contact' => 'Contact us',
+        'search' => 'Search',
+    ],
+    'actions' => [
+        'search' => 'Search',
+        'toggle_menu' => 'Toggle menu',
+        'report_problem' => 'Request service',
+        'get_membership_card' => 'Get membership card',
+        'share' => 'Share',
+        'copy_link' => 'Copy link',
+        'native_share' => 'Native share',
+        'previous' => 'Previous',
+        'next' => 'Next',
+    ],
+    'footer' => [
+        'links' => 'Links',
+        'privacy' => 'Privacy policy',
+        'contact' => 'Contact',
+        'follow_us' => 'Follow us',
+        'download_app' => 'Get the app',
+        'app_store' => 'App Store',
+        'google_play' => 'Google Play',
+        'facebook' => 'Facebook',
+        'x' => 'X',
+        'instagram' => 'Instagram',
+    ],
+    'labels' => [
+        'breaking' => 'Breaking',
+        'latest_news' => 'Latest news',
+        'source' => 'Source',
+        'published_at' => 'Published',
+    ],
+    'sections' => [
+        'breaking_news' => 'Breaking news',
+        'latest_episodes' => 'Latest episodes',
+        'news_reports' => 'News reports',
+    ],
+    'messages' => [
+        'live_url_not_set' => 'Live stream URL is not set yet. Please configure it in the admin panel.',
+        'no_breaking_news' => 'No breaking news right now.',
+        'no_episodes' => 'No episodes available right now.',
+        'no_reports' => 'No reports available right now.',
+        'link_copied' => 'Copied',
+        'session_expired' => 'Your session expired. Please submit the form again.',
+    ],
+    'contact' => [
+        'intro_default' => 'Send us your service request details and we will follow up soon.',
+        'name' => 'Name',
+        'email' => 'Email',
+        'subject' => 'Subject',
+        'message' => 'Message',
+        'send' => 'Send',
+        'sent' => 'Your message has been sent successfully.',
+    ],
+    'membership' => [
+        'intro_default' => 'Please complete the membership & volunteering form, then submit it.',
+    ],
+    'search' => [
+        'placeholder' => 'Search for news…',
+        'results_for' => 'Search results for: :query',
+        'no_results' => 'No results found.',
+        'hint' => 'Type a keyword to search the news.',
+    ],
+];

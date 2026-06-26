@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --sh-bg: 248 250 252;
+        --sh-surface: 255 255 255;
+        --sh-surface-soft: 241 245 249;
+        --sh-ink: 15 23 42;
+        --sh-ink-muted: 71 85 105;
+        --sh-ink-faint: 148 163 184;
+        --sh-line: 226 232 240;
+        --sh-accent: 220 38 38;
+        --sh-accent-strong: 185 28 28;
+        --sh-accent-soft: 254 226 226;
+        --sh-success: 22 163 74;
+        --sh-warning: 202 138 4;
+        --sh-danger: 220 38 38;
+        --sh-night: 2 6 23;
+        --sh-night-surface: 17 24 39;
+        --sh-night-line: 71 85 105;
+    }
+}
+
+@layer components {
+    .sh-form-shell {
+        @apply space-y-5 rounded-2xl bg-surface p-6 shadow-surface ring-1 ring-line;
+    }
+
+    .sh-form-label {
+        @apply block text-sm font-bold text-ink;
+    }
+
+    .sh-form-field {
+        @apply mt-2 w-full rounded-control border-line bg-surface shadow-sm focus:border-accent focus:ring-accent/20;
+    }
+
+    .sh-form-help {
+        @apply text-sm font-semibold text-ink-muted;
+    }
+
+    .sh-form-error {
+        @apply mt-2 text-xs font-semibold text-danger;
+    }
+
+    .sh-btn-primary {
+        @apply inline-flex items-center justify-center rounded-xl bg-ink px-4 py-3 text-sm font-extrabold text-white shadow-surface hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30;
+    }
+
+    .sh-btn-secondary {
+        @apply inline-flex items-center justify-center rounded-xl border border-line bg-surface px-4 py-3 text-sm font-extrabold text-ink shadow-surface hover:bg-surface-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/25;
+    }
+
+    .sh-alert-success {
+        @apply rounded-2xl border border-success/30 bg-success/10 px-4 py-3 text-sm font-semibold text-success;
+    }
+
+    .sh-alert-error {
+        @apply rounded-2xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger;
+    }
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+/* Breaking ticker (JS-driven, inspired by yeg2799/breaking-news-ticker) */
+.sh-breaking-track {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    white-space: nowrap;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+}
+
+.sh-breaking-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+}
+
+.sh-breaking-item:hover {
+    text-decoration: underline;
+}
+
+.sh-breaking-time {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgb(var(--sh-ink-muted));
+    flex: 0 0 auto;
+}
+
+.sh-breaking-title {
+    font-weight: 700;
+}
+
+.sh-breaking-divider {
+    height: 1rem;
+    width: 1rem;
+    flex: 0 0 auto;
+    opacity: 0.7;
+}

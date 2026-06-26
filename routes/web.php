@@ -1,0 +1,47 @@
+<?php
+
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\Admin\MembershipApplicationDocumentController;
+use App\Http\Controllers\AlManarUrgentImportWebhookController;
+use App\Http\Controllers\BreakingApiController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HostedVideoController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LiveController;
+use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\RssImportWebhookController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SitePageController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\WeatherController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', HomeController::class)->name('home');
+Route::get('/home/latest-news', [HomeController::class, 'latest'])->name('home.latest');
+Route::get('/live', LiveController::class)->name('live');
+Route::get('/search', SearchController::class)->name('search');
+Route::get('/membership', [MembershipController::class, 'show'])->name('membership');
+Route::post('/membership', [MembershipController::class, 'store'])->name('membership.store')->middleware('throttle:membership');
+Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:contact');
+
+Route::get('/pages/{slug}', [SitePageController::class, 'show'])->name('pages.show');
+
+Route::get('/news/{slug}', [ArticleController::class, 'show'])->name('news.show');
+
+Route::get('/videos/{videoItem}', [VideoController::class, 'show'])->name('videos.show');
+Route::get('/videos/hosted/{hostedVideo:slug}', [HostedVideoController::class, 'show'])->name('hosted-videos.show');
+Route::get('/api/weather', WeatherController::class)->name('api.weather');
+Route::get('/api/breaking', BreakingApiController::class)->name('api.breaking')->middleware('throttle:api-breaking');
+
+Route::get('/admin/membership-applications/{membershipApplication}/id-document', MembershipApplicationDocumentController::class)
+    ->name('admin.membership-applications.id-document')
+    ->middleware('auth');
+
+Route::match(['GET', 'POST'], '/tasks/import-rss/{secret}', RssImportWebhookController::class)
+    ->name('tasks.import-rss')
+    ->middleware('throttle:rss-import');
+
+Route::match(['GET', 'POST'], '/tasks/import-almanar-urgent/{secret}', AlManarUrgentImportWebhookController::class)
+    ->name('tasks.import-almanar-urgent')
+    ->middleware('throttle:almanar-urgent-import');

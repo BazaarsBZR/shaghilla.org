@@ -1,0 +1,77 @@
+<?php
+
+return [
+    'nav' => [
+        'home' => 'الرئيسية',
+        'live' => 'مباشر',
+        'membership' => 'انتساب',
+        'contact' => 'طلب الخدمة',
+    ],
+    'pages' => [
+        'home' => 'الرئيسية',
+        'live' => 'البث المباشر',
+        'membership' => 'انتساب',
+        'contact' => 'طلب الخدمة',
+        'search' => 'بحث',
+    ],
+    'actions' => [
+        'search' => 'بحث',
+        'toggle_menu' => 'فتح القائمة',
+        'report_problem' => 'طلب الخدمة',
+        'get_membership_card' => 'انتساب',
+        'share' => 'مشاركة',
+        'copy_link' => 'نسخ الرابط',
+        'native_share' => 'مشاركة الهاتف',
+        'previous' => 'السابق',
+        'next' => 'التالي',
+    ],
+    'footer' => [
+        'links' => 'روابط',
+        'privacy' => 'سياسة الخصوصية',
+        'contact' => 'تواصل',
+        'follow_us' => 'تابعنا',
+        'download_app' => 'حمّل التطبيق',
+        'app_store' => 'App Store',
+        'google_play' => 'Google Play',
+        'facebook' => 'فيسبوك',
+        'x' => 'X',
+        'instagram' => 'انستغرام',
+    ],
+    'labels' => [
+        'breaking' => 'أخبار عاجلة',
+        'latest_news' => 'آخر الأخبار',
+        'source' => 'المصدر',
+        'published_at' => 'تاريخ النشر',
+    ],
+    'sections' => [
+        'breaking_news' => 'الأخبار العاجلة',
+        'latest_episodes' => 'آخر الحلقات',
+        'news_reports' => 'تقارير إخبارية',
+    ],
+    'messages' => [
+        'live_url_not_set' => 'لم يتم إعداد رابط البث بعد. يرجى ضبطه من لوحة التحكم.',
+        'no_breaking_news' => 'لا يوجد أخبار عاجلة حالياً.',
+        'no_episodes' => 'لا يوجد حلقات حالياً.',
+        'no_reports' => 'لا يوجد تقارير حالياً.',
+        'link_copied' => 'تم النسخ',
+        'session_expired' => 'انتهت صلاحية الجلسة، يرجى إعادة إرسال الطلب.',
+    ],
+    'contact' => [
+        'intro_default' => 'اكتب لنا تفاصيل طلب الخدمة وسنقوم بالمتابعة بأقرب وقت.',
+        'name' => 'الاسم',
+        'email' => 'البريد الإلكتروني',
+        'subject' => 'الموضوع',
+        'message' => 'الرسالة',
+        'send' => 'إرسال',
+        'sent' => 'تم إرسال رسالتك بنجاح.',
+    ],
+    'membership' => [
+        'intro_default' => 'يرجى تعبئة نموذج الانتساب والتطوّع كاملًا ثم الضغط على «تحقّق».',
+    ],
+    'search' => [
+        'placeholder' => 'ابحث عن خبر...',
+        'results_for' => 'نتائج البحث عن: :query',
+        'no_results' => 'لا توجد نتائج.',
+        'hint' => 'اكتب كلمة أو عبارة للبحث في الأخبار.',
+    ],
+];
