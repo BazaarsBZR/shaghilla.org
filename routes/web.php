@@ -24,6 +24,9 @@ Route::get('/membership', [MembershipController::class, 'show'])->name('membersh
 Route::post('/membership', [MembershipController::class, 'store'])->name('membership.store')->middleware('throttle:membership');
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:contact');
+Route::post('/admin/blob-upload', \App\Http\Controllers\AdminBlobUploadController::class)
+    ->middleware(['auth', 'throttle:30,1'])
+    ->name('admin.blob-upload');
 
 Route::get('/pages/{slug}', [SitePageController::class, 'show'])->name('pages.show');
 
@@ -31,8 +34,10 @@ Route::get('/news/{slug}', [ArticleController::class, 'show'])->name('news.show'
 
 Route::get('/videos/{videoItem}', [VideoController::class, 'show'])->name('videos.show');
 Route::get('/videos/hosted/{hostedVideo:slug}', [HostedVideoController::class, 'show'])->name('hosted-videos.show');
-Route::get('/api/weather', WeatherController::class)->name('api.weather');
-Route::get('/api/breaking', BreakingApiController::class)->name('api.breaking')->middleware('throttle:api-breaking');
+Route::get('/weather-feed', WeatherController::class)->name('api.weather');
+Route::get('/breaking-feed', BreakingApiController::class)->name('api.breaking')->middleware('throttle:api-breaking');
+Route::get('/api/weather', WeatherController::class);
+Route::get('/api/breaking', BreakingApiController::class)->middleware('throttle:api-breaking');
 
 Route::get('/admin/membership-applications/{membershipApplication}/id-document', MembershipApplicationDocumentController::class)
     ->name('admin.membership-applications.id-document')

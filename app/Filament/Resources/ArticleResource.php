@@ -7,6 +7,7 @@ use App\Models\Article;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\ViewField;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -111,6 +112,7 @@ class ArticleResource extends Resource
                     ->schema([
                         FileUpload::make('manual_image')
                             ->label('Upload image')
+                            ->hidden(fn (): bool => (bool) env('VERCEL'))
                             ->disk('public_uploads')
                             ->directory('news/manual')
                             ->visibility('public')
@@ -124,6 +126,11 @@ class ArticleResource extends Resource
                             ->maxSize(10240)
                             ->helperText('JPG, PNG, or WebP up to 10 MB. A new upload replaces the image URL below.')
                             ->columnSpanFull(),
+
+                        ViewField::make('blob_upload')
+                            ->label('Upload image')
+                            ->view('filament.forms.components.blob-image-upload')
+                            ->visible(fn (): bool => (bool) env('VERCEL')),
 
                         TextInput::make('image_url')
                             ->label('Image URL')

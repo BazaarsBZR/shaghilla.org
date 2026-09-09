@@ -54,3 +54,5 @@ yarn-error.log
 /update.md
 /Deployupdates.md
 /.interface-design/
+.vercel
+.env*

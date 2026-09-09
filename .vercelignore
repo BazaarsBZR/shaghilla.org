@@ -1,0 +1,14 @@
+.env
+.env.*
+.git
+.github
+.vercel
+node_modules
+/vendor
+bootstrap/cache/*.php
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+supabase/.temp
+tests

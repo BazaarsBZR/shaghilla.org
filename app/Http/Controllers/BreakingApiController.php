@@ -16,16 +16,28 @@ class BreakingApiController extends Controller
         $limit = max(1, min(50, $limit));
 
         $articles = Cache::remember(
-            'api.breaking.v1.limit_'.$limit,
+            'api.breaking.v2.limit_'.$limit,
             now()->addSeconds(30),
-            fn () => Article::query()
-                ->where('status', 'published')
-                ->where('is_breaking', true)
-                ->orderByDesc('imported_at')
-                ->orderByDesc('published_at')
-                ->orderByDesc('id')
-                ->limit($limit)
-                ->get(['slug', 'title', 'published_at']),
+            function () use ($limit) {
+                $items = Article::query()
+                    ->where('status', 'published')
+                    ->where('is_breaking', true)
+                    ->orderByDesc('imported_at')
+                    ->orderByDesc('published_at')
+                    ->orderByDesc('id')
+                    ->limit($limit)
+                    ->get(['slug', 'title', 'published_at']);
+
+                return $items->isNotEmpty()
+                    ? $items
+                    : Article::query()
+                        ->where('status', 'published')
+                        ->orderByDesc('published_at')
+                        ->orderByDesc('imported_at')
+                        ->orderByDesc('id')
+                        ->limit($limit)
+                        ->get(['slug', 'title', 'published_at']);
+            },
         );
 
         $items = $articles->map(function (Article $article): array {

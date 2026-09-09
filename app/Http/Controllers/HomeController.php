@@ -34,17 +34,30 @@ class HomeController extends Controller
         $newsLatestLimit = max(6, min(self::HOME_LATEST_TOTAL_LIMIT, $newsLatestLimit));
 
         $breakingItems = Cache::remember(
-            'news.breaking.ticker',
+            'news.breaking.ticker.v2',
             now()->addMinutes(5),
-            fn () => Article::query()
-                ->with(['feedSource'])
-                ->where('status', 'published')
-                ->where('is_breaking', true)
-                ->orderByDesc('imported_at')
-                ->orderByDesc('published_at')
-                ->orderByDesc('id')
-                ->limit($tickerLimit)
-                ->get(),
+            function () use ($tickerLimit) {
+                $items = Article::query()
+                    ->with(['feedSource'])
+                    ->where('status', 'published')
+                    ->where('is_breaking', true)
+                    ->orderByDesc('imported_at')
+                    ->orderByDesc('published_at')
+                    ->orderByDesc('id')
+                    ->limit($tickerLimit)
+                    ->get();
+
+                return $items->isNotEmpty()
+                    ? $items
+                    : Article::query()
+                        ->with(['feedSource'])
+                        ->where('status', 'published')
+                        ->orderByDesc('published_at')
+                        ->orderByDesc('imported_at')
+                        ->orderByDesc('id')
+                        ->limit($tickerLimit)
+                        ->get();
+            },
         );
 
         $latestPage = max(1, (int) $request->integer('latest_page', 1));

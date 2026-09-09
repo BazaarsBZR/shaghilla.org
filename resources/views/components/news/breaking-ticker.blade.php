@@ -35,16 +35,28 @@
         $resolvedItems = $items;
         if (! ($resolvedItems instanceof \Illuminate\Support\Collection)) {
             $resolvedItems = \Illuminate\Support\Facades\Cache::remember(
-                'news.breaking.ticker',
+                'news.breaking.ticker.v2',
                 now()->addMinutes(5),
-                fn () => \App\Models\Article::query()
-                    ->where('status', 'published')
-                    ->where('is_breaking', true)
-                    ->orderByDesc('imported_at')
-                    ->orderByDesc('published_at')
-                    ->orderByDesc('id')
-                    ->limit($tickerLimit)
-                    ->get(),
+                function () use ($tickerLimit) {
+                    $items = \App\Models\Article::query()
+                        ->where('status', 'published')
+                        ->where('is_breaking', true)
+                        ->orderByDesc('imported_at')
+                        ->orderByDesc('published_at')
+                        ->orderByDesc('id')
+                        ->limit($tickerLimit)
+                        ->get();
+
+                    return $items->isNotEmpty()
+                        ? $items
+                        : \App\Models\Article::query()
+                            ->where('status', 'published')
+                            ->orderByDesc('published_at')
+                            ->orderByDesc('imported_at')
+                            ->orderByDesc('id')
+                            ->limit($tickerLimit)
+                            ->get();
+                },
             );
         }
     }
