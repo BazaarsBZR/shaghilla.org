@@ -194,6 +194,11 @@ class RssImporter
         return self::$articlesColumnMemo[$column];
     }
 
+    private function containsArabic(string $text): bool
+    {
+        return preg_match('/\p{Arabic}/u', $text) === 1;
+    }
+
     /**
      * @param  array<int, string>  $workerKeywords
      * @param  array<int, string>  $breakingKeywords
@@ -276,6 +281,11 @@ class RssImporter
 
         foreach ($items as $item) {
             $data = $this->parseRssItem($feedSource, $item);
+
+            if (! $this->containsArabic($data['title'])) {
+                $skipped++;
+                continue;
+            }
 
             if ($this->shouldSkipItem($feedSource, $data, $forceNoSkip)) {
                 $skipped++;
