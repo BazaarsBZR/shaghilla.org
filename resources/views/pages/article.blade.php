@@ -46,8 +46,12 @@
             </div>
         @endif
 
-        <div class="rounded-2xl bg-white p-5 leading-relaxed text-gray-900 shadow-sm ring-1 ring-gray-200">
-            {!! nl2br(e(trim(strip_tags($article->content ?: $article->excerpt ?: '')))) !!}
+        <div class="sh-article-body rounded-2xl bg-white p-5 leading-relaxed text-gray-900 shadow-sm ring-1 ring-gray-200 sm:p-8">
+            @if ($article->feed_source_id)
+                {!! nl2br(e(trim(strip_tags($article->content ?: $article->excerpt ?: '')))) !!}
+            @else
+                {!! str($article->content ?: $article->excerpt ?: '')->sanitizeHtml() !!}
+            @endif
         </div>
     </article>
 </x-layouts.site>

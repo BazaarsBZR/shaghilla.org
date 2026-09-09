@@ -36,7 +36,7 @@
             return `${v}°C`;
         },
         async load() {
-            const key = 'shaghilla_weather_header_v1';
+            const key = 'shaghilla_weather_header_v2';
             const ttlMs = 10 * 60 * 1000;
 
             try {
@@ -54,7 +54,36 @@
             } catch (_) {}
 
             try {
-                const res = await fetch(this.endpoint, { headers: { 'Accept': 'application/json' } });
+                let weatherEndpoint = this.endpoint;
+
+                try {
+                    const locationResponse = await fetch('https://ipapi.co/json/', {
+                        headers: { 'Accept': 'application/json' },
+                    });
+
+                    if (locationResponse.ok) {
+                        const location = await locationResponse.json();
+                        const latitude = Number(location?.latitude);
+                        const longitude = Number(location?.longitude);
+
+                        if (
+                            String(location?.country_code || '').toUpperCase() === 'LB'
+                            && Number.isFinite(latitude)
+                            && Number.isFinite(longitude)
+                        ) {
+                            const url = new URL(this.endpoint, window.location.origin);
+                            url.searchParams.set('country', 'LB');
+                            url.searchParams.set('city', String(location?.city || ''));
+                            url.searchParams.set('latitude', String(latitude));
+                            url.searchParams.set('longitude', String(longitude));
+                            weatherEndpoint = url.toString();
+                        }
+                    }
+                } catch (_) {
+                    // Location is optional; the configured Lebanon weather remains the fallback.
+                }
+
+                const res = await fetch(weatherEndpoint, { headers: { 'Accept': 'application/json' } });
                 if (!res.ok) throw new Error('bad_status');
                 const data = await res.json();
                 this.temperature = data?.temperature_c ?? null;

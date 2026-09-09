@@ -105,3 +105,54 @@
     flex: 0 0 auto;
     opacity: 0.7;
 }
+
+.sh-article-body {
+    font-size: 1.05rem;
+    line-height: 2;
+}
+
+.sh-article-body > * + * {
+    margin-top: 1.15rem;
+}
+
+.sh-article-body h2,
+.sh-article-body h3 {
+    color: rgb(var(--sh-ink));
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.sh-article-body h2 {
+    font-size: 1.5rem;
+}
+
+.sh-article-body h3 {
+    font-size: 1.25rem;
+}
+
+.sh-article-body ul,
+.sh-article-body ol {
+    padding-inline-start: 1.5rem;
+}
+
+.sh-article-body ul {
+    list-style: disc;
+}
+
+.sh-article-body ol {
+    list-style: decimal;
+}
+
+.sh-article-body blockquote {
+    border-inline-start: 4px solid rgb(var(--sh-accent));
+    background: rgb(var(--sh-accent-soft) / 0.5);
+    padding: 1rem 1.25rem;
+    color: rgb(var(--sh-ink-muted));
+}
+
+.sh-article-body a {
+    color: rgb(var(--sh-accent-strong));
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}

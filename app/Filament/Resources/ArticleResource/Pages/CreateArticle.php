@@ -6,6 +6,7 @@ use App\Filament\Resources\ArticleResource;
 use App\Services\BreakingNewsLimiter;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -19,6 +20,15 @@ class CreateArticle extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        if (! empty($data['manual_image'])) {
+            $data['image_url'] = Storage::disk('public_uploads')->url($data['manual_image']);
+        }
+        unset($data['manual_image']);
+
+        if (($data['status'] ?? 'published') === 'published' && empty($data['published_at'])) {
+            $data['published_at'] = now();
+        }
+
         if (Schema::hasColumn('articles', 'is_breaking_locked')) {
             $data['is_breaking_locked'] = true;
         }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class Article extends Model
 {
@@ -44,6 +45,10 @@ class Article extends Model
     protected static function booted(): void
     {
         static::saving(function (Article $article): void {
+            if (! filled($article->slug)) {
+                $article->slug = self::uniqueSlugFor($article);
+            }
+
             if ($article->canonical_url && ! $article->canonical_url_hash) {
                 $article->canonical_url_hash = hash('sha256', $article->canonical_url);
             }
@@ -62,6 +67,36 @@ class Article extends Model
                 $article->setAttribute('show_on_home', true);
             }
         });
+    }
+
+    private static function uniqueSlugFor(Article $article): string
+    {
+        $base = Str::of((string) $article->title)
+            ->lower()
+            ->replaceMatches('/[^\pL\pN]+/u', '-')
+            ->trim('-')
+            ->limit(190, '')
+            ->toString();
+
+        if ($base === '') {
+            $base = 'article-'.now()->format('Ymd-His');
+        }
+
+        $slug = $base;
+        $suffix = 2;
+
+        while (self::query()
+            ->where('slug', $slug)
+            ->when(
+                $article->exists,
+                fn ($query) => $query->where($article->getKeyName(), '!=', $article->getKey()),
+            )
+            ->exists()) {
+            $slug = Str::limit($base, 180, '').'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 
     public static function hasShowOnHomeColumn(): bool

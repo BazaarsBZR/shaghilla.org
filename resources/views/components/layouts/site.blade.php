@@ -6,6 +6,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
         <title>{{ $title ?? config('app.name') }}</title>
+        <link rel="icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
+        <link rel="shortcut icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
+        <link rel="apple-touch-icon" href="{{ asset('logo-fav.png') }}" />
 
         @php
             $deployBuildId = null;

@@ -12,6 +12,7 @@ class ArticleController extends Controller
         $article = Article::query()
             ->with(['feedSource', 'category'])
             ->where('slug', $slug)
+            ->where('status', 'published')
             ->firstOrFail();
 
         return view('pages.article', [

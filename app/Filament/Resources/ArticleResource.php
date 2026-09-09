@@ -5,23 +5,23 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Models\Article;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Schema;
-use Livewire\Component as Livewire;
 
 class ArticleResource extends Resource
 {
@@ -31,79 +31,26 @@ class ArticleResource extends Resource
 
     protected static ?string $navigationGroup = 'News';
 
+    protected static ?string $navigationLabel = 'Articles';
+
+    protected static ?string $modelLabel = 'article';
+
+    protected static ?string $pluralModelLabel = 'articles';
+
     public static function form(Form $form): Form
     {
         $hasShowOnHome = Schema::hasColumn('articles', 'show_on_home');
 
         return $form
             ->schema([
-                Section::make()
+                Section::make('Write article')
+                    ->description('Create an original story for Shaghilla or edit an imported article.')
                     ->schema([
-                        Select::make('display_destination')
-                            ->label('Display')
-                            ->options([
-                                'home' => 'Home page only',
-                                'both' => 'Use on both (home + breaking)',
-                                'breaking' => 'Breaking ticker only',
-                            ])
-                            ->default('home')
-                            ->visible($hasShowOnHome)
-                            ->live()
-                            ->afterStateHydrated(function (Select $component, $state, Livewire $livewire): void {
-                                if (! method_exists($livewire, 'getRecord')) {
-                                    return;
-                                }
-
-                                $record = $livewire->getRecord();
-                                if (! $record instanceof Article) {
-                                    return;
-                                }
-
-                                $showOnHome = Schema::hasColumn('articles', 'show_on_home')
-                                    ? (bool) ($record->show_on_home ?? true)
-                                    : true;
-
-                                $isBreaking = (bool) ($record->is_breaking ?? false);
-
-                                $component->state(
-                                    $showOnHome
-                                        ? ($isBreaking ? 'both' : 'home')
-                                        : 'breaking',
-                                );
-                            })
-                            ->afterStateUpdated(function (?string $state, ?string $old, Set $set): void {
-                                $state = $state ?: 'home';
-
-                                if ($state === 'breaking') {
-                                    $set('show_on_home', false);
-                                    $set('is_breaking', true);
-                                    return;
-                                }
-
-                                if ($state === 'both') {
-                                    $set('show_on_home', true);
-                                    $set('is_breaking', true);
-                                    return;
-                                }
-
-                                $set('show_on_home', true);
-                                $set('is_breaking', false);
-                            })
-                            ->helperText('Choose where this article appears.'),
-
-                        Hidden::make('show_on_home')
-                            ->default(true)
-                            ->visible($hasShowOnHome),
-
                         TextInput::make('title')
+                            ->label('Headline')
                             ->required()
                             ->maxLength(500)
-                            ->columnSpanFull(),
-
-                        TextInput::make('slug')
-                            ->required()
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true)
+                            ->placeholder('Write the article headline')
                             ->columnSpanFull(),
 
                         Select::make('category_id')
@@ -113,56 +60,119 @@ class ArticleResource extends Resource
                             ->preload()
                             ->required(),
 
+                        Select::make('status')
+                            ->label('Publication status')
+                            ->options([
+                                'published' => 'Publish now',
+                                'draft' => 'Save as draft',
+                            ])
+                            ->default('published')
+                            ->required()
+                            ->native(false),
+
+                        DateTimePicker::make('published_at')
+                            ->label('Published at')
+                            ->default(now())
+                            ->seconds(false)
+                            ->required(),
+
+                        Textarea::make('excerpt')
+                            ->label('Summary')
+                            ->rows(4)
+                            ->maxLength(1000)
+                            ->helperText('A short summary for cards, search results, and social previews.')
+                            ->columnSpanFull(),
+
+                        RichEditor::make('content')
+                            ->label('Article body')
+                            ->required()
+                            ->toolbarButtons([
+                                'blockquote',
+                                'bold',
+                                'bulletList',
+                                'h2',
+                                'h3',
+                                'italic',
+                                'link',
+                                'orderedList',
+                                'redo',
+                                'underline',
+                                'undo',
+                            ])
+                            ->fileAttachmentsDisk('public_uploads')
+                            ->fileAttachmentsDirectory('news/content')
+                            ->fileAttachmentsVisibility('public')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Section::make('Featured image')
+                    ->description('Upload a lead image for the homepage card and article page.')
+                    ->schema([
+                        FileUpload::make('manual_image')
+                            ->label('Upload image')
+                            ->disk('public_uploads')
+                            ->directory('news/manual')
+                            ->visibility('public')
+                            ->image()
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                '16:9',
+                                '4:3',
+                                null,
+                            ])
+                            ->maxSize(10240)
+                            ->helperText('JPG, PNG, or WebP up to 10 MB. A new upload replaces the image URL below.')
+                            ->columnSpanFull(),
+
+                        TextInput::make('image_url')
+                            ->label('Image URL')
+                            ->url()
+                            ->helperText('Optional for imported stories or externally hosted images.')
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Placement and source')
+                    ->schema([
+                        Toggle::make('show_on_home')
+                            ->label('Show on home page')
+                            ->default(true)
+                            ->visible($hasShowOnHome),
+
+                        Toggle::make('is_breaking')
+                            ->label('Show in breaking ticker')
+                            ->default(false),
+
                         Select::make('feed_source_id')
                             ->label('Feed source')
                             ->relationship('feedSource', 'name')
                             ->searchable()
-                            ->preload(),
-
-                        Toggle::make('is_breaking')
-                            ->label('Breaking')
-                            ->default(false)
-                            ->hidden($hasShowOnHome),
-
-                        Select::make('status')
-                            ->options([
-                                'published' => 'published',
-                                'draft' => 'draft',
-                            ])
-                            ->default('published')
-                            ->required(),
+                            ->preload()
+                            ->helperText('Leave blank for an original Shaghilla article.'),
 
                         TextInput::make('language')
                             ->maxLength(5)
                             ->default('ar'),
 
-                        DateTimePicker::make('published_at')
-                            ->label('Published at')
-                            ->required(),
+                        TextInput::make('slug')
+                            ->label('URL slug')
+                            ->helperText('Optional. A unique URL is generated from the headline when left blank.')
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true)
+                            ->columnSpanFull(),
+
+                        TextInput::make('canonical_url')
+                            ->label('Canonical URL')
+                            ->url()
+                            ->helperText('Leave blank for original Shaghilla articles.')
+                            ->columnSpanFull(),
 
                         DateTimePicker::make('imported_at')
                             ->label('Imported at')
                             ->disabled(),
-
-                        Textarea::make('excerpt')
-                            ->rows(3)
-                            ->columnSpanFull(),
-
-                        Textarea::make('content')
-                            ->rows(10)
-                            ->columnSpanFull(),
-
-                        Textarea::make('canonical_url')
-                            ->label('Canonical URL')
-                            ->rows(2)
-                            ->columnSpanFull(),
-
-                        Textarea::make('image_url')
-                            ->label('Image URL')
-                            ->rows(2)
-                            ->columnSpanFull(),
                     ])
-                    ->columns(2),
+                    ->columns(2)
+                    ->collapsible(),
             ]);
     }
 
@@ -172,17 +182,15 @@ class ArticleResource extends Resource
 
         return $table
             ->columns([
+                ImageColumn::make('image_url')
+                    ->label('Image')
+                    ->square()
+                    ->size(44),
+
                 TextColumn::make('published_at')
                     ->label('Published')
                     ->dateTime()
                     ->sortable(),
-
-                IconColumn::make('show_on_home')
-                    ->label('Home')
-                    ->boolean()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visible($hasShowOnHome),
 
                 TextColumn::make('title')
                     ->searchable()
@@ -193,9 +201,17 @@ class ArticleResource extends Resource
                     ->label('Category')
                     ->sortable(),
 
-                TextColumn::make('feedSource.name')
-                    ->label('Feed')
-                    ->toggleable(),
+                TextColumn::make('origin')
+                    ->label('Origin')
+                    ->getStateUsing(fn (Article $record): string => $record->feed_source_id ? 'Imported' : 'Manual')
+                    ->badge()
+                    ->color(fn (string $state): string => $state === 'Manual' ? 'success' : 'gray'),
+
+                IconColumn::make('show_on_home')
+                    ->label('Home')
+                    ->boolean()
+                    ->sortable()
+                    ->visible($hasShowOnHome),
 
                 IconColumn::make('is_breaking')
                     ->label('Breaking')
@@ -204,23 +220,24 @@ class ArticleResource extends Resource
 
                 TextColumn::make('status')
                     ->badge()
+                    ->color(fn (string $state): string => $state === 'published' ? 'success' : 'warning')
                     ->sortable(),
+
+                TextColumn::make('feedSource.name')
+                    ->label('Feed')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('language')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                TernaryFilter::make('is_breaking')
-                    ->label('Breaking'),
-                TernaryFilter::make('show_on_home')
-                    ->label('Home')
-                    ->visible($hasShowOnHome),
-                SelectFilter::make('status')
-                    ->options([
-                        'published' => 'published',
-                        'draft' => 'draft',
-                    ]),
+                TernaryFilter::make('is_breaking')->label('Breaking'),
+                TernaryFilter::make('show_on_home')->label('Home')->visible($hasShowOnHome),
+                SelectFilter::make('status')->options([
+                    'published' => 'published',
+                    'draft' => 'draft',
+                ]),
                 SelectFilter::make('category_id')
                     ->label('Category')
                     ->relationship('category', 'name_ar'),
@@ -238,8 +255,7 @@ class ArticleResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-        ];
+        return [];
     }
 
     public static function getPages(): array

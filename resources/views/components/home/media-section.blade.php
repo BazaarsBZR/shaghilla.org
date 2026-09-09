@@ -24,12 +24,16 @@
                         <x-home.media-card :item="$item" />
                     </div>
                 @endforeach
+                <div class="w-72 shrink-0">
+                    <x-home.almanar-live-card />
+                </div>
             </div>
         @else
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($items as $item)
                     <x-home.media-card :item="$item" />
                 @endforeach
+                <x-home.almanar-live-card />
             </div>
         @endif
     </section>
