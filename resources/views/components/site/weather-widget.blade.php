@@ -36,14 +36,19 @@
             return `${v}°C`;
         },
         async load() {
-            const key = 'shaghilla_weather_header_v2';
+            const key = 'shaghilla_weather.header.v3';
             const ttlMs = 10 * 60 * 1000;
 
             try {
                 const cachedRaw = localStorage.getItem(key);
                 if (cachedRaw) {
                     const cached = JSON.parse(cachedRaw);
-                    if (cached?.ts && cached?.data && (Date.now() - cached.ts) < ttlMs) {
+                    if (
+                        cached?.ts
+                        && cached?.data
+                        && Number.isFinite(Number(cached.data.temperature_c))
+                        && (Date.now() - cached.ts) < ttlMs
+                    ) {
                         this.temperature = cached.data.temperature_c ?? null;
                         this.weatherCode = cached.data.weather_code ?? null;
                         this.label = cached.data.label ?? this.label;
@@ -89,9 +94,11 @@
                 this.temperature = data?.temperature_c ?? null;
                 this.weatherCode = data?.weather_code ?? null;
                 this.label = data?.label ?? this.label;
-                try {
-                    localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
-                } catch (_) {}
+                if (Number.isFinite(Number(data?.temperature_c))) {
+                    try {
+                        localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
+                    } catch (_) {}
+                }
             } catch (_) {
                 // ignore (keep fallback UI)
             } finally {

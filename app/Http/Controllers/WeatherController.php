@@ -39,11 +39,11 @@ class WeatherController extends Controller
             $lon = 35.5018;
         }
 
-        $cacheKey = 'weather.header.v2.'.md5(round($lat, 2).','.round($lon, 2));
+        $cacheKey = 'weather.header.v3.'.md5(round($lat, 2).','.round($lon, 2));
 
         $payload = Cache::remember($cacheKey, now()->addMinutes(15), function () use ($lat, $lon): array {
             try {
-                $response = Http::timeout(6)
+                $response = Http::timeout(10)
                     ->acceptJson()
                     ->get('https://api.open-meteo.com/v1/forecast', [
                         'latitude' => $lat,
@@ -83,6 +83,10 @@ class WeatherController extends Controller
                 ];
             }
         });
+
+        if (! is_numeric($payload['temperature_c'] ?? null)) {
+            Cache::forget($cacheKey);
+        }
 
         return response()->json([
             'label' => $label,
