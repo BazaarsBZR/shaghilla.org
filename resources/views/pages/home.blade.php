@@ -27,22 +27,6 @@
                 ->values();
         @endphp
 
-        <section class="sh-home-edition" aria-labelledby="home-edition-title">
-            <div class="sh-home-edition__copy">
-                <span class="sh-home-edition__kicker">منصة إخبارية لبنانية</span>
-                <h1 id="home-edition-title">الخبر أقرب. الصورة أوضح.</h1>
-                <p>تغطية متواصلة لأخبار الناس، الشأن العام، وكل ما يهم لبنان والمنطقة.</p>
-                <div class="sh-home-edition__actions">
-                    <a href="#latest-news" class="sh-home-edition__primary">تابع آخر الأخبار</a>
-                    <a href="{{ route('live') }}" class="sh-home-edition__secondary">شاهد البث المباشر</a>
-                </div>
-            </div>
-            <div class="sh-home-edition__mark" aria-hidden="true">
-                <span></span>
-                <img src="{{ asset('website-logo.png') }}" alt="" />
-            </div>
-        </section>
-
         @if ($newsLayout === 'mosaic')
             @if ($heroArticle || $topGridArticles->isNotEmpty())
                 @if ($heroArticle && $topGridArticles->isNotEmpty())
