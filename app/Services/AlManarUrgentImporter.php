@@ -230,6 +230,18 @@ class AlManarUrgentImporter
                         'status' => 'published',
                     ];
 
+                    if ($this->hasArticlesColumn('show_on_home')) {
+                        $updates['show_on_home'] = false;
+                    }
+
+                    if ($this->hasArticlesColumn('is_breaking_locked')) {
+                        $updates['is_breaking_locked'] = true;
+                    }
+
+                    if ($this->hasArticlesColumn('show_on_home_locked')) {
+                        $updates['show_on_home_locked'] = true;
+                    }
+
                     if ($existing->guid !== $sourceUrl) {
                         $updates['guid'] = $sourceUrl;
                     }
@@ -315,6 +327,7 @@ class AlManarUrgentImporter
         $this->breakingNewsLimiter->keepLatest();
 
         Cache::forget('news.breaking.ticker');
+        Cache::forget('news.breaking.ticker.v3');
         Cache::forget('news.home.hero');
         Cache::forget('news.home.latest');
 

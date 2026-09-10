@@ -34,10 +34,11 @@
         $resolvedItems = $items;
         if (! ($resolvedItems instanceof \Illuminate\Support\Collection)) {
             $resolvedItems = \Illuminate\Support\Facades\Cache::remember(
-                'news.breaking.ticker.v2',
+                'news.breaking.ticker.v3',
                 now()->addMinutes(5),
                 function () use ($tickerLimit) {
                     $items = \App\Models\Article::query()
+                        ->with('feedSource:id,destination')
                         ->where('status', 'published')
                         ->where('is_breaking', true)
                         ->orderByDesc('imported_at')
@@ -49,6 +50,7 @@
                     return $items->isNotEmpty()
                         ? $items
                         : \App\Models\Article::query()
+                            ->with('feedSource:id,destination')
                             ->where('status', 'published')
                             ->orderByDesc('published_at')
                             ->orderByDesc('imported_at')
@@ -61,10 +63,16 @@
     }
 
     $initialItems = $resolvedItems->map(function ($article): array {
+        $isTickerOnly = $article->feedSource?->destination === \App\Models\FeedSource::DESTINATION_BREAKING
+            || ($article->feed_source_id === null
+                && empty($article->canonical_url)
+                && str_starts_with((string) $article->guid, 'https://almanar.com.lb/'));
+
         return [
             'slug' => (string) $article->slug,
             'title' => (string) $article->title,
             'time' => optional($article->published_at)->format('H:i') ?: null,
+            'linkable' => ! $isTickerOnly,
         ];
     })->values()->all();
 
@@ -111,10 +119,23 @@
                         <noscript>
                             <div class="overflow-x-auto whitespace-nowrap text-sm text-ink" dir="rtl">
                                 @foreach ($resolvedItems as $article)
-                                    <a href="{{ route('news.show', $article->slug) }}" class="inline-flex items-center gap-2 px-2 font-bold hover:underline">
-                                        <span class="text-xs font-semibold text-ink-muted">{{ optional($article->published_at)->format('H:i') }}</span>
-                                        <span class="font-semibold">{{ $article->title }}</span>
-                                    </a>
+                                    @php
+                                        $tickerOnly = $article->feedSource?->destination === \App\Models\FeedSource::DESTINATION_BREAKING
+                                            || ($article->feed_source_id === null
+                                                && empty($article->canonical_url)
+                                                && str_starts_with((string) $article->guid, 'https://almanar.com.lb/'));
+                                    @endphp
+                                    @if($tickerOnly)
+                                        <span class="inline-flex items-center gap-2 px-2 font-bold">
+                                            <span class="text-xs font-semibold text-ink-muted">{{ optional($article->published_at)->format('H:i') }}</span>
+                                            <span class="font-semibold">{{ $article->title }}</span>
+                                        </span>
+                                    @else
+                                        <a href="{{ route('news.show', $article->slug) }}" class="inline-flex items-center gap-2 px-2 font-bold hover:underline">
+                                            <span class="text-xs font-semibold text-ink-muted">{{ optional($article->published_at)->format('H:i') }}</span>
+                                            <span class="font-semibold">{{ $article->title }}</span>
+                                        </a>
+                                    @endif
                                 @endforeach
                             </div>
                         </noscript>

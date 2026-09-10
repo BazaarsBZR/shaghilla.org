@@ -154,6 +154,7 @@ class RssImporter
         $this->breakingNewsLimiter->keepLatest();
 
         Cache::forget('news.breaking.ticker');
+        Cache::forget('news.breaking.ticker.v3');
         Cache::forget('news.breaking.live');
         Cache::forget('news.home.hero');
         Cache::forget('news.home.latest');

@@ -16,36 +16,44 @@ class BreakingApiController extends Controller
         $limit = max(1, min(50, $limit));
 
         $articles = Cache::remember(
-            'api.breaking.v2.limit_'.$limit,
+            'api.breaking.v3.limit_'.$limit,
             now()->addSeconds(30),
             function () use ($limit) {
                 $items = Article::query()
+                    ->with('feedSource:id,destination')
                     ->where('status', 'published')
                     ->where('is_breaking', true)
                     ->orderByDesc('imported_at')
                     ->orderByDesc('published_at')
                     ->orderByDesc('id')
                     ->limit($limit)
-                    ->get(['slug', 'title', 'published_at']);
+                    ->get(['id', 'feed_source_id', 'slug', 'title', 'canonical_url', 'guid', 'published_at']);
 
                 return $items->isNotEmpty()
                     ? $items
-                    : Article::query()
+                        : Article::query()
+                            ->with('feedSource:id,destination')
                         ->where('status', 'published')
                         ->orderByDesc('published_at')
                         ->orderByDesc('imported_at')
                         ->orderByDesc('id')
                         ->limit($limit)
-                        ->get(['slug', 'title', 'published_at']);
+                            ->get(['id', 'feed_source_id', 'slug', 'title', 'canonical_url', 'guid', 'published_at']);
             },
         );
 
         $items = $articles->map(function (Article $article): array {
+            $isTickerOnly = $article->feedSource?->destination === 'breaking'
+                || ($article->feed_source_id === null
+                    && empty($article->canonical_url)
+                    && str_starts_with((string) $article->guid, 'https://almanar.com.lb/'));
+
             return [
                 'slug' => (string) $article->slug,
                 'title' => (string) $article->title,
                 'published_at' => $article->published_at?->toIso8601String(),
                 'time' => $article->published_at?->format('H:i'),
+                'linkable' => ! $isTickerOnly,
             ];
         })->values()->all();
 

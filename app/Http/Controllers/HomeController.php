@@ -298,6 +298,15 @@ class HomeController extends Controller
             $query->where('show_on_home', true);
         }
 
+        $query
+            ->whereDoesntHave('feedSource', fn ($feed) => $feed->where('destination', 'breaking'))
+            ->where(function ($articles) {
+                $articles
+                    ->whereNotNull('canonical_url')
+                    ->orWhereNull('guid')
+                    ->orWhere('guid', 'not like', 'https://almanar.com.lb/%');
+            });
+
         return $query
             ->orderByDesc('imported_at')
             ->orderByDesc('published_at')

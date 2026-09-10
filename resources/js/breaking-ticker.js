@@ -8,11 +8,12 @@ function safeJsonParse(text, fallback) {
     }
 }
 
-function buildItemNode({ slug, title, time }, { newsBaseUrl }) {
-    const a = document.createElement('a');
-    a.className = 'sh-breaking-item';
-    a.href = `${newsBaseUrl}/${slug}`;
-    a.dir = 'rtl';
+function buildItemNode({ slug, title, time, linkable }, { newsBaseUrl }) {
+    const canOpen = linkable && slug;
+    const item = document.createElement(canOpen ? 'a' : 'span');
+    item.className = 'sh-breaking-item';
+    if (canOpen) item.href = `${newsBaseUrl}/${slug}`;
+    item.dir = 'rtl';
 
     const timeSpan = document.createElement('span');
     timeSpan.className = 'sh-breaking-time';
@@ -22,9 +23,9 @@ function buildItemNode({ slug, title, time }, { newsBaseUrl }) {
     titleSpan.className = 'sh-breaking-title';
     titleSpan.textContent = title || '';
 
-    a.appendChild(timeSpan);
-    a.appendChild(titleSpan);
-    return a;
+    item.appendChild(timeSpan);
+    item.appendChild(titleSpan);
+    return item;
 }
 
 function buildDividerNode(dividerLogoUrl) {
@@ -50,6 +51,7 @@ function normalizeItems(items) {
             slug: String(it?.slug || ''),
             title: String(it?.title || ''),
             time: it?.time ? String(it.time) : '',
+            linkable: it?.linkable !== false,
         }))
         .filter((it) => it.slug && it.title);
 }
