@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Schema;
 
 class MembershipSettings extends Page
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     protected static string $view = 'filament.pages.membership-settings';

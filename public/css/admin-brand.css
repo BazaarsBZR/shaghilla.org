@@ -255,3 +255,390 @@
     border-radius: 1.15rem !important;
     box-shadow: 0 16px 34px -30px rgba(16, 47, 57, 0.48) !important;
 }
+
+.fi-sidebar-item:has(a[href*="telegram"]) {
+    display: none !important;
+}
+
+.fi-main-ctn {
+    max-width: 96rem;
+}
+
+.fi-header-subheading {
+    color: #64777e !important;
+}
+
+.fi-wi-stats-overview-stat {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, #ffffff, #f8fbfa) !important;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.fi-wi-stats-overview-stat::after {
+    position: absolute;
+    right: -1rem;
+    bottom: -1.5rem;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 9999px;
+    background: rgba(19, 136, 94, 0.05);
+    content: '';
+}
+
+.fi-wi-stats-overview-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px -28px rgba(16, 47, 57, 0.55) !important;
+}
+
+.fi-ta-ctn {
+    overflow: hidden;
+    border: 1px solid rgba(16, 47, 57, 0.09);
+    border-radius: 1.15rem !important;
+    box-shadow: 0 16px 34px -30px rgba(16, 47, 57, 0.42) !important;
+}
+
+.fi-ta-header {
+    background: linear-gradient(180deg, #ffffff, #f8fbfa);
+}
+
+.fi-ta-row:hover {
+    background: rgba(19, 136, 94, 0.035) !important;
+}
+
+.fi-fo-component-ctn .fi-section {
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.97);
+}
+
+.fi-fo-component-ctn .fi-section-header {
+    padding-block: 1.35rem;
+    background: linear-gradient(90deg, rgba(19, 136, 94, 0.055), transparent 55%);
+}
+
+.fi-fo-field-wrp-label label {
+    color: var(--sh-admin-night);
+    font-weight: 800 !important;
+}
+
+.fi-input-wrp,
+.fi-select-input,
+.fi-fo-rich-editor {
+    border-radius: 0.85rem !important;
+}
+
+.sh-newsroom-welcome {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 17rem;
+    margin-bottom: 1.25rem;
+    padding: 2.5rem;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    color: #ffffff;
+    background: radial-gradient(circle at 84% 18%, rgba(255, 255, 255, 0.13), transparent 14rem), linear-gradient(125deg, #102f39 0%, #123d45 60%, #13885e 140%);
+    box-shadow: 0 26px 55px -34px rgba(16, 47, 57, 0.8);
+}
+
+.sh-newsroom-welcome::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0.45rem;
+    height: 100%;
+    background: var(--sh-admin-red);
+    content: '';
+}
+
+.sh-newsroom-welcome::after {
+    position: absolute;
+    top: -8rem;
+    right: 8%;
+    width: 20rem;
+    height: 20rem;
+    border: 3rem solid rgba(255, 255, 255, 0.035);
+    border-radius: 9999px;
+    content: '';
+}
+
+.sh-newsroom-welcome__copy {
+    position: relative;
+    z-index: 1;
+    max-width: 47rem;
+}
+
+.sh-newsroom-kicker {
+    display: inline-flex;
+    margin-bottom: 0.85rem;
+    padding: 0.32rem 0.72rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 9999px;
+    color: #bcebd7;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sh-newsroom-welcome h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.45rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+}
+
+.sh-newsroom-welcome p {
+    max-width: 42rem;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.sh-newsroom-welcome__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.sh-newsroom-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 2.8rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.8rem;
+    font-size: 0.88rem;
+    font-weight: 800;
+    transition: transform 160ms ease, background 160ms ease;
+}
+
+.sh-newsroom-button svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.sh-newsroom-button:hover {
+    transform: translateY(-1px);
+}
+
+.sh-newsroom-button--primary {
+    color: #ffffff;
+    background: var(--sh-admin-red);
+}
+
+.sh-newsroom-button--primary:hover {
+    background: var(--sh-admin-red-dark);
+}
+
+.sh-newsroom-button--secondary {
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.sh-newsroom-status {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    min-width: 13.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 1rem;
+    background: rgba(0, 0, 0, 0.14);
+    backdrop-filter: blur(12px);
+}
+
+.sh-newsroom-status__dot {
+    width: 0.62rem;
+    height: 0.62rem;
+    margin-top: 0.28rem;
+    flex: 0 0 auto;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 9999px;
+    background: #22c55e;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.14);
+}
+
+.sh-newsroom-status strong,
+.sh-newsroom-status span {
+    display: block;
+}
+
+.sh-newsroom-status strong {
+    font-size: 0.86rem;
+}
+
+.sh-newsroom-status span {
+    margin-top: 0.2rem;
+    color: rgba(255, 255, 255, 0.64);
+    font-size: 0.72rem;
+}
+
+.sh-newsroom-action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
+.sh-newsroom-action-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: 0.9rem;
+    min-height: 8.5rem;
+    padding: 1.15rem;
+    border: 1px solid rgba(16, 47, 57, 0.1);
+    border-radius: 1rem;
+    color: var(--sh-admin-night);
+    background: linear-gradient(145deg, #ffffff, #f8fbfa);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.sh-newsroom-action-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(217, 39, 46, 0.35);
+    box-shadow: 0 18px 35px -26px rgba(16, 47, 57, 0.7);
+}
+
+.sh-newsroom-action-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.8rem;
+    color: var(--sh-admin-red);
+    background: rgba(217, 39, 46, 0.08);
+}
+
+.sh-newsroom-action-card h3 {
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.sh-newsroom-action-card p {
+    margin-top: 0.4rem;
+    color: #64777e;
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.sh-newsroom-action-card__arrow {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.2rem;
+    color: #9aabb0;
+}
+
+.sh-newsroom-workflow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 1.25rem;
+    padding: 1.3rem 1.5rem;
+    border: 1px solid rgba(19, 136, 94, 0.12);
+    border-radius: 1.15rem;
+    background: rgba(19, 136, 94, 0.045);
+}
+
+.sh-newsroom-workflow__title span,
+.sh-newsroom-workflow__title strong {
+    display: block;
+}
+
+.sh-newsroom-workflow__title span {
+    color: var(--sh-admin-green);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sh-newsroom-workflow__title strong {
+    margin-top: 0.2rem;
+    color: var(--sh-admin-night);
+    font-size: 1rem;
+}
+
+.sh-newsroom-workflow ol {
+    display: flex;
+    gap: 1.4rem;
+}
+
+.sh-newsroom-workflow li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #64777e;
+    font-size: 0.76rem;
+}
+
+.sh-newsroom-workflow li b {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    flex: 0 0 auto;
+    border-radius: 9999px;
+    color: #ffffff;
+    background: var(--sh-admin-green);
+}
+
+.sh-newsroom-workflow li strong {
+    display: block;
+    color: var(--sh-admin-night);
+}
+
+@media (max-width: 1024px) {
+    .sh-newsroom-welcome {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .sh-newsroom-action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sh-newsroom-workflow,
+    .sh-newsroom-workflow ol {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .sh-newsroom-welcome {
+        min-height: auto;
+        padding: 1.5rem;
+        border-radius: 1.15rem;
+    }
+
+    .sh-newsroom-welcome h2 {
+        font-size: 2rem;
+    }
+
+    .sh-newsroom-status {
+        width: 100%;
+    }
+
+    .sh-newsroom-action-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sh-newsroom-workflow ol {
+        gap: 0.9rem;
+    }
+}

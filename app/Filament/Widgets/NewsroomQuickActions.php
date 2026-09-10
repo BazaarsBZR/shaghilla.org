@@ -2,8 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Pages\MaintenanceTools;
-use App\Filament\Pages\RssAutomation;
 use App\Filament\Resources\ArticleResource;
 use App\Filament\Resources\ContactMessageResource;
 use App\Filament\Resources\FeedSourceResource;
@@ -23,53 +21,46 @@ class NewsroomQuickActions extends Widget
     {
         return [
             [
-                'label' => 'Create Article',
-                'description' => 'Publish a manual or corrected story.',
+                'label' => 'Write a new story',
+                'description' => 'Start a draft, add a photo or video, then publish when it is ready.',
                 'icon' => 'heroicon-o-document-plus',
                 'color' => 'primary',
                 'url' => ArticleResource::getUrl('create'),
             ],
             [
-                'label' => 'Create Video Item',
-                'description' => 'Add episode/report cards for the live page.',
+                'label' => 'Manage published stories',
+                'description' => 'Find, correct, publish, or remove a story from the breaking bar.',
+                'icon' => 'heroicon-o-newspaper',
+                'color' => 'gray',
+                'url' => ArticleResource::getUrl('index'),
+            ],
+            [
+                'label' => 'Add a video',
+                'description' => 'Add a broadcast, report, or homepage video for visitors to watch.',
                 'icon' => 'heroicon-o-video-camera',
                 'color' => 'success',
                 'url' => VideoItemResource::getUrl('create'),
             ],
             [
-                'label' => 'Manage Feed Sources',
-                'description' => 'Enable, disable, or edit RSS providers.',
-                'icon' => 'heroicon-o-rss',
+                'label' => 'Read visitor messages',
+                'description' => 'Open service requests and messages sent through the website.',
+                'icon' => 'heroicon-o-chat-bubble-left-right',
                 'color' => 'info',
-                'url' => FeedSourceResource::getUrl('index'),
+                'url' => ContactMessageResource::getUrl('index'),
             ],
             [
-                'label' => 'Review Memberships',
-                'description' => 'Process pending membership applications.',
+                'label' => 'Review memberships',
+                'description' => 'Check new applications and update their progress.',
                 'icon' => 'heroicon-o-user-group',
                 'color' => 'warning',
                 'url' => MembershipApplicationResource::getUrl('index'),
             ],
             [
-                'label' => 'Open Service Requests',
-                'description' => 'View and respond to new contact messages.',
-                'icon' => 'heroicon-o-chat-bubble-left-right',
+                'label' => 'Manage news sources',
+                'description' => 'See which automatic news sources are active or paused.',
+                'icon' => 'heroicon-o-rss',
                 'color' => 'gray',
-                'url' => ContactMessageResource::getUrl('index'),
-            ],
-            [
-                'label' => 'RSS Automation',
-                'description' => 'Run import diagnostics and cron checks.',
-                'icon' => 'heroicon-o-cpu-chip',
-                'color' => 'danger',
-                'url' => RssAutomation::getUrl(),
-            ],
-            [
-                'label' => 'Maintenance Tools',
-                'description' => 'Run migrations or clear stale caches safely.',
-                'icon' => 'heroicon-o-wrench-screwdriver',
-                'color' => 'gray',
-                'url' => MaintenanceTools::getUrl(),
+                'url' => FeedSourceResource::getUrl('index'),
             ],
         ];
     }

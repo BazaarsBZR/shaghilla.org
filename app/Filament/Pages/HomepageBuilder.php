@@ -17,6 +17,8 @@ use Filament\Pages\Page;
 
 class HomepageBuilder extends Page
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
     protected static string $view = 'filament.pages.homepage-builder';

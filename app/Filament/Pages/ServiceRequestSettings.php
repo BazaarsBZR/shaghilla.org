@@ -13,6 +13,8 @@ use Filament\Pages\Page;
 
 class ServiceRequestSettings extends Page
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-inbox';
 
     protected static string $view = 'filament.pages.service-request-settings';

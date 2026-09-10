@@ -1,4 +1,4 @@
-<header class="border-b border-line bg-surface" x-data="{ open: false }">
+<header class="sh-site-header border-b border-line bg-surface" x-data="{ open: false }">
     @php
         $brandName = \App\Models\SiteSetting::getValue('site_brand_name', config('app.name'));
         $showHeaderLogo = \App\Models\SiteSetting::getBool('header_logo_enabled', true);

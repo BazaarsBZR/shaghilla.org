@@ -22,6 +22,8 @@ use Illuminate\Support\Str;
 
 class SharePlatformResource extends Resource
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $model = SharePlatform::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-share';

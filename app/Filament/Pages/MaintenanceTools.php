@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Schema;
 
 class MaintenanceTools extends Page
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-wrench-screwdriver';
 
     protected static string $view = 'filament.pages.maintenance-tools';

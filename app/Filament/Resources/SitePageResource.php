@@ -26,6 +26,8 @@ use Filament\Tables\Table;
 
 class SitePageResource extends Resource
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $model = SitePage::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

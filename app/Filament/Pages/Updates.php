@@ -12,6 +12,8 @@ use Filament\Pages\Page;
 
 class Updates extends Page
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
 
     protected static string $view = 'filament.pages.updates';

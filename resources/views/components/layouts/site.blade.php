@@ -31,14 +31,14 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('head')
     </head>
-    <body class="min-h-screen overflow-x-hidden bg-canvas font-sans text-ink antialiased">
+    <body class="sh-site-body min-h-screen overflow-x-hidden bg-canvas font-sans text-ink antialiased">
         @if ($deployBuildId)
             <!-- shaghilla-build: {{ $deployBuildId }} -->
         @endif
         <x-site.header />
         <x-news.breaking-ticker />
 
-        <main class="mx-auto w-full max-w-6xl px-4 pb-8 pt-5">
+        <main class="sh-site-main mx-auto w-full max-w-6xl px-4 pb-10 pt-6">
             {{ $slot }}
         </main>
 

@@ -1,4 +1,4 @@
-<footer class="border-t border-line bg-surface">
+<footer class="sh-site-footer border-t border-line bg-surface">
     <div class="mx-auto w-full max-w-6xl px-4 py-10 text-sm text-ink-muted">
         @php
             $brandName = \App\Models\SiteSetting::getValue('site_brand_name', config('app.name'));
@@ -13,9 +13,12 @@
 
         <div class="grid gap-8 border-b border-line pb-8 {{ $hasSocials ? 'md:grid-cols-3' : 'md:grid-cols-2' }}">
             <div class="space-y-3">
-                <div class="text-lg font-extrabold tracking-tight text-ink">{{ $brandName }}</div>
+                <div class="flex items-center gap-3 text-lg font-extrabold tracking-tight text-ink">
+                    <img src="{{ asset('website-logo.png') }}" alt="" class="h-12 w-12 rounded-full bg-white object-contain p-1 shadow-sm" />
+                    <span>{{ $brandName }}</span>
+                </div>
                 <p class="max-w-xs text-sm leading-relaxed text-ink-muted">
-                    منصة أخبار مباشرة وسريعة بواجهة عربية واضحة.
+                    صوت الناس وأخبار لبنان في منصة عربية واضحة، سريعة، ومتجددة.
                 </p>
             </div>
 

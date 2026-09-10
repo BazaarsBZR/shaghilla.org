@@ -1,5 +1,5 @@
 <x-layouts.site :title="__('ui.pages.home')">
-    <div class="space-y-6">
+    <div class="sh-home-stack space-y-8">
         @php
             $newsLayout = in_array(($newsLayout ?? ''), ['mosaic', 'classic', 'grid'], true) ? $newsLayout : 'mosaic';
             $newsTopSmallCount = max(0, min(12, (int) ($newsTopSmallCount ?? 4)));
@@ -9,10 +9,26 @@
             $latestArticles = collect($latestArticles ?? collect())->values();
         @endphp
 
+        <section class="sh-home-edition" aria-labelledby="home-edition-title">
+            <div class="sh-home-edition__copy">
+                <span class="sh-home-edition__kicker">منصة إخبارية لبنانية</span>
+                <h1 id="home-edition-title">الخبر أقرب. الصورة أوضح.</h1>
+                <p>تغطية متواصلة لأخبار الناس، الشأن العام، وكل ما يهم لبنان والمنطقة.</p>
+                <div class="sh-home-edition__actions">
+                    <a href="#latest-news" class="sh-home-edition__primary">تابع آخر الأخبار</a>
+                    <a href="{{ route('live') }}" class="sh-home-edition__secondary">شاهد البث المباشر</a>
+                </div>
+            </div>
+            <div class="sh-home-edition__mark" aria-hidden="true">
+                <span></span>
+                <img src="{{ asset('website-logo.png') }}" alt="" />
+            </div>
+        </section>
+
         @if ($newsLayout === 'mosaic')
             @if ($heroArticle || $topGridArticles->isNotEmpty())
                 @if ($heroArticle && $topGridArticles->isNotEmpty())
-                    <section dir="ltr" class="flex flex-col gap-4 md:flex-row-reverse md:items-stretch">
+                    <section dir="ltr" class="sh-home-lead flex flex-col gap-4 md:flex-row-reverse md:items-stretch">
                         <div dir="rtl" class="md:basis-7/12 md:shrink-0">
                             <x-news.hero-card :article="$heroArticle" :fill="true" />
                         </div>
@@ -26,9 +42,9 @@
                         </div>
                     </section>
                 @elseif ($heroArticle)
-                    <x-news.hero-card :article="$heroArticle" />
+                    <div class="sh-home-lead"><x-news.hero-card :article="$heroArticle" /></div>
                 @elseif ($topGridArticles->isNotEmpty())
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sh-home-lead grid grid-cols-1 gap-4 sm:grid-cols-2">
                         @foreach ($topGridArticles as $article)
                             <x-news.article-card :article="$article" />
                         @endforeach
@@ -37,13 +53,13 @@
             @endif
         @elseif ($newsLayout === 'classic')
             @if ($heroArticle)
-                <x-news.hero-card :article="$heroArticle" />
+                <div class="sh-home-lead"><x-news.hero-card :article="$heroArticle" /></div>
             @endif
         @endif
 
         <section
             id="latest-news"
-            class="space-y-3"
+            class="sh-home-latest space-y-4"
             x-data="{
                 loading: false,
                 endpoint: @js(route('home.latest')),
@@ -99,8 +115,11 @@
             }"
             @click="handlePaginationClick($event)"
         >
-            <div class="flex items-center justify-between gap-3 border-b border-line pb-2">
-                <h2 class="text-base font-extrabold tracking-tight text-ink">{{ __('ui.labels.latest_news') }}</h2>
+            <div class="sh-home-section-heading flex items-end justify-between gap-3 border-b border-line pb-3">
+                <div>
+                    <span>تغطية مستمرة</span>
+                    <h2 class="text-xl font-extrabold tracking-tight text-ink">{{ __('ui.labels.latest_news') }}</h2>
+                </div>
                 <span
                     x-cloak
                     x-show="loading"
