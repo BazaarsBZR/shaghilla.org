@@ -1,5 +1,14 @@
 @php
     $lbpPerUsd = 89500;
+    $formatUsd = static function (float $lbpBillions) use ($lbpPerUsd): string {
+        $usd = ($lbpBillions * 1_000_000_000) / $lbpPerUsd;
+        return match (true) {
+            $usd >= 1_000_000_000 => '$'.number_format($usd / 1_000_000_000, 2).' مليار',
+            $usd >= 1_000_000 => '$'.number_format($usd / 1_000_000, 2).' مليون',
+            $usd >= 1_000 => '$'.number_format($usd / 1_000, 1).' ألف',
+            default => '$'.number_format($usd, 0),
+        };
+    };
     $categoryLabels = [
         'Total estimated expenditure' => 'إجمالي النفقات المقدّرة',
         'Ministry of National Defense' => 'وزارة الدفاع الوطني',
@@ -52,7 +61,7 @@
                             <tr class="{{ $item->is_total ? 'font-black' : '' }}">
                                 <td class="px-4 py-4">{{ $categoryLabels[$item->category] ?? $item->category }}</td>
                                 <td class="whitespace-nowrap px-4 py-4">{{ number_format((float) $item->amount) }} مليار ليرة لبنانية</td>
-                                <td class="whitespace-nowrap px-4 py-4 text-emerald-700">≈ ${{ number_format((float) $item->amount / $lbpPerUsd, 3) }} مليار</td>
+                                <td class="whitespace-nowrap px-4 py-4 text-emerald-700">≈ {{ $formatUsd((float) $item->amount) }}</td>
                                 <td class="px-4 py-4"><a class="font-bold text-accent" href="{{ $item->source_url }}" target="_blank" rel="noopener noreferrer">{{ $pageReference ?: __('ui.public_money.source') }}</a></td>
                             </tr>
                         @endforeach

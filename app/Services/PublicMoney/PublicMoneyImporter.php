@@ -119,6 +119,9 @@ final class PublicMoneyImporter
         if ($href === '') {
             return null;
         }
+        if (preg_match('#^http://(?:www\.)?ppa\.gov\.lb/#i', $href)) {
+            $href = 'https://'.substr($href, 7);
+        }
         if (preg_match('#^https?://#i', $href)) {
             return $href;
         }
