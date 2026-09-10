@@ -17,8 +17,7 @@
     $engine = \App\Models\SiteSetting::getValue('breaking_ticker_engine', 'js');
     $engine = in_array($engine, ['js', 'legacy'], true) ? $engine : 'js';
 
-    $direction = \App\Models\SiteSetting::getValue('breaking_ticker_direction', 'left');
-    $direction = in_array($direction, ['left', 'right'], true) ? $direction : 'left';
+    $direction = 'right';
 
     $speedPxPerSec = \App\Models\SiteSetting::getInt('breaking_ticker_speed_px_per_sec', 90);
     $speedPxPerSec = max(20, min(600, $speedPxPerSec));
