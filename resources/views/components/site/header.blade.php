@@ -107,7 +107,7 @@
                     break;
 
                 case 'menu':
-                    echo '<nav class="hidden items-center gap-6 text-sm font-extrabold text-ink md:flex">';
+                    echo '<nav class="hidden items-center gap-3 text-xs font-extrabold text-ink md:flex xl:gap-6 xl:text-sm">';
                     if ($menuItems->isEmpty()) {
                         echo '<a href="'.e(route('home')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.home')).'</a>';
                         if (! $showLiveButton) {
@@ -133,6 +133,8 @@
                         }
                     }
                     echo '<a href="'.e(route('public-money.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.public_money')).'</a>';
+                    echo '<a href="'.e(route('government-tenders.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">المناقصات الحكومية</a>';
+                    echo '<a href="'.e(route('financial-status.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">الوضع المالي</a>';
                     echo '</nav>';
                     break;
 

@@ -6,12 +6,16 @@ use App\Models\ProcurementRecord;
 use App\Models\PublicMoneySource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class GovernmentTenderController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->ensureTenderSchema();
+
         $base = $this->baseQuery();
         $status = $request->string('status', 'open')->toString();
         $query = clone $base;
@@ -81,6 +85,8 @@ class GovernmentTenderController extends Controller
 
     public function show(string $sourceRecordId): View
     {
+        $this->ensureTenderSchema();
+
         $tender = $this->baseQuery()
             ->where('source_record_id', $sourceRecordId)
             ->firstOrFail();
@@ -118,6 +124,13 @@ class GovernmentTenderController extends Controller
             ->with('source')
             ->where('stage', 'tender')
             ->whereHas('source', fn (Builder $query) => $query->where('key', 'ppa-tenders'));
+    }
+
+    private function ensureTenderSchema(): void
+    {
+        if (! Schema::hasColumn('public_money_procurements', 'submission_deadline_at')) {
+            Artisan::call('migrate', ['--force' => true]);
+        }
     }
 
     private function applyStatus(Builder $query, string $status): void
