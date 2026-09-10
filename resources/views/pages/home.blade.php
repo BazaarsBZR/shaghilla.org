@@ -148,4 +148,5 @@
             />
         @endif
     </div>
+    <x-site.whatsapp-fab />
 </x-layouts.site>

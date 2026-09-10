@@ -8,6 +8,8 @@
         $activityMax = max(1, (int) ($monthlyActivity->max() ?? 1));
         $budgetTotal = $financial->firstWhere('measure_type', 'allocation');
         $spentTotal = $financial->firstWhere('measure_type', 'reported_expenditure');
+        $lbpPerUsd = 89500;
+        $mapPlaces = $placeMentions->map(fn (array $place): array => collect($place)->only(['name', 'lat', 'lng', 'count'])->all())->values();
         $budgetLabels = [
             'Ministry of National Defense' => 'وزارة الدفاع الوطني',
             'Ministry of Interior and Municipalities' => 'وزارة الداخلية والبلديات',
@@ -55,8 +57,8 @@
         </section>
 
         <section class="relative z-10 -mt-5 grid gap-px overflow-hidden border-y border-[#dbe3e7] bg-[#dbe3e7] sm:mx-6 sm:grid-cols-2 sm:rounded-3xl sm:border lg:grid-cols-4">
-            <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">اعتمادات موازنة 2026</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ $budgetTotal ? number_format((float) $budgetTotal->amount) : '—' }}</p><p class="mt-1 text-xs text-[#8a979c]">{{ $budgetTotal?->original_unit ?: 'بانتظار المصدر' }}</p></article>
-            <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">الإنفاق المبلّغ 2025</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ $spentTotal ? number_format((float) $spentTotal->amount) : '—' }}</p><p class="mt-1 text-xs text-[#8a979c]">{{ $spentTotal?->original_unit ?: 'بانتظار المصدر' }}</p></article>
+            <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">اعتمادات موازنة 2026</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ $budgetTotal ? number_format((float) $budgetTotal->amount) : '—' }}</p><p class="mt-1 text-xs text-[#8a979c]">{{ $budgetTotal ? 'مليار ليرة لبنانية' : 'بانتظار المصدر' }}</p>@if ($budgetTotal)<p class="mt-2 text-sm font-black text-[#18784e]">≈ ${{ number_format((float) $budgetTotal->amount / $lbpPerUsd, 2) }} مليار</p>@endif</article>
+            <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">الإنفاق المبلّغ 2025</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ $spentTotal ? number_format((float) $spentTotal->amount) : '—' }}</p><p class="mt-1 text-xs text-[#8a979c]">{{ $spentTotal ? 'مليار ليرة لبنانية' : 'بانتظار المصدر' }}</p>@if ($spentTotal)<p class="mt-2 text-sm font-black text-[#18784e]">≈ ${{ number_format((float) $spentTotal->amount / $lbpPerUsd, 2) }} مليار</p>@endif</article>
             <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">السجلات المنشورة</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ number_format($publishedCount) }}</p><p class="mt-1 text-xs text-[#8a979c]">عبر مراحل الشراء الثلاث</p></article>
             <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">الجهات الشارية</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ number_format($authorityCount) }}</p><p class="mt-1 text-xs text-[#8a979c]">جهة عامة مميّزة</p></article>
         </section>
@@ -95,16 +97,21 @@
         </section>
 
         <section class="grid gap-5 px-4 pt-5 sm:px-6 lg:grid-cols-[.9fr_1.1fr]">
-            <article class="relative min-h-[390px] overflow-hidden rounded-[1.75rem] bg-[#0e2d3b] p-6 text-white">
-                <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px"></div>
-                <div class="relative z-10"><p class="text-xs font-black text-[#55c592]">خريطة التغطية</p><h2 class="mt-1 text-2xl font-black">الإشارات الجغرافية في السجلات</h2><p class="mt-2 max-w-sm text-xs leading-6 text-white/55">النقاط تعني أن اسم المنطقة ورد في عنوان السجل أو الجهة، وليست تحديداً لموقع المشروع.</p></div>
-                <svg class="absolute bottom-5 left-1/2 h-[270px] w-[230px] -translate-x-1/2" viewBox="0 0 100 130" role="img" aria-label="خريطة لبنان">
-                    <path d="M58 4 72 13 67 25 72 38 64 50 69 62 59 75 62 88 52 101 48 124 36 116 39 101 31 91 38 78 32 65 40 52 36 39 45 27 44 14Z" fill="#e8edf0" stroke="#7ea2af" stroke-width="1.5"/>
-                    @foreach ($placeMentions as $place)
-                        <g><circle cx="{{ $place['x'] }}" cy="{{ $place['y'] }}" r="{{ min(6, 2.5 + $place['count']) }}" fill="#e3b447" stroke="#fff" stroke-width="1.2"/><title>{{ $place['name'] }}: {{ $place['count'] }}</title></g>
-                    @endforeach
-                </svg>
-                <div class="absolute bottom-5 right-5 z-10 space-y-1 text-[11px] text-white/65">@forelse ($placeMentions->take(4) as $place)<p><span class="text-[#e3b447]">●</span> {{ $place['name'] }} · {{ $place['count'] }}</p>@empty<p class="max-w-[140px] leading-5">لا توجد إشارات مكانية صريحة في السجلات المنشورة بعد.</p>@endforelse</div>
+            <article class="overflow-hidden rounded-[1.75rem] border border-[#dbe3e7] bg-white">
+                <div class="bg-[#0e2d3b] p-6 text-white"><p class="text-xs font-black text-[#55c592]">خريطة التغطية الفعلية</p><h2 class="mt-1 text-2xl font-black">الإشارات الجغرافية في السجلات</h2><p class="mt-2 max-w-xl text-xs leading-6 text-white/65">خريطة لبنان الحقيقية. العلامات تعني أن اسم المنطقة ورد في عنوان السجل أو الجهة، ولا تدّعي تحديد موقع المشروع.</p></div>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+                <div id="public-money-map" class="h-[390px] w-full" aria-label="خريطة لبنان التفاعلية"></div>
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                <script>
+                    (() => {
+                        const mapElement = document.getElementById('public-money-map');
+                        if (!mapElement || typeof L === 'undefined') return;
+                        const map = L.map(mapElement, { scrollWheelZoom: false }).setView([33.8547, 35.8623], 8);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+                        const places = @json($mapPlaces);
+                        places.forEach((place) => L.circleMarker([place.lat, place.lng], { radius: Math.min(13, 6 + place.count), color: '#ffffff', weight: 2, fillColor: '#c99a28', fillOpacity: 0.95 }).bindPopup(`<strong>${place.name}</strong><br>${place.count} سجل`).addTo(map));
+                    })();
+                </script>
             </article>
 
             <article class="rounded-[1.75rem] border border-[#dbe3e7] bg-white p-5 sm:p-7">

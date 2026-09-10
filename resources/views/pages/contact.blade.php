@@ -3,6 +3,7 @@
 @endphp
 
 <x-layouts.site :title="$title ?? __('ui.pages.contact')">
+    <style>a[href="https://wa.me/96179333415"] { display: none !important; }</style>
     <div class="mx-auto max-w-2xl space-y-6">
         <div class="space-y-2">
             <h1 class="text-2xl font-extrabold tracking-tight text-ink">{{ $title ?? __('ui.pages.contact') }}</h1>

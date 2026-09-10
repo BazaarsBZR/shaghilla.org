@@ -34,7 +34,7 @@ final class PublicMoneyImporter
                 ->orderBy('id')->get();
             $results = [];
             foreach ($sources as $source) {
-                $results[$source->key] = $this->importSource($source, max(1, min(200, $limit)), $publishVerified);
+                $results[$source->key] = $this->importSource($source, max(1, min(500, $limit)), $publishVerified);
             }
             return $results;
         } finally {
@@ -67,14 +67,35 @@ final class PublicMoneyImporter
     /** @return array{discovered_count:int,created_count:int,updated_count:int,failed_count:int} */
     private function importPpa(PublicMoneySource $source, PublicMoneyImportRun $run, int $limit, bool $publishVerified): array
     {
-        $download = $this->client->get($source->discovery_url);
-        $document = $this->document($source, $run, $download, strtoupper(str_replace('_', ' ', $source->adapter)), 'html');
-        $rows = array_slice($this->parsePpaTable($download['body'], $source->adapter, $download['url']), 0, $limit);
+        $rows = [];
+        $nextUrl = $source->discovery_url;
+        $visited = [];
+        $page = 1;
+
+        while ($nextUrl && count($rows) < $limit && $page <= 25 && ! isset($visited[$nextUrl])) {
+            $visited[$nextUrl] = true;
+            $download = $this->client->get($nextUrl);
+            $document = $this->document($source, $run, $download, strtoupper(str_replace('_', ' ', $source->adapter)).' - Page '.$page, 'html');
+
+            foreach ($this->parsePpaTable($download['body'], $source->adapter, $download['url']) as $row) {
+                if (count($rows) >= $limit) {
+                    break;
+                }
+                $row['_document_id'] = $document->id;
+                $rows[$row['external_key']] = $row;
+            }
+
+            $nextUrl = $this->ppaNextPage($download['body'], $download['url']);
+            $page++;
+        }
+
+        $rows = array_values($rows);
         $counts = ['discovered_count' => count($rows), 'created_count' => 0, 'updated_count' => 0, 'failed_count' => 0];
         foreach ($rows as $row) {
             try {
                 $row['source_id'] = $source->id;
-                $row['document_id'] = $document->id;
+                $row['document_id'] = $row['_document_id'];
+                unset($row['_document_id']);
                 $result = $this->upsertProcurement($row, $publishVerified);
                 $counts[$result.'_count']++;
             } catch (\Throwable) {
@@ -83,6 +104,32 @@ final class PublicMoneyImporter
         }
         $document->update(['extraction_status' => $counts['failed_count'] ? 'partial' : 'parsed']);
         return $counts;
+    }
+
+    private function ppaNextPage(string $html, string $currentUrl): ?string
+    {
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML($html);
+        libxml_clear_errors();
+        $xpath = new \DOMXPath($dom);
+        $link = $xpath->query('//a[@rel="next"] | //a[contains(normalize-space(.), "Next")]')->item(0);
+        $href = trim((string) $link?->getAttribute('href'));
+
+        if ($href === '') {
+            return null;
+        }
+        if (preg_match('#^https?://#i', $href)) {
+            return $href;
+        }
+
+        $parts = parse_url($currentUrl);
+        $origin = ($parts['scheme'] ?? 'https').'://'.($parts['host'] ?? 'www.ppa.gov.lb');
+        if (str_starts_with($href, '?')) {
+            return preg_replace('/\?.*$/', '', $currentUrl).$href;
+        }
+
+        return $origin.'/'.ltrim($href, '/');
     }
 
     /** @return array<int, array<string, mixed>> */

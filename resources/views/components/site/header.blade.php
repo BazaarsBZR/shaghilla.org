@@ -113,10 +113,11 @@
                         if (! $showLiveButton) {
                             echo '<a href="'.e(route('live')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.live')).'</a>';
                         }
-                        echo '<a href="'.e(route('membership')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.membership')).'</a>';
-                        echo '<a href="'.e(route('contact')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.contact')).'</a>';
                     } else {
                         foreach ($menuItems as $item) {
+                            if (in_array($item->url(), [route('membership'), route('contact')], true)) {
+                                continue;
+                            }
                             if (
                                 $showLiveButton
                                 && $item->type === \App\Models\SitePage::TYPE_ROUTE
@@ -244,10 +245,9 @@
                 @if (! $showLiveButton)
                     <a href="{{ route('live') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.live') }}</a>
                 @endif
-                <a href="{{ route('membership') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.membership') }}</a>
-                <a href="{{ route('contact') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.contact') }}</a>
             @else
                 @foreach ($menuItems as $item)
+                    @continue(in_array($item->url(), [route('membership'), route('contact')], true))
                     @continue(
                         $showLiveButton
                             && $item->type === \App\Models\SitePage::TYPE_ROUTE

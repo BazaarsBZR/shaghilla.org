@@ -37,7 +37,7 @@ class PublicMoneyImportWebhookController extends Controller
             'ran_at' => now()->toIso8601String(),
             'result' => $importer->import(
                 $source,
-                max(1, min(100, $request->integer('limit', 50))),
+                max(1, min(500, $request->integer('limit', 50))),
                 $request->boolean('publish_verified'),
             ),
         ])

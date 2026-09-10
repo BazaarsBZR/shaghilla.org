@@ -41,13 +41,13 @@ class PublicMoneyController extends Controller
             ->take(-10);
         $mapRecords = ProcurementRecord::publiclyVisible()->get(['title', 'authority']);
         $places = [
-            ['name' => 'بيروت', 'terms' => ['بيروت', 'Beirut'], 'x' => 42, 'y' => 43],
-            ['name' => 'طرابلس', 'terms' => ['طرابلس', 'Tripoli'], 'x' => 37, 'y' => 17],
-            ['name' => 'عكار', 'terms' => ['عكار', 'Akkar'], 'x' => 47, 'y' => 8],
-            ['name' => 'البقاع', 'terms' => ['البقاع', 'Bekaa', 'زحلة', 'Zahle'], 'x' => 64, 'y' => 50],
-            ['name' => 'صيدا', 'terms' => ['صيدا', 'Saida', 'Sidon'], 'x' => 38, 'y' => 66],
-            ['name' => 'النبطية', 'terms' => ['النبطية', 'Nabatieh'], 'x' => 56, 'y' => 76],
-            ['name' => 'صور', 'terms' => ['صور', 'Tyre'], 'x' => 35, 'y' => 85],
+            ['name' => 'بيروت', 'terms' => ['بيروت', 'Beirut'], 'lat' => 33.8938, 'lng' => 35.5018],
+            ['name' => 'طرابلس', 'terms' => ['طرابلس', 'Tripoli'], 'lat' => 34.4335, 'lng' => 35.8441],
+            ['name' => 'عكار', 'terms' => ['عكار', 'Akkar'], 'lat' => 34.5500, 'lng' => 36.0780],
+            ['name' => 'البقاع', 'terms' => ['البقاع', 'Bekaa', 'زحلة', 'Zahle'], 'lat' => 33.8463, 'lng' => 35.9020],
+            ['name' => 'صيدا', 'terms' => ['صيدا', 'Saida', 'Sidon'], 'lat' => 33.5631, 'lng' => 35.3689],
+            ['name' => 'النبطية', 'terms' => ['النبطية', 'Nabatieh'], 'lat' => 33.3772, 'lng' => 35.4838],
+            ['name' => 'صور', 'terms' => ['صور', 'Tyre'], 'lat' => 33.2705, 'lng' => 35.2038],
         ];
         $placeMentions = collect($places)->map(function (array $place) use ($mapRecords): array {
             $count = $mapRecords->filter(function (ProcurementRecord $record) use ($place): bool {
