@@ -858,13 +858,36 @@ class RssImporter
             return null;
         }
 
-        if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/i', $html, $matches) !== 1) {
+        if (preg_match_all('/<img\b[^>]*>/i', $html, $tags) !== 1 && empty($tags[0])) {
             return null;
         }
 
-        $url = trim($matches[1]);
+        foreach ($tags[0] as $tag) {
+            foreach (['src', 'data-src', 'data-original', 'data-lazy-src', 'srcset', 'data-srcset'] as $attribute) {
+                $pattern = '/(?:^|\s)'.preg_quote($attribute, '/').'\s*=\s*["\']([^"\']+)["\']/i';
+                if (preg_match($pattern, $tag, $matches) !== 1) {
+                    continue;
+                }
 
-        return $url !== '' ? $url : null;
+                $url = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                if (str_contains($attribute, 'srcset')) {
+                    $url = trim(explode(',', $url)[0] ?? '');
+                    $url = preg_split('/\s+/', $url)[0] ?? '';
+                }
+
+                $lower = strtolower($url);
+                if (
+                    $url !== ''
+                    && ! str_starts_with($lower, 'data:')
+                    && ! str_contains($lower, 'spacer.gif')
+                    && ! str_contains($lower, 'blank.gif')
+                ) {
+                    return $url;
+                }
+            }
+        }
+
+        return null;
     }
 
     private function makeExcerpt(string $html): ?string

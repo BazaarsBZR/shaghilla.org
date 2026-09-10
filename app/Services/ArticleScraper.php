@@ -112,30 +112,58 @@ class ArticleScraper
             return null;
         }
 
-        if (preg_match('/<img[^>]+src=["\\\']([^"\\\']+)["\\\']/i', $html, $matches) !== 1) {
+        if (preg_match_all('/<img\b[^>]*>/i', $html, $tags) !== 1 && empty($tags[0])) {
             return null;
         }
 
-        $url = trim($matches[1]);
+        foreach ($tags[0] as $tag) {
+            foreach (['src', 'data-src', 'data-original', 'data-lazy-src', 'srcset', 'data-srcset'] as $attribute) {
+                $pattern = '/(?:^|\s)'.preg_quote($attribute, '/').'\s*=\s*["\\\']([^"\\\']+)["\\\']/i';
+                if (preg_match($pattern, $tag, $matches) !== 1) {
+                    continue;
+                }
 
-        return $url !== '' ? $url : null;
+                $url = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                if (str_contains($attribute, 'srcset')) {
+                    $url = trim(explode(',', $url)[0] ?? '');
+                    $url = preg_split('/\s+/', $url)[0] ?? '';
+                }
+
+                $lower = strtolower($url);
+                if (
+                    $url !== ''
+                    && ! str_starts_with($lower, 'data:')
+                    && ! str_contains($lower, 'spacer.gif')
+                    && ! str_contains($lower, 'blank.gif')
+                ) {
+                    return $url;
+                }
+            }
+        }
+
+        return null;
     }
 
     private function extractMetaContent(string $html, string $attrName, string $attrValue): ?string
     {
-        $pattern = sprintf(
-            '/<meta[^>]+%s=["\\\']%s["\\\'][^>]*content=["\\\']([^"\\\']+)["\\\'][^>]*>/i',
-            preg_quote($attrName, '/'),
-            preg_quote($attrValue, '/'),
-        );
-
-        if (preg_match($pattern, $html, $matches) !== 1) {
+        if (preg_match_all('/<meta\b[^>]*>/i', $html, $tags) !== 1 && empty($tags[0])) {
             return null;
         }
 
-        $url = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $namePattern = '/(?:^|\s)'.preg_quote($attrName, '/').'\s*=\s*["\\\']'.preg_quote($attrValue, '/').'["\\\']/i';
+        $contentPattern = '/(?:^|\s)content\s*=\s*["\\\']([^"\\\']+)["\\\']/i';
 
-        return $url !== '' ? $url : null;
+        foreach ($tags[0] as $tag) {
+            if (preg_match($namePattern, $tag) !== 1 || preg_match($contentPattern, $tag, $matches) !== 1) {
+                continue;
+            }
+
+            $url = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+            return $url !== '' ? $url : null;
+        }
+
+        return null;
     }
 
     private function extractArticleBodyHtml(string $html): string
