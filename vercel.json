@@ -32,8 +32,20 @@
   ],
   "routes": [
     {
+      "src": "/api/blob-upload",
+      "dest": "/api/blob-upload"
+    },
+    {
       "src": "/build/(.*)",
       "dest": "/build/$1"
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/js/$1"
     },
     {
       "src": "/(favicon\\.ico|logo-fav\\.png|website-logo\\.png|robots\\.txt)",
