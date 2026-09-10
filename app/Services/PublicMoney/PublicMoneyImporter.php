@@ -229,6 +229,9 @@ final class PublicMoneyImporter
         $fingerprint = hash('sha256', json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         $record = $modelClass::query()->where('source_id', $data['source_id'])->where('external_key', $data['external_key'])->first();
         if ($record && hash_equals((string) $record->fingerprint, $fingerprint)) {
+            if ($publish && ($record->review_status !== 'approved' || $record->publication_status !== 'published')) {
+                $record->transition('publish', null, 'Initial verified import from the linked official source.');
+            }
             return 'updated';
         }
         $isNew = ! $record;

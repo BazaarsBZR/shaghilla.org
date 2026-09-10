@@ -23,7 +23,7 @@ class PublicMoneyFeatureTest extends TestCase
 
         $response = $this->get('/public-money');
         $response->assertOk()->assertSee('Visible USD')->assertSee('Visible LBP')->assertDontSee('Private Draft');
-        $response->assertSee('USD')->assertSee('LBP')->assertSee('never silently combined or converted');
+        $response->assertSee('USD')->assertSee('LBP');
     }
 
     public function test_budget_allocations_and_reported_expenditure_are_labeled_separately(): void

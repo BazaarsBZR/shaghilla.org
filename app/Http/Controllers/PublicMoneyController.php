@@ -18,8 +18,50 @@ class PublicMoneyController extends Controller
         $currencyTotals = ProcurementRecord::publiclyVisible()->whereNotNull('amount')->whereNotNull('currency')->selectRaw('currency, sum(amount) as total')->groupBy('currency')->pluck('total', 'currency');
         $financial = FinancialObservation::publiclyVisible()->where('is_total', true)->latest('reporting_period_end')->get();
         $reports = PublicMoneyReport::query()->where('status', 'published')->latest('published_at')->limit(6)->get();
+        $publishedCount = ProcurementRecord::publiclyVisible()->count();
+        $authorityCount = ProcurementRecord::publiclyVisible()->distinct('authority')->count('authority');
+        $topAuthorities = ProcurementRecord::publiclyVisible()
+            ->selectRaw('authority, count(*) as total')
+            ->groupBy('authority')
+            ->orderByDesc('total')
+            ->limit(6)
+            ->get();
+        $budgetBreakdown = FinancialObservation::publiclyVisible()
+            ->where('measure_type', 'allocation')
+            ->where('is_total', false)
+            ->orderByDesc('amount')
+            ->limit(7)
+            ->get();
+        $monthlyActivity = ProcurementRecord::publiclyVisible()
+            ->whereNotNull('event_on')
+            ->orderBy('event_on')
+            ->get(['event_on'])
+            ->groupBy(fn (ProcurementRecord $record): string => $record->event_on->format('Y-m'))
+            ->map->count()
+            ->take(-10);
+        $mapRecords = ProcurementRecord::publiclyVisible()->get(['title', 'authority']);
+        $places = [
+            ['name' => 'بيروت', 'terms' => ['بيروت', 'Beirut'], 'x' => 42, 'y' => 43],
+            ['name' => 'طرابلس', 'terms' => ['طرابلس', 'Tripoli'], 'x' => 37, 'y' => 17],
+            ['name' => 'عكار', 'terms' => ['عكار', 'Akkar'], 'x' => 47, 'y' => 8],
+            ['name' => 'البقاع', 'terms' => ['البقاع', 'Bekaa', 'زحلة', 'Zahle'], 'x' => 64, 'y' => 50],
+            ['name' => 'صيدا', 'terms' => ['صيدا', 'Saida', 'Sidon'], 'x' => 38, 'y' => 66],
+            ['name' => 'النبطية', 'terms' => ['النبطية', 'Nabatieh'], 'x' => 56, 'y' => 76],
+            ['name' => 'صور', 'terms' => ['صور', 'Tyre'], 'x' => 35, 'y' => 85],
+        ];
+        $placeMentions = collect($places)->map(function (array $place) use ($mapRecords): array {
+            $count = $mapRecords->filter(function (ProcurementRecord $record) use ($place): bool {
+                $haystack = $record->title.' '.$record->authority;
+                return collect($place['terms'])->contains(fn (string $term): bool => mb_stripos($haystack, $term) !== false);
+            })->count();
+            return [...$place, 'count' => $count];
+        })->filter(fn (array $place): bool => $place['count'] > 0)->values();
+        $latestSourceUpdate = PublicMoneySource::query()->max('last_success_at');
 
-        return view('pages.public-money.index', compact('procurements', 'stageCounts', 'currencyTotals', 'financial', 'reports'));
+        return view('pages.public-money.index', compact(
+            'procurements', 'stageCounts', 'currencyTotals', 'financial', 'reports', 'publishedCount',
+            'authorityCount', 'topAuthorities', 'budgetBreakdown', 'monthlyActivity', 'placeMentions', 'latestSourceUpdate',
+        ));
     }
 
     public function procurements(Request $request): View
