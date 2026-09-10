@@ -10,6 +10,7 @@
 </head>
 <body class="financial-status-shell">
     <x-site.header />
+    <x-site.data-navigation />
     @yield('content')
     @includeIf('components.site.footer')
 </body>

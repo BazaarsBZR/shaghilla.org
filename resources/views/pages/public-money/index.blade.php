@@ -68,6 +68,8 @@
         }
     </style>
 
+    <x-site.data-navigation />
+
     <div class="pm-dashboard -mx-4 -mt-5 overflow-hidden bg-[#edf2f5] pb-12 sm:mx-0 sm:mt-0 sm:rounded-[2.5rem]">
         <section class="pm-hero relative isolate overflow-hidden bg-[#071d2d] px-5 pb-10 pt-6 text-white sm:px-10 lg:px-14">
             <div class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_72%_35%,rgba(38,106,128,.75),transparent_34%),linear-gradient(105deg,#071d2d_5%,#0d3044_55%,#102737_100%)]"></div>
