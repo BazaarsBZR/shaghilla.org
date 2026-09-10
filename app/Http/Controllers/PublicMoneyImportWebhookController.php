@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 
 class PublicMoneyImportWebhookController extends Controller
 {
-    public function __invoke(Request $request, PublicMoneyImporter $importer): JsonResponse
+    public function __invoke(Request $request, PublicMoneyImporter $importer, ?string $source = null): JsonResponse
     {
         $expected = (string) env('CRON_SECRET', env('PUBLIC_MONEY_IMPORT_SECRET', ''));
         $provided = (string) $request->bearerToken();
@@ -27,7 +27,20 @@ class PublicMoneyImportWebhookController extends Controller
             '--force' => true,
         ]);
 
-        return response()->json(['ok' => true, 'ran_at' => now()->toIso8601String(), 'result' => $importer->import()])
+        $allowedSources = ['ppa-awards', 'ppa-contracts', 'ppa-implementation', 'mof-budget-2026', 'mof-finance-2025'];
+        if ($source !== null && ! in_array($source, $allowedSources, true)) {
+            abort(404);
+        }
+
+        return response()->json([
+            'ok' => true,
+            'ran_at' => now()->toIso8601String(),
+            'result' => $importer->import(
+                $source,
+                max(1, min(100, $request->integer('limit', 50))),
+                $request->boolean('publish_verified'),
+            ),
+        ])
             ->header('Cache-Control', 'no-store');
     }
 }

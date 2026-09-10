@@ -10,8 +10,24 @@
   },
   "crons": [
     {
-      "path": "/tasks/public-money-import",
+      "path": "/tasks/public-money-import/ppa-awards",
       "schedule": "15 3 * * *"
+    },
+    {
+      "path": "/tasks/public-money-import/ppa-contracts",
+      "schedule": "20 3 * * *"
+    },
+    {
+      "path": "/tasks/public-money-import/ppa-implementation",
+      "schedule": "25 3 * * *"
+    },
+    {
+      "path": "/tasks/public-money-import/mof-budget-2026",
+      "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/tasks/public-money-import/mof-finance-2025",
+      "schedule": "35 3 * * *"
     }
   ],
   "routes": [

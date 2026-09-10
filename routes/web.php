@@ -62,6 +62,6 @@ Route::match(['GET', 'POST'], '/tasks/import-almanar-urgent/{secret}', AlManarUr
     ->name('tasks.import-almanar-urgent')
     ->middleware('throttle:almanar-urgent-import');
 
-Route::match(['GET', 'POST'], '/tasks/public-money-import', PublicMoneyImportWebhookController::class)
+Route::match(['GET', 'POST'], '/tasks/public-money-import/{source?}', PublicMoneyImportWebhookController::class)
     ->name('tasks.public-money-import')
     ->middleware('throttle:6,1');
