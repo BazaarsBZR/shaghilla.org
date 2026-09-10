@@ -23,9 +23,6 @@
             </div>
 
             <div class="space-y-3 md:justify-self-center">
-                <div class="text-xs font-extrabold uppercase tracking-wide text-ink">
-                    {{ __('ui.footer.links') }}
-                </div>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-3 font-semibold">
                     @if ($footerItems->isEmpty())
                         <a href="{{ route('home') }}" class="text-ink-muted transition hover:text-ink">{{ __('ui.nav.home') }}</a>
