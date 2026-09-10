@@ -39,14 +39,14 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('رابطة الشغيلة')
-            ->brandLogo(asset('website-logo.png'))
+            ->brandLogo('/website-logo.png')
             ->brandLogoHeight('3rem')
-            ->favicon(asset('logo-fav.png'))
+            ->favicon('/logo-fav.png')
             ->colors([
                 'primary' => Color::Red,
             ])
             ->assets([
-                Css::make('shaghilla-admin-brand', asset('css/admin-brand.css')),
+                Css::make('shaghilla-admin-brand', '/css/admin-brand.css'),
             ])
             ->plugins($plugins)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
