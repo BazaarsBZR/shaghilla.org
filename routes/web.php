@@ -9,6 +9,8 @@ use App\Http\Controllers\HostedVideoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LiveController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\PublicMoneyController;
+use App\Http\Controllers\PublicMoneyImportWebhookController;
 use App\Http\Controllers\RssImportWebhookController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitePageController;
@@ -24,6 +26,15 @@ Route::get('/membership', [MembershipController::class, 'show'])->name('membersh
 Route::post('/membership', [MembershipController::class, 'store'])->name('membership.store')->middleware('throttle:membership');
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:contact');
+
+Route::prefix('public-money')->name('public-money.')->group(function (): void {
+    Route::get('/', [PublicMoneyController::class, 'index'])->name('index');
+    Route::get('/procurements', [PublicMoneyController::class, 'procurements'])->name('procurements');
+    Route::get('/procurements/{record}', [PublicMoneyController::class, 'procurement'])->name('procurement');
+    Route::get('/budget', [PublicMoneyController::class, 'budget'])->name('budget');
+    Route::get('/sources', [PublicMoneyController::class, 'sources'])->name('sources');
+    Route::get('/reports/{report:slug}', [PublicMoneyController::class, 'report'])->name('report');
+});
 Route::post('/admin/blob-upload', \App\Http\Controllers\AdminBlobUploadController::class)
     ->middleware(['auth', 'throttle:30,1'])
     ->name('admin.blob-upload');
@@ -50,3 +61,7 @@ Route::match(['GET', 'POST'], '/tasks/import-rss/{secret}', RssImportWebhookCont
 Route::match(['GET', 'POST'], '/tasks/import-almanar-urgent/{secret}', AlManarUrgentImportWebhookController::class)
     ->name('tasks.import-almanar-urgent')
     ->middleware('throttle:almanar-urgent-import');
+
+Route::match(['GET', 'POST'], '/tasks/public-money-import', PublicMoneyImportWebhookController::class)
+    ->name('tasks.public-money-import')
+    ->middleware('throttle:6,1');

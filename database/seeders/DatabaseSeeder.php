@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             SitePageSeeder::class,
             SharePlatformSeeder::class,
             AdminUserSeeder::class,
+            PublicMoneySourceSeeder::class,
         ]);
     }
 }

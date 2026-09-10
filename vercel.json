@@ -8,6 +8,12 @@
       "maxDuration": 60
     }
   },
+  "crons": [
+    {
+      "path": "/tasks/public-money-import",
+      "schedule": "15 3 * * *"
+    }
+  ],
   "routes": [
     {
       "src": "/build/(.*)",

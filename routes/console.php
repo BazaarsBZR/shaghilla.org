@@ -50,3 +50,7 @@ Schedule::call(function (): void {
 Schedule::command('news:import-almanar-urgent')
     ->everyMinute()
     ->withoutOverlapping(2);
+
+Schedule::command('public-money:import')
+    ->dailyAt('03:15')
+    ->withoutOverlapping(15);

@@ -131,6 +131,7 @@
                             echo '<a href="'.e($item->url()).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink"'.$attrs.'>'.e($item->displayTitle()).'</a>';
                         }
                     }
+                    echo '<a href="'.e(route('public-money.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.public_money')).'</a>';
                     echo '</nav>';
                     break;
 
@@ -261,6 +262,8 @@
                     </a>
                 @endforeach
             @endif
+
+            <a href="{{ route('public-money.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.public_money') }}</a>
 
             @if ($showLiveButton && $hasLive)
                 <a
