@@ -7,12 +7,14 @@ use App\Models\ProcurementRecord;
 use App\Models\PublicMoneyReport;
 use App\Models\PublicMoneySource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class PublicMoneyController extends Controller
 {
     public function index(): View
     {
+        $data = Cache::remember('public-money.dashboard.v2', now()->addMinutes(15), function (): array {
         $procurements = ProcurementRecord::publiclyVisible()->with('source')->latest('event_on')->limit(8)->get();
         $stageCounts = ProcurementRecord::publiclyVisible()->selectRaw('stage, count(*) as total')->groupBy('stage')->pluck('total', 'stage');
         $currencyTotals = ProcurementRecord::publiclyVisible()->whereNotNull('amount')->whereNotNull('currency')->selectRaw('currency, sum(amount) as total')->groupBy('currency')->pluck('total', 'currency');
@@ -58,10 +60,13 @@ class PublicMoneyController extends Controller
         })->filter(fn (array $place): bool => $place['count'] > 0)->values();
         $latestSourceUpdate = PublicMoneySource::query()->max('last_success_at');
 
-        return view('pages.public-money.index', compact(
+        return compact(
             'procurements', 'stageCounts', 'currencyTotals', 'financial', 'reports', 'publishedCount',
             'authorityCount', 'topAuthorities', 'budgetBreakdown', 'monthlyActivity', 'placeMentions', 'latestSourceUpdate',
-        ));
+        );
+        });
+
+        return view('pages.public-money.index', $data);
     }
 
     public function procurements(Request $request): View

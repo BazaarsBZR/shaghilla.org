@@ -132,9 +132,9 @@
                             echo '<a href="'.e($item->url()).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink"'.$attrs.'>'.e($item->displayTitle()).'</a>';
                         }
                     }
-                    echo '<a href="'.e(route('public-money.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.public_money')).'</a>';
-                    echo '<a href="'.e(route('government-tenders.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">المناقصات الحكومية</a>';
-                    echo '<a href="'.e(route('financial-status.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">الوضع المالي</a>';
+                    echo '<a data-prefetch-page href="'.e(route('public-money.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.public_money')).'</a>';
+                    echo '<a data-prefetch-page href="'.e(route('government-tenders.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">المناقصات الحكومية</a>';
+                    echo '<a data-prefetch-page href="'.e(route('financial-status.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">الوضع المالي</a>';
                     echo '</nav>';
                     break;
 
@@ -265,9 +265,9 @@
                 @endforeach
             @endif
 
-            <a href="{{ route('public-money.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.public_money') }}</a>
-<a href="{{ route('government-tenders.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">المناقصات الحكومية</a>
-<a href="{{ route('financial-status.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">الوضع المالي</a>
+            <a data-prefetch-page href="{{ route('public-money.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.public_money') }}</a>
+            <a data-prefetch-page href="{{ route('government-tenders.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">المناقصات الحكومية</a>
+            <a data-prefetch-page href="{{ route('financial-status.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">الوضع المالي</a>
 
             @if ($showLiveButton && $hasLive)
                 <a

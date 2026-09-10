@@ -40,5 +40,30 @@
         </main>
 
         <x-site.footer />
+
+        <script>
+            (() => {
+                const prefetched = new Set();
+                const prefetch = (link) => {
+                    const url = link?.href;
+                    if (!url || prefetched.has(url)) return;
+                    prefetched.add(url);
+                    fetch(url, { credentials: 'omit', priority: 'low' }).catch(() => prefetched.delete(url));
+                };
+
+                document.addEventListener('pointerover', (event) => {
+                    const link = event.target.closest?.('[data-prefetch-page]');
+                    if (link) prefetch(link);
+                }, { passive: true });
+                document.addEventListener('focusin', (event) => {
+                    const link = event.target.closest?.('[data-prefetch-page]');
+                    if (link) prefetch(link);
+                });
+                document.addEventListener('touchstart', (event) => {
+                    const link = event.target.closest?.('[data-prefetch-page]');
+                    if (link) prefetch(link);
+                }, { passive: true });
+            })();
+        </script>
     </body>
 </html>

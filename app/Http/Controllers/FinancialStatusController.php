@@ -6,12 +6,14 @@ use App\Models\FinancialObservation;
 use App\Models\PublicMoneySource;
 use App\Services\PublicMoney\FinancialPressureCalculator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class FinancialStatusController extends Controller
 {
     public function index(): View
     {
+        $data = Cache::remember('financial-status.dashboard.v2', now()->addMinutes(15), function (): array {
         $observations = FinancialObservation::query()
             ->publiclyVisible()
             ->with(['source', 'document'])
@@ -54,7 +56,7 @@ class FinancialStatusController extends Controller
             ->orderByDesc('last_success_at')
             ->get();
 
-        return view('pages.financial-status.index', [
+        return [
             'cards' => [
                 'debt' => $latest('public_debt_gross'),
                 'revenue' => $latestRevenue,
@@ -74,7 +76,10 @@ class FinancialStatusController extends Controller
             'sources' => $sources,
             'lastTrustedUpdate' => $sources->max('last_success_at'),
             'hasSourceError' => $sources->contains(fn (PublicMoneySource $source) => filled($source->last_error)),
-        ]);
+        ];
+        });
+
+        return view('pages.financial-status.index', $data);
     }
 
     /** @return array<string, mixed>|null */

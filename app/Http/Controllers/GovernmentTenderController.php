@@ -7,6 +7,7 @@ use App\Models\PublicMoneySource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
@@ -57,29 +58,35 @@ class GovernmentTenderController extends Controller
         }
 
         $tenders = $query->paginate(18)->withQueryString();
-        $source = PublicMoneySource::query()->where('key', 'ppa-tenders')->first();
         $now = now();
+        $metadata = Cache::remember('government-tenders.metadata.v2', now()->addMinutes(15), function () use ($base, $now): array {
+            return [
+                'source' => PublicMoneySource::query()->where('key', 'ppa-tenders')->first(),
+                'counters' => [
+                    'open' => $this->openQuery(clone $base)->count(),
+                    'closing_week' => $this->openQuery(clone $base)
+                        ->whereBetween('submission_deadline_at', [$now, $now->copy()->addDays(7)])
+                        ->count(),
+                    'recent' => (clone $base)->where(function (Builder $builder) use ($now): void {
+                        $builder->where('announcement_at', '>=', $now->copy()->subDays(7))
+                            ->orWhere('source_imported_at', '>=', $now->copy()->subDays(7));
+                    })->count(),
+                ],
+                'filterOptions' => [
+                    'authorities' => (clone $base)->whereNotNull('authority')->distinct()->orderBy('authority')->pluck('authority'),
+                    'sectors' => (clone $base)->whereNotNull('sector')->distinct()->orderBy('sector')->pluck('sector'),
+                    'methods' => (clone $base)->whereNotNull('procurement_method')->distinct()->orderBy('procurement_method')->pluck('procurement_method'),
+                    'currencies' => (clone $base)->whereNotNull('currency')->distinct()->orderBy('currency')->pluck('currency'),
+                ],
+            ];
+        });
 
         return view('pages.government-tenders.index', [
             'tenders' => $tenders,
-            'source' => $source,
+            'source' => $metadata['source'],
             'status' => $status,
-            'counters' => [
-                'open' => $this->openQuery(clone $base)->count(),
-                'closing_week' => $this->openQuery(clone $base)
-                    ->whereBetween('submission_deadline_at', [$now, $now->copy()->addDays(7)])
-                    ->count(),
-                'recent' => (clone $base)->where(function (Builder $builder) use ($now): void {
-                    $builder->where('announcement_at', '>=', $now->copy()->subDays(7))
-                        ->orWhere('source_imported_at', '>=', $now->copy()->subDays(7));
-                })->count(),
-            ],
-            'filterOptions' => [
-                'authorities' => (clone $base)->whereNotNull('authority')->distinct()->orderBy('authority')->pluck('authority'),
-                'sectors' => (clone $base)->whereNotNull('sector')->distinct()->orderBy('sector')->pluck('sector'),
-                'methods' => (clone $base)->whereNotNull('procurement_method')->distinct()->orderBy('procurement_method')->pluck('procurement_method'),
-                'currencies' => (clone $base)->whereNotNull('currency')->distinct()->orderBy('currency')->pluck('currency'),
-            ],
+            'counters' => $metadata['counters'],
+            'filterOptions' => $metadata['filterOptions'],
         ]);
     }
 
@@ -128,8 +135,15 @@ class GovernmentTenderController extends Controller
 
     private function ensureTenderSchema(): void
     {
-        if (! Schema::hasColumn('public_money_procurements', 'submission_deadline_at')) {
+        $schemaReady = Cache::remember(
+            'government-tenders.schema-ready.v1',
+            now()->addHours(12),
+            fn (): bool => Schema::hasColumn('public_money_procurements', 'submission_deadline_at'),
+        );
+
+        if (! $schemaReady) {
             Artisan::call('migrate', ['--force' => true]);
+            Cache::put('government-tenders.schema-ready.v1', true, now()->addHours(12));
         }
     }
 
