@@ -12,21 +12,23 @@
 >
     <div
         @class([
-            'aspect-[16/9] w-full',
+            'relative aspect-[16/9] w-full overflow-hidden bg-surface-soft',
             'md:aspect-auto md:h-full' => (bool) $fill,
         ])
     >
+        <x-news.image-fallback />
+
         @if (! empty($article->image_url))
             <img
                 src="{{ $article->image_url }}"
                 alt=""
-                loading="lazy"
+                loading="eager"
                 decoding="async"
                 fetchpriority="high"
-                class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.01]"
+                referrerpolicy="no-referrer"
+                onerror="this.style.display='none'"
+                class="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.01]"
             />
-        @else
-            <div class="h-full w-full bg-gradient-to-br from-surface-soft to-canvas"></div>
         @endif
     </div>
 

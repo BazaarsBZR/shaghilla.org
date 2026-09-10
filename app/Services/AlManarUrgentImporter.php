@@ -213,6 +213,7 @@ class AlManarUrgentImporter
             try {
                 $articleHtml = $this->fetchArticleHtml($sourceUrl);
                 $contentText = $articleHtml !== null ? $this->extractArticleContentFromHtml($articleHtml) : null;
+                $imageUrl = $articleHtml !== null ? $this->extractArticleImageUrl($articleHtml, $sourceUrl) : null;
 
                 $contentText = $this->normalizeText($contentText);
                 $contentForStorage = $contentText !== '' ? $contentText : $title;
@@ -233,6 +234,10 @@ class AlManarUrgentImporter
                         $updates['guid'] = $sourceUrl;
                     }
 
+                    if (empty($existing->image_url) && $imageUrl !== null) {
+                        $updates['image_url'] = $imageUrl;
+                    }
+
                     $existing->forceFill($updates)->save();
                     $updated++;
                 } else {
@@ -249,7 +254,7 @@ class AlManarUrgentImporter
                         'canonical_url_hash' => $sourceHash,
                         'guid' => $sourceUrl,
                         'guid_hash' => hash('sha256', 'almanar-urgent|'.$sourceUrl),
-                        'image_url' => null,
+                        'image_url' => $imageUrl,
                         'published_at' => $publishedAt ?: now(),
                         'imported_at' => now(),
                         'is_breaking' => true,
@@ -335,6 +340,74 @@ class AlManarUrgentImporter
         } finally {
             optional($lock)->release();
         }
+    }
+
+    private function extractArticleImageUrl(string $html, string $sourceUrl): ?string
+    {
+        libxml_use_internal_errors(true);
+
+        $dom = new \DOMDocument();
+        $loaded = $dom->loadHTML(
+            mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'),
+            LIBXML_NOERROR | LIBXML_NOWARNING,
+        );
+
+        if (! $loaded) {
+            return null;
+        }
+
+        $xpath = new \DOMXPath($dom);
+        $queries = [
+            '//meta[@property="og:image:secure_url"]/@content',
+            '//meta[@property="og:image"]/@content',
+            '//meta[@name="twitter:image"]/@content',
+            '//meta[@name="twitter:image:src"]/@content',
+            '//link[@rel="image_src"]/@href',
+        ];
+
+        foreach ($queries as $query) {
+            $value = trim(html_entity_decode((string) $xpath->evaluate("string({$query})"), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+            $normalized = $this->normalizeArticleImageUrl($value, $sourceUrl);
+
+            if ($normalized !== null) {
+                return $normalized;
+            }
+        }
+
+        return null;
+    }
+
+    private function normalizeArticleImageUrl(string $imageUrl, string $sourceUrl): ?string
+    {
+        if ($imageUrl === '') {
+            return null;
+        }
+
+        if (str_starts_with($imageUrl, '//')) {
+            $scheme = parse_url($sourceUrl, PHP_URL_SCHEME) ?: 'https';
+            $imageUrl = $scheme.':'.$imageUrl;
+        } elseif (! parse_url($imageUrl, PHP_URL_SCHEME)) {
+            $scheme = parse_url($sourceUrl, PHP_URL_SCHEME) ?: 'https';
+            $host = parse_url($sourceUrl, PHP_URL_HOST);
+
+            if (! is_string($host) || $host === '') {
+                return null;
+            }
+
+            if (str_starts_with($imageUrl, '/')) {
+                $imageUrl = $scheme.'://'.$host.$imageUrl;
+            } else {
+                $path = (string) parse_url($sourceUrl, PHP_URL_PATH);
+                $directory = trim(str_replace('\\', '/', dirname($path)), '/.');
+                $imageUrl = $scheme.'://'.$host.'/'.($directory !== '' ? $directory.'/' : '').ltrim($imageUrl, '/');
+            }
+        }
+
+        $scheme = strtolower((string) parse_url($imageUrl, PHP_URL_SCHEME));
+
+        return in_array($scheme, ['http', 'https'], true) && filter_var($imageUrl, FILTER_VALIDATE_URL)
+            ? $imageUrl
+            : null;
     }
 
     /**

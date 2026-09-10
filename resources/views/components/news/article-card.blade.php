@@ -5,16 +5,18 @@
 <article class="group h-full overflow-hidden rounded-card border border-line bg-surface shadow-surface hover:bg-surface-soft">
     <a href="{{ route('news.show', $article->slug) }}" class="flex h-full flex-col">
         <div class="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-surface-soft">
+            <x-news.image-fallback compact />
+
             @if (! empty($article->image_url))
                 <img
                     src="{{ $article->image_url }}"
                     alt=""
                     loading="lazy"
                     decoding="async"
-                    class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.01]"
+                    referrerpolicy="no-referrer"
+                    onerror="this.style.display='none'"
+                    class="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.01]"
                 />
-            @else
-                <div class="absolute inset-0 bg-gradient-to-br from-surface-soft to-canvas"></div>
             @endif
         </div>
 
