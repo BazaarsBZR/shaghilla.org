@@ -2,11 +2,29 @@
     <div class="sh-home-stack space-y-8">
         @php
             $newsLayout = in_array(($newsLayout ?? ''), ['mosaic', 'classic', 'grid'], true) ? $newsLayout : 'mosaic';
-            $newsTopSmallCount = max(0, min(12, (int) ($newsTopSmallCount ?? 4)));
+            $newsTopSmallCount = max(0, min(4, (int) ($newsTopSmallCount ?? 4)));
 
-            $heroArticle = $newsLayout === 'grid' ? null : (! empty($hero) ? $hero : null);
-            $topGridArticles = collect($topGridArticles ?? collect())->take($newsTopSmallCount)->values();
-            $latestArticles = collect($latestArticles ?? collect())->values();
+            $hasReadableStory = static function ($article): bool {
+                $text = trim((string) preg_replace(
+                    '/[[:space:]]+/u',
+                    ' ',
+                    strip_tags((string) ($article->content ?: $article->excerpt ?: '')),
+                ));
+
+                return \Illuminate\Support\Str::length($text) >= 45;
+            };
+
+            $heroArticle = $newsLayout === 'grid' || empty($hero) || ! $hasReadableStory($hero) || blank($hero->image_url)
+                ? null
+                : $hero;
+            $topGridArticles = collect($topGridArticles ?? collect())
+                ->filter($hasReadableStory)
+                ->take($newsTopSmallCount)
+                ->values();
+            $latestArticles = collect($latestArticles ?? collect())
+                ->filter($hasReadableStory)
+                ->take(9)
+                ->values();
         @endphp
 
         <section class="sh-home-edition" aria-labelledby="home-edition-title">
@@ -60,6 +78,7 @@
         <section
             id="latest-news"
             class="sh-home-latest space-y-4"
+            style="content-visibility: auto; contain-intrinsic-size: 900px;"
             x-data="{
                 loading: false,
                 endpoint: @js(route('home.latest')),

@@ -16,7 +16,7 @@ class HomeController extends Controller
 {
     private const HOME_LATEST_TOTAL_LIMIT = 40;
 
-    private const HOME_LATEST_CACHE_LIMIT = 120;
+    private const HOME_LATEST_CACHE_LIMIT = 48;
 
     /**
      * Handle the incoming request.
@@ -30,8 +30,8 @@ class HomeController extends Controller
         $newsTopSmallCount = SiteSetting::getInt('home_news_top_small_count', 4);
         $newsTopSmallCount = max(0, min(12, $newsTopSmallCount));
 
-        $newsLatestLimit = SiteSetting::getInt('home_news_latest_limit', 18);
-        $newsLatestLimit = max(6, min(self::HOME_LATEST_TOTAL_LIMIT, $newsLatestLimit));
+        $newsLatestLimit = SiteSetting::getInt('home_news_latest_limit', 9);
+        $newsLatestLimit = max(6, min(9, $newsLatestLimit));
 
         $breakingItems = Cache::remember(
             'news.breaking.ticker.v2',
@@ -208,7 +208,7 @@ class HomeController extends Controller
     {
         $newsLayout = SiteSetting::getValue('home_news_layout', 'mosaic');
         $newsTopSmallCount = max(0, min(12, SiteSetting::getInt('home_news_top_small_count', 4)));
-        $newsLatestLimit = max(6, min(self::HOME_LATEST_TOTAL_LIMIT, SiteSetting::getInt('home_news_latest_limit', 18)));
+        $newsLatestLimit = max(6, min(9, SiteSetting::getInt('home_news_latest_limit', 9)));
         $latestPage = max(1, (int) $request->integer('latest_page', 1));
 
         $newsData = $this->buildHomeNewsData(
@@ -299,6 +299,11 @@ class HomeController extends Controller
         }
 
         $query
+            ->where(function ($articles): void {
+                $articles
+                    ->whereRaw("LENGTH(TRIM(COALESCE(content, ''))) >= 80")
+                    ->orWhereRaw("LENGTH(TRIM(COALESCE(excerpt, ''))) >= 45");
+            })
             ->whereDoesntHave('feedSource', fn ($feed) => $feed->where('destination', 'breaking'))
             ->where(function ($articles) {
                 $articles

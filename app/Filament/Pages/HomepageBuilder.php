@@ -39,7 +39,7 @@ class HomepageBuilder extends Page
         $this->form->fill([
             'home_news_layout' => SiteSetting::getValue('home_news_layout', 'mosaic'),
             'home_news_top_small_count' => SiteSetting::getInt('home_news_top_small_count', 4),
-            'home_news_latest_limit' => SiteSetting::getInt('home_news_latest_limit', 18),
+            'home_news_latest_limit' => min(9, SiteSetting::getInt('home_news_latest_limit', 9)),
 
             'home_hosted_videos_enabled' => SiteSetting::getBool('home_hosted_videos_enabled', true),
             'home_hosted_videos_title_ar' => SiteSetting::getValue('home_hosted_videos_title_ar', 'الفيديو'),
@@ -108,9 +108,9 @@ class HomepageBuilder extends Page
                             ->label('Latest articles limit')
                             ->numeric()
                             ->minValue(6)
-                            ->maxValue(40)
-                            ->default(18)
-                            ->helperText('Per-page size for latest news pagination (maximum 40 total news items).')
+                            ->maxValue(9)
+                            ->default(9)
+                            ->helperText('Kept intentionally compact for speed and readability.')
                             ->required(),
                     ])
                     ->columns(2),

@@ -25,9 +25,6 @@
             <meta name="x-shaghilla-build" content="{{ $deployBuildId }}" />
         @endif
 
-        <link href="{{ asset('vendor/bladewind/css/animate.min.css') }}" rel="stylesheet" />
-        <link href="{{ asset('vendor/bladewind/css/bladewind-ui.min.css') }}" rel="stylesheet" />
-
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('head')
     </head>
@@ -43,7 +40,5 @@
         </main>
 
         <x-site.footer />
-
-        <script src="{{ asset('vendor/bladewind/js/helpers.js') }}" type="text/javascript"></script>
     </body>
 </html>
