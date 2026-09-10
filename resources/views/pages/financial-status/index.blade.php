@@ -5,7 +5,7 @@
     $unitLabels = ['LBP billion' => 'مليار ليرة لبنانية', 'percent' => '%', 'score 0-100' => 'نقطة'];
     $format = function ($observation) use ($unitLabels) {
         if (!$observation) return 'غير متوفر';
-        return $observation->amount_text.' '.($unitLabels[$observation->original_unit] ?? $observation->original_unit);
+        return ($unitLabels[$observation->original_unit] ?? $observation->original_unit).' '.$observation->amount_text;
     };
     $period = fn ($observation) => $observation?->fiscal_period ? 'الفترة: '.$observation->fiscal_period : 'الفترة غير مذكورة';
     $lastUpdate = $lastTrustedUpdate ? \Illuminate\Support\Carbon::parse($lastTrustedUpdate)->timezone('Asia/Beirut') : null;
@@ -23,6 +23,13 @@
         'Budget Advances' => 'سلفات الموازنة',
         'Treasury Expenditures' => 'نفقات الخزينة',
     ];
+    $riskClass = match (true) {
+        $scoreValue === null => 'is-empty',
+        $scoreValue <= 25 => 'is-low',
+        $scoreValue <= 50 => 'is-mid',
+        $scoreValue <= 75 => 'is-high',
+        default => 'is-critical',
+    };
 @endphp
 
 <section class="fs-hero">
@@ -36,21 +43,22 @@
 <main class="fs-dashboard">
     <div class="fs-wrap">
         <section class="fs-meter-panel">
-            <div class="fs-gauge-box">
+            <div class="fs-gauge-box {{ $riskClass }}">
                 <h2>مؤشر الضغط المالي</h2>
-                <div class="fs-gauge {{ $scoreValue === null ? 'is-empty' : '' }}" style="--score: {{ $scoreValue ?? 0 }}">
+                <div class="fs-gauge {{ $riskClass }}" style="--score: {{ $scoreValue ?? 0 }}">
                     @if($scoreValue !== null)<span class="fs-gauge-needle" aria-hidden="true"></span>@endif
                     <div class="fs-gauge-value">
                         <strong>{{ $scoreValue ?? '—' }}</strong>
                         <span>{{ $scoreLabel ?? 'بيانات غير كافية' }}</span>
                     </div>
                 </div>
-                <div class="fs-zones">
-                    <span><b>0–25</b> منخفض</span>
-                    <span><b>26–50</b> متوسط</span>
-                    <span><b>51–75</b> مرتفع</span>
-                    <span><b>76–100</b> حرج</span>
+                <div class="fs-zones" aria-label="مستويات المخاطر المالية">
+                    <span class="fs-zone fs-zone-low"><i aria-hidden="true"></i><b>0–25</b><small>منخفض</small></span>
+                    <span class="fs-zone fs-zone-mid"><i aria-hidden="true"></i><b>26–50</b><small>متوسط</small></span>
+                    <span class="fs-zone fs-zone-high"><i aria-hidden="true"></i><b>51–75</b><small>مرتفع</small></span>
+                    <span class="fs-zone fs-zone-critical"><i aria-hidden="true"></i><b>76–100</b><small>حرج</small></span>
                 </div>
+                <p class="fs-risk-direction"><span>مخاطر أقل</span><i aria-hidden="true"></i><span>مخاطر أعلى</span></p>
             </div>
             <div class="fs-meter-copy">
                 @if($score)
@@ -377,11 +385,97 @@
     }
 
     .fs-zones > * {
+        --zone-color: #6f8290;
         min-width: 0;
-        padding: 8px 5px;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, .72);
+        position: relative;
+        padding: 10px 5px 9px;
+        border: 1px solid #d9e5e9;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, .84);
         font-size: 12px;
+        transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .fs-zones b {
+        font-weight: 950;
+    }
+
+    .fs-zones small {
+        display: block;
+        margin-top: 2px;
+        color: #71838a;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .fs-zone > i {
+        display: block;
+        width: 27px;
+        height: 5px;
+        margin: 0 auto 6px;
+        border-radius: 999px;
+        background: var(--zone-color);
+    }
+
+    .fs-zone-low { --zone-color: var(--fs-low) !important; }
+    .fs-zone-mid { --zone-color: var(--fs-mid) !important; }
+    .fs-zone-high { --zone-color: var(--fs-high) !important; }
+    .fs-zone-critical { --zone-color: var(--fs-critical) !important; }
+
+    .fs-gauge-box.is-low .fs-zone-low,
+    .fs-gauge-box.is-mid .fs-zone-mid,
+    .fs-gauge-box.is-high .fs-zone-high,
+    .fs-gauge-box.is-critical .fs-zone-critical {
+        transform: translateY(-3px);
+        border-color: var(--zone-color);
+        box-shadow: 0 9px 22px rgba(17, 49, 59, .12), inset 0 -3px 0 var(--zone-color);
+    }
+
+    .fs-risk-direction {
+        width: min(430px, 100%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 12px auto 0;
+        color: #71848b;
+        font-size: 11px;
+        font-weight: 900;
+    }
+
+    .fs-risk-direction i {
+        flex: 1;
+        height: 5px;
+        border-radius: 999px;
+        background: linear-gradient(to left, var(--fs-low), var(--fs-mid), var(--fs-high), var(--fs-critical));
+    }
+
+    .fs-card {
+        overflow: hidden;
+        position: relative;
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .fs-card::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--fs-emerald), #38b982);
+        content: '';
+    }
+
+    .fs-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(11, 139, 96, .34);
+        box-shadow: 0 18px 38px rgba(5, 42, 49, .1);
+    }
+
+    .fs-card > strong {
+        display: block;
+        direction: rtl;
+        unicode-bidi: plaintext;
+        text-align: right;
     }
 
     .fs-meter-copy {

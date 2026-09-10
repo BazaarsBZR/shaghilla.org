@@ -52,20 +52,25 @@
 .fs-gauge-box { text-align: center; }
 .fs-gauge-box h2 { margin: 0 0 20px; font-size: 1.35rem; }
 .fs-gauge {
+    --fs-active: var(--fs-low);
+    --fs-active-soft: #e7f7ef;
     position: relative;
     width: min(330px, 78vw);
     aspect-ratio: 1;
     margin: auto;
     border-radius: 50%;
-    background: conic-gradient(var(--fs-low) 0 25%, var(--fs-mid) 25% 50%, var(--fs-high) 50% 75%, var(--fs-critical) 75% 100%);
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.04), 0 18px 35px rgba(7,39,48,.12);
+    background: conic-gradient(from -90deg, var(--fs-low) 0 25%, var(--fs-mid) 25% 50%, var(--fs-high) 50% 75%, var(--fs-critical) 75% 100%);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.04), 0 22px 42px rgba(7,39,48,.15);
 }
+.fs-gauge.is-mid { --fs-active: var(--fs-mid); --fs-active-soft: #fff7dc; }
+.fs-gauge.is-high { --fs-active: var(--fs-high); --fs-active-soft: #fff0e6; }
+.fs-gauge.is-critical { --fs-active: var(--fs-critical); --fs-active-soft: #fdebed; }
 .fs-gauge::before {
     position: absolute;
-    inset: 31px;
+    inset: 34px;
     border-radius: 50%;
-    background: #fff;
-    box-shadow: inset 0 0 0 1px var(--fs-line);
+    background: radial-gradient(circle at 50% 34%, #fff 0 45%, var(--fs-active-soft) 100%);
+    box-shadow: inset 0 0 0 1px rgba(17,49,59,.12), 0 0 0 7px rgba(255,255,255,.3);
     content: "";
 }
 .fs-gauge-needle {
@@ -73,18 +78,19 @@
     z-index: 2;
     top: 50%;
     right: 50%;
-    width: 39%;
-    height: 4px;
-    border-radius: 99px;
-    background: var(--fs-ink);
-    transform: rotate(calc((var(--score, 0) * 3.6deg) - 90deg));
+    width: 40%;
+    height: 9px;
+    background: linear-gradient(90deg, var(--fs-active), var(--fs-ink) 74%);
+    clip-path: polygon(0 50%, 100% 0, 100% 100%);
+    transform: rotate(calc((var(--score, 0) * 3.6deg) - 270deg));
     transform-origin: right center;
     transition: transform .8s ease;
+    filter: drop-shadow(0 3px 3px rgba(12,40,49,.24));
 }
-.fs-gauge-needle::after { position: absolute; top: -8px; right: -9px; width: 20px; height: 20px; border-radius: 50%; background: var(--fs-ink); content: ""; }
+.fs-gauge-needle::after { position: absolute; top: -6px; right: -10px; width: 20px; height: 20px; border: 5px solid #fff; border-radius: 50%; background: var(--fs-active); box-shadow: 0 0 0 3px var(--fs-ink), 0 5px 12px rgba(12,40,49,.22); content: ""; }
 .fs-gauge-value { position: absolute; z-index: 3; inset: 0; display: grid; place-content: center; padding-top: 58px; }
-.fs-gauge-value strong { font-size: 3.5rem; line-height: 1; }
-.fs-gauge-value span { margin-top: 9px; font-weight: 900; }
+.fs-gauge-value strong { color: var(--fs-active); font-size: 3.5rem; line-height: 1; }
+.fs-gauge-value span { margin-top: 9px; padding: 5px 13px; border-radius: 999px; color: var(--fs-ink); background: var(--fs-active-soft); font-weight: 900; }
 .fs-gauge.is-empty { filter: grayscale(1); opacity: .52; }
 .fs-zones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 17px; color: var(--fs-muted); font-size: .72rem; }
 .fs-zones b { display: block; color: var(--fs-ink); }
