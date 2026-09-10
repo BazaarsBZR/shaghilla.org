@@ -341,38 +341,44 @@
         padding: clamp(22px, 3vw, 34px);
         border: 1px solid #dbe9e4;
         border-radius: 26px;
-        background:
-            radial-gradient(circle at 50% 42%, #fff 0 36%, transparent 37%),
-            linear-gradient(145deg, #f5faf8, #eaf4f0);
+        background: radial-gradient(circle at 50% 38%, #fff 0 22%, transparent 48%), linear-gradient(145deg, #f5faf8, #e8f3ef);
+        box-shadow: inset 0 1px 0 #fff, 0 18px 45px rgba(5, 42, 49, .08);
     }
 
     .fs-gauge-box > h2 {
-        margin: 0 0 18px;
+        margin: 0 0 16px;
         color: var(--fs-navy);
         font-size: clamp(22px, 2vw, 29px);
         font-weight: 900;
     }
 
     .fs-gauge {
-        width: min(100%, 330px);
+        width: min(100%, 292px);
         margin-inline: auto;
         filter: drop-shadow(0 16px 26px rgba(5, 42, 49, .1));
     }
 
     .fs-gauge-value {
         color: var(--fs-navy);
-        font-size: clamp(50px, 5vw, 68px);
+        font-size: initial;
         font-weight: 950;
+        line-height: 1;
+        letter-spacing: 0;
+    }
+
+    .fs-gauge-value strong {
+        font-size: clamp(48px, 5vw, 66px);
         line-height: .9;
         letter-spacing: -.05em;
     }
 
-    .fs-gauge-value small {
+    .fs-gauge-value span {
         display: block;
-        margin-top: 14px;
-        color: var(--fs-muted);
-        font-size: 17px;
-        font-weight: 800;
+        max-width: 78%;
+        margin-top: 12px;
+        font-size: 15px;
+        font-weight: 900;
+        line-height: 1.4;
         letter-spacing: 0;
     }
 
@@ -472,7 +478,11 @@
     }
 
     .fs-card > strong {
-        display: block;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: flex-start;
+        gap: .22em;
         direction: rtl;
         unicode-bidi: plaintext;
         text-align: right;

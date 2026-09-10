@@ -21,13 +21,32 @@
         ];
     @endphp
 
-    <div class="-mx-4 -mt-5 overflow-hidden bg-[#edf2f5] pb-12 sm:mx-0 sm:mt-0 sm:rounded-[2.5rem]">
-        <section class="relative isolate overflow-hidden bg-[#071d2d] px-5 pb-10 pt-6 text-white sm:px-10 lg:px-14">
+    <style>
+        .pm-dashboard { background-image: radial-gradient(circle at 15% 22%, rgba(35, 157, 105, .07), transparent 24rem); }
+        .pm-hero { min-height: 430px; }
+        .pm-subnav a, .pm-subnav span { padding: 8px 12px; border-radius: 999px; }
+        .pm-subnav a { transition: color 160ms ease, background 160ms ease; }
+        .pm-subnav a:hover { color: #fff; background: rgba(255,255,255,.09); }
+        .pm-subnav span { color: #071d2d; background: #55cc95; }
+        .pm-hero-visual::before, .pm-hero-visual::after { position: absolute; border: 1px solid rgba(85,204,149,.2); border-radius: 50%; content: ''; }
+        .pm-hero-visual::before { inset: -25px 20px 5px 30px; }
+        .pm-hero-visual::after { inset: 20px 65px 45px 75px; }
+        .pm-stat-card { position: relative; overflow: hidden; transition: transform 180ms ease, box-shadow 180ms ease; }
+        .pm-stat-card::after { position: absolute; inset: auto -25px -35px auto; width: 92px; height: 92px; border: 16px solid rgba(31,154,104,.07); border-radius: 50%; content: ''; }
+        .pm-stat-card:hover { z-index: 1; transform: translateY(-4px); box-shadow: 0 18px 40px rgba(16,39,53,.1); }
+        .pm-dashboard article { transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+        .pm-dashboard article:hover { border-color: rgba(31,154,104,.28); box-shadow: 0 18px 45px rgba(16,39,53,.075); }
+        @media (max-width: 1023px) { .pm-hero { min-height: 0; } }
+        @media (max-width: 640px) { .pm-subnav { gap: 4px; } .pm-subnav a, .pm-subnav span { padding: 7px 9px; } }
+    </style>
+
+    <div class="pm-dashboard -mx-4 -mt-5 overflow-hidden bg-[#edf2f5] pb-12 sm:mx-0 sm:mt-0 sm:rounded-[2.5rem]">
+        <section class="pm-hero relative isolate overflow-hidden bg-[#071d2d] px-5 pb-10 pt-6 text-white sm:px-10 lg:px-14">
             <div class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_72%_35%,rgba(38,106,128,.75),transparent_34%),linear-gradient(105deg,#071d2d_5%,#0d3044_55%,#102737_100%)]"></div>
             <div class="absolute inset-x-0 bottom-0 -z-10 h-44 opacity-30" style="background: linear-gradient(165deg, transparent 35%, #1c4b58 36% 48%, transparent 49%), linear-gradient(195deg, transparent 48%, #183d4a 49% 62%, transparent 63%)"></div>
             <img src="{{ asset('website-logo.png') }}" alt="" class="pointer-events-none absolute -left-5 bottom-5 -z-10 w-56 opacity-[.08] sm:w-80" />
 
-            <nav class="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-white/10 pb-5 text-xs font-black text-white/65" aria-label="{{ __('ui.public_money.title') }}">
+            <nav class="pm-subnav flex flex-wrap items-center gap-x-2 gap-y-2 border-b border-white/10 pb-5 text-xs font-black text-white/65" aria-label="{{ __('ui.public_money.title') }}">
                 <span class="text-[#49c38a]">نظرة عامة</span>
                 <a href="{{ route('public-money.procurements') }}" class="transition hover:text-white">التلزيمات والعقود</a>
                 <a href="{{ route('public-money.budget') }}" class="transition hover:text-white">الموازنة والإنفاق</a>
@@ -44,7 +63,7 @@
                         <a href="{{ route('public-money.sources') }}" class="rounded-full border border-white/25 bg-white/5 px-5 py-3 text-sm font-black text-white">كيف نتحقق؟</a>
                     </div>
                 </div>
-                <div class="relative mx-auto hidden h-64 w-full max-w-md lg:block">
+                <div class="pm-hero-visual relative mx-auto hidden h-64 w-full max-w-md lg:block">
                     <div class="absolute inset-x-0 bottom-4 mx-auto h-44 w-72 rotate-[-7deg] rounded-[2rem] border border-white/15 bg-white/5 p-5 shadow-2xl backdrop-blur">
                         <div class="flex items-center justify-between"><span class="text-xs text-white/50">آخر تحديث رسمي</span><span class="h-2 w-2 rounded-full bg-[#49c38a] shadow-[0_0_15px_#49c38a]"></span></div>
                         <p class="mt-5 text-4xl font-black text-[#e6bd55]">{{ number_format($publishedCount) }}</p>
@@ -56,11 +75,11 @@
             </div>
         </section>
 
-        <section class="relative z-10 -mt-5 grid gap-px overflow-hidden border-y border-[#dbe3e7] bg-[#dbe3e7] sm:mx-6 sm:grid-cols-2 sm:rounded-3xl sm:border lg:grid-cols-4">
-            <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">اعتمادات موازنة 2026</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ $budgetTotal ? number_format((float) $budgetTotal->amount) : '—' }}</p><p class="mt-1 text-xs text-[#8a979c]">{{ $budgetTotal ? 'مليار ليرة لبنانية' : 'بانتظار المصدر' }}</p>@if ($budgetTotal)<p class="mt-2 text-sm font-black text-[#18784e]">≈ ${{ number_format((float) $budgetTotal->amount / $lbpPerUsd, 2) }} مليار</p>@endif</article>
-            <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">الإنفاق المبلّغ 2025</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ $spentTotal ? number_format((float) $spentTotal->amount) : '—' }}</p><p class="mt-1 text-xs text-[#8a979c]">{{ $spentTotal ? 'مليار ليرة لبنانية' : 'بانتظار المصدر' }}</p>@if ($spentTotal)<p class="mt-2 text-sm font-black text-[#18784e]">≈ ${{ number_format((float) $spentTotal->amount / $lbpPerUsd, 2) }} مليار</p>@endif</article>
-            <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">السجلات المنشورة</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ number_format($publishedCount) }}</p><p class="mt-1 text-xs text-[#8a979c]">عبر مراحل الشراء الثلاث</p></article>
-            <article class="bg-white p-5"><p class="text-xs font-bold text-[#708087]">الجهات الشارية</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ number_format($authorityCount) }}</p><p class="mt-1 text-xs text-[#8a979c]">جهة عامة مميّزة</p></article>
+        <section class="pm-stat-grid relative z-10 -mt-5 grid gap-px overflow-hidden border-y border-[#dbe3e7] bg-[#dbe3e7] sm:mx-6 sm:grid-cols-2 sm:rounded-3xl sm:border lg:grid-cols-4">
+            <article class="pm-stat-card bg-white p-5"><p class="text-xs font-bold text-[#708087]">اعتمادات موازنة 2026</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ $budgetTotal ? number_format((float) $budgetTotal->amount) : '—' }}</p><p class="mt-1 text-xs text-[#8a979c]">{{ $budgetTotal ? 'مليار ليرة لبنانية' : 'بانتظار المصدر' }}</p>@if ($budgetTotal)<p class="mt-2 text-sm font-black text-[#18784e]">≈ ${{ number_format((float) $budgetTotal->amount / $lbpPerUsd, 2) }} مليار</p>@endif</article>
+            <article class="pm-stat-card bg-white p-5"><p class="text-xs font-bold text-[#708087]">الإنفاق المبلّغ 2025</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ $spentTotal ? number_format((float) $spentTotal->amount) : '—' }}</p><p class="mt-1 text-xs text-[#8a979c]">{{ $spentTotal ? 'مليار ليرة لبنانية' : 'بانتظار المصدر' }}</p>@if ($spentTotal)<p class="mt-2 text-sm font-black text-[#18784e]">≈ ${{ number_format((float) $spentTotal->amount / $lbpPerUsd, 2) }} مليار</p>@endif</article>
+            <article class="pm-stat-card bg-white p-5"><p class="text-xs font-bold text-[#708087]">السجلات المنشورة</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ number_format($publishedCount) }}</p><p class="mt-1 text-xs text-[#8a979c]">عبر مراحل الشراء الثلاث</p></article>
+            <article class="pm-stat-card bg-white p-5"><p class="text-xs font-bold text-[#708087]">الجهات الشارية</p><p class="mt-2 text-2xl font-black text-[#102735]">{{ number_format($authorityCount) }}</p><p class="mt-1 text-xs text-[#8a979c]">جهة عامة مميّزة</p></article>
         </section>
 
         <section class="grid gap-5 px-4 pt-8 sm:px-6 lg:grid-cols-[1.1fr_.9fr]">

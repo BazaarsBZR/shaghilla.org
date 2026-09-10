@@ -59,7 +59,7 @@
     aspect-ratio: 1;
     margin: auto;
     border-radius: 50%;
-    background: conic-gradient(from -90deg, var(--fs-low) 0 25%, var(--fs-mid) 25% 50%, var(--fs-high) 50% 75%, var(--fs-critical) 75% 100%);
+    background: conic-gradient(var(--fs-low) 0 25%, var(--fs-mid) 25% 50%, var(--fs-high) 50% 75%, var(--fs-critical) 75% 100%);
     box-shadow: inset 0 0 0 1px rgba(0,0,0,.04), 0 22px 42px rgba(7,39,48,.15);
 }
 .fs-gauge.is-mid { --fs-active: var(--fs-mid); --fs-active-soft: #fff7dc; }
@@ -88,9 +88,9 @@
     filter: drop-shadow(0 3px 3px rgba(12,40,49,.24));
 }
 .fs-gauge-needle::after { position: absolute; top: -6px; right: -10px; width: 20px; height: 20px; border: 5px solid #fff; border-radius: 50%; background: var(--fs-active); box-shadow: 0 0 0 3px var(--fs-ink), 0 5px 12px rgba(12,40,49,.22); content: ""; }
-.fs-gauge-value { position: absolute; z-index: 3; inset: 0; display: grid; place-content: center; padding-top: 58px; }
+.fs-gauge-value { position: absolute; z-index: 3; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; }
 .fs-gauge-value strong { color: var(--fs-active); font-size: 3.5rem; line-height: 1; }
-.fs-gauge-value span { margin-top: 9px; padding: 5px 13px; border-radius: 999px; color: var(--fs-ink); background: var(--fs-active-soft); font-weight: 900; }
+.fs-gauge-value span { margin-top: 9px; padding: 5px 15px; border-radius: 999px; color: var(--fs-ink); background: var(--fs-active-soft); font-size: 1rem; font-weight: 900; line-height: 1.4; letter-spacing: 0; }
 .fs-gauge.is-empty { filter: grayscale(1); opacity: .52; }
 .fs-zones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 17px; color: var(--fs-muted); font-size: .72rem; }
 .fs-zones b { display: block; color: var(--fs-ink); }

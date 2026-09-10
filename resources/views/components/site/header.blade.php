@@ -107,7 +107,7 @@
                     break;
 
                 case 'menu':
-                    echo '<nav class="hidden items-center gap-3 text-xs font-extrabold text-ink md:flex xl:gap-6 xl:text-sm">';
+                    echo '<nav class="sh-primary-nav hidden min-w-0 items-center gap-1 text-[13px] font-extrabold text-ink xl:flex">';
                     if ($menuItems->isEmpty()) {
                         echo '<a href="'.e(route('home')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.home')).'</a>';
                         if (! $showLiveButton) {
@@ -132,9 +132,9 @@
                             echo '<a href="'.e($item->url()).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink"'.$attrs.'>'.e($item->displayTitle()).'</a>';
                         }
                     }
-                    echo '<a data-prefetch-page href="'.e(route('public-money.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">'.e(__('ui.nav.public_money')).'</a>';
-                    echo '<a data-prefetch-page href="'.e(route('government-tenders.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">المناقصات الحكومية</a>';
-                    echo '<a data-prefetch-page href="'.e(route('financial-status.index')).'" class="inline-flex items-center py-2 text-ink-muted transition hover:text-ink">الوضع المالي</a>';
+                    echo '<a data-prefetch-page href="'.e(route('public-money.index')).'" class="sh-nav-link '.(request()->routeIs('public-money.*') ? 'is-active' : '').'">'.e(__('ui.nav.public_money')).'</a>';
+                    echo '<a data-prefetch-page href="'.e(route('government-tenders.index')).'" class="sh-nav-link '.(request()->routeIs('government-tenders.*') ? 'is-active' : '').'">المناقصات الحكومية</a>';
+                    echo '<a data-prefetch-page href="'.e(route('financial-status.index')).'" class="sh-nav-link '.(request()->routeIs('financial-status.*') ? 'is-active' : '').'">الوضع المالي</a>';
                     echo '</nav>';
                     break;
 
@@ -148,7 +148,7 @@
                     break;
 
                 case 'hamburger':
-                    echo '<button type="button" class="inline-flex items-center justify-center rounded-control border border-line bg-surface p-2 text-ink transition hover:bg-surface-soft md:hidden" @click="open = !open" :aria-expanded="open.toString()" aria-controls="mobile-menu">';
+                    echo '<button type="button" class="inline-flex items-center justify-center rounded-control border border-line bg-surface p-2 text-ink transition hover:bg-surface-soft xl:hidden" @click="open = !open" :aria-expanded="open.toString()" aria-controls="mobile-menu">';
                     echo '<span class="sr-only">'.e(__('ui.actions.toggle_menu')).'</span>';
                     echo '<svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">';
                     echo '<path fill-rule="evenodd" d="M3 5h14a1 1 0 0 1 0 2H3a1 1 0 0 1 0-2Zm0 6h14a1 1 0 1 1 0 2H3a1 1 0 0 1 0-2Zm0 6h14a1 1 0 1 1 0 2H3a1 1 0 0 1 0-2Z" clip-rule="evenodd" />';
@@ -195,7 +195,7 @@
 
     @if ($row1Enabled)
         <div class="border-b border-line bg-surface-soft/50">
-            <div class="mx-auto w-full max-w-6xl px-4 py-2.5">
+            <div class="mx-auto w-full max-w-[1500px] px-4 py-2.5">
                 <div class="flex items-center gap-3" dir="rtl">
                     <div class="flex items-center gap-2">
                         @foreach ($row1Right as $block)
@@ -219,9 +219,9 @@
 
     <!-- Main nav row -->
     <div class="bg-surface">
-        <div class="mx-auto w-full max-w-6xl px-4 py-2.5">
+        <div class="mx-auto w-full max-w-[1500px] px-4 py-2.5">
             <div class="flex items-center gap-2 sm:gap-4" dir="rtl">
-                <div class="flex items-center gap-3 sm:gap-5">
+                <div class="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
                     @foreach ($row2Right as $block)
                         @php($renderBlock($block))
                     @endforeach
@@ -240,8 +240,8 @@
         </div>
     </div>
 
-    <div id="mobile-menu" class="border-t border-line bg-surface md:hidden" x-show="open" x-transition x-cloak>
-        <nav class="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-4 text-sm font-semibold text-ink">
+    <div id="mobile-menu" class="border-t border-line bg-surface xl:hidden" x-show="open" x-transition x-cloak>
+        <nav class="mx-auto grid w-full max-w-[1500px] gap-2 px-4 py-4 text-sm font-semibold text-ink sm:grid-cols-2 lg:grid-cols-3">
             @if ($menuItems->isEmpty())
                 <a href="{{ route('home') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.home') }}</a>
                 @if (! $showLiveButton)
@@ -280,3 +280,40 @@
         </nav>
     </div>
 </header>
+
+<style>
+    .sh-site-header {
+        position: relative;
+        z-index: 60;
+        box-shadow: 0 1px 0 rgba(16, 39, 53, .06), 0 10px 30px rgba(16, 39, 53, .035);
+    }
+    .sh-primary-nav > a,
+    .sh-nav-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 38px;
+        padding: 0 11px;
+        border-radius: 12px;
+        color: #536176;
+        white-space: nowrap;
+        text-decoration: none;
+        transition: color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+    .sh-primary-nav > a:hover,
+    .sh-nav-link:hover {
+        color: #102735;
+        background: #f1f6f4;
+        transform: translateY(-1px);
+    }
+    .sh-nav-link.is-active {
+        color: #086b4b;
+        background: #e7f4ee;
+        box-shadow: inset 0 0 0 1px rgba(8, 124, 85, .14);
+    }
+    @media (max-width: 1279px) {
+        .sh-site-header [id="mobile-menu"] a {
+            border: 1px solid #e5ebed;
+            background: #f8faf9;
+        }
+    }
+</style>
