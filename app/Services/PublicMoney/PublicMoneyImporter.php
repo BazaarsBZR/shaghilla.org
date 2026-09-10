@@ -23,7 +23,7 @@ final class PublicMoneyImporter
     /** @return array<string, array<string, int|string|null>> */
     public function import(?string $onlySource = null, int $limit = 50, bool $publishVerified = false): array
     {
-        $lock = Cache::lock('public-money-import', 840);
+        $lock = Cache::lock('public-money-import-v2', 75);
         if (! $lock->get()) {
             throw new RuntimeException('A public-money import is already running.');
         }
