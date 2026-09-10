@@ -170,5 +170,10 @@
     .fs-meter-panel { padding: 22px 16px; border-radius: 22px; }
     .fs-cards { grid-template-columns: 1fr; }
     .fs-section-head, .fs-freshness, .fs-sources li { align-items: flex-start; flex-direction: column; }
-    .fs-break-row { grid-template-columns: 105px 1fr 48px; }
+    .fs-break-row { grid-template-columns: minmax(76px, 105px) minmax(80px, 1fr) 44px; }
+    .fs-zones { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .fs-gauge-value strong { font-size: 2.75rem; }
+    .fs-gauge-value span { max-width: 72%; font-size: .82rem; }
+    .fs-card strong { max-width: 100%; font-size: clamp(1.35rem, 8vw, 2rem); overflow-wrap: anywhere; }
+    .fs-panel, .fs-card { padding: 18px; }
 }

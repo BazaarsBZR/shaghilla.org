@@ -36,8 +36,36 @@
         .pm-stat-card:hover { z-index: 1; transform: translateY(-4px); box-shadow: 0 18px 40px rgba(16,39,53,.1); }
         .pm-dashboard article { transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
         .pm-dashboard article:hover { border-color: rgba(31,154,104,.28); box-shadow: 0 18px 45px rgba(16,39,53,.075); }
+        .pm-activity-chart { display: flex; align-items: stretch; gap: 10px; height: 245px; margin-top: 24px; padding: 8px 4px 0; border-bottom: 1px solid #dce4e7; }
+        .pm-activity-item { display: flex; min-width: 0; flex: 1; flex-direction: column; align-items: center; justify-content: flex-end; }
+        .pm-activity-month { order: 3; margin-top: 9px; color: #6e7f87; font-size: 10px; font-weight: 800; white-space: nowrap; }
+        .pm-activity-track { order: 2; display: flex; width: min(42px, 72%); height: 178px; align-items: flex-end; overflow: hidden; border-radius: 11px 11px 4px 4px; background: #eef3f2; }
+        .pm-activity-track i { display: block; width: 100%; height: var(--activity); min-height: 7px; border-radius: 10px 10px 3px 3px; background: linear-gradient(180deg, #3aba86, #135967); box-shadow: 0 8px 16px rgba(19,89,103,.17); }
+        .pm-activity-count { order: 1; margin-bottom: 7px; padding: 3px 7px; border-radius: 999px; color: #173745; background: #e8f4ef; font-size: 10px; font-weight: 950; }
+        .pm-authority-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+        .pm-authority-row { display: grid !important; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 48px; padding: 9px 13px !important; border: 1px solid #e4eaec; border-radius: 13px !important; background: #f5f8f7 !important; }
+        .pm-authority-name { min-width: 0; color: #465d66; font-size: 12px; font-weight: 750; line-height: 1.55; overflow-wrap: anywhere; }
+        .pm-authority-count { min-width: 34px; padding: 5px 7px; border-radius: 9px; color: #fff !important; background: #155d65; text-align: center; }
         @media (max-width: 1023px) { .pm-hero { min-height: 0; } }
-        @media (max-width: 640px) { .pm-subnav { gap: 4px; } .pm-subnav a, .pm-subnav span { padding: 7px 9px; } }
+        @media (max-width: 640px) {
+            .pm-dashboard { overflow-x: clip; }
+            .pm-subnav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; border-bottom: 0; }
+            .pm-subnav a, .pm-subnav span { display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 7px 8px; text-align: center; }
+            .pm-hero h1 { font-size: clamp(2.35rem, 13vw, 3.5rem); }
+            .pm-hero p { font-size: .92rem; line-height: 1.85; }
+            .pm-stat-grid { margin-inline: 12px; border: 1px solid #dbe3e7; border-radius: 20px; }
+            .pm-stat-card { padding: 16px; }
+            .pm-dashboard table { min-width: 720px; }
+            .pm-activity-panel { padding: 18px 14px; }
+            .pm-activity-chart { display: grid; height: auto; gap: 9px; margin-top: 18px; padding: 0; border-bottom: 0; }
+            .pm-activity-item { display: grid; grid-template-columns: 68px minmax(0, 1fr) 34px; gap: 9px; align-items: center; }
+            .pm-activity-month { order: initial; margin: 0; color: #425962; font-size: 10px; text-align: right; }
+            .pm-activity-track { order: initial; width: 100%; height: 10px; border-radius: 999px; }
+            .pm-activity-track i { width: var(--activity); height: 100%; min-width: 7px; border-radius: inherit; }
+            .pm-activity-count { order: initial; margin: 0; padding: 2px 5px; text-align: center; }
+            .pm-authority-grid { grid-template-columns: 1fr; }
+            .pm-authority-row { min-height: 44px; }
+        }
     </style>
 
     <div class="pm-dashboard -mx-4 -mt-5 overflow-hidden bg-[#edf2f5] pb-12 sm:mx-0 sm:mt-0 sm:rounded-[2.5rem]">
@@ -133,15 +161,15 @@
                 </script>
             </article>
 
-            <article class="rounded-[1.75rem] border border-[#dbe3e7] bg-white p-5 sm:p-7">
-                <p class="text-xs font-black text-[#a2342c]">النشاط الزمني</p><h2 class="mt-1 text-2xl font-black text-[#102735]">السجلات حسب شهر الحدث</h2>
+            <article class="pm-activity-panel rounded-[1.75rem] border border-[#dbe3e7] bg-white p-5 sm:p-7">
+                <p class="text-xs font-black text-[#a2342c]">النشاط الزمني</p><h2 class="mt-1 text-2xl font-black text-[#102735]">السجلات حسب شهر الحدث</h2><p class="mt-2 text-xs leading-6 text-[#728188]">عدد السجلات الرسمية التي تحمل تاريخاً في كل شهر.</p>
                 @if ($monthlyActivity->isNotEmpty())
-                    <div class="mt-8 flex h-52 items-end gap-2 border-b border-[#dce4e7]">
+                    <div class="pm-activity-chart" role="img" aria-label="عدد السجلات الرسمية حسب الشهر">
                         @foreach ($monthlyActivity as $month => $count)
-                            <div class="group flex h-full min-w-0 flex-1 flex-col justify-end text-center">
-                                <span class="mb-2 text-[10px] font-black text-[#4e646d] opacity-0 transition group-hover:opacity-100">{{ $count }}</span>
-                                <div class="mx-auto w-full max-w-10 rounded-t-lg bg-gradient-to-t from-[#155d65] to-[#35a77a]" style="height: {{ max(6, ($count / $activityMax) * 100) }}%"></div>
-                                <span class="mt-2 -rotate-45 whitespace-nowrap text-[9px] text-[#829096]">{{ $month }}</span>
+                            <div class="pm-activity-item">
+                                <span class="pm-activity-month" dir="ltr">{{ $month }}</span>
+                                <span class="pm-activity-track"><i style="--activity: {{ max(6, ($count / $activityMax) * 100) }}%"></i></span>
+                                <strong class="pm-activity-count">{{ $count }}</strong>
                             </div>
                         @endforeach
                     </div>
@@ -149,7 +177,7 @@
                     <div class="mt-8 rounded-2xl border border-dashed border-[#cfdadd] p-8 text-center text-sm text-[#7e8b91]">يظهر الرسم بعد نشر سجلات تحمل تاريخاً رسمياً.</div>
                 @endif
                 <h3 class="mt-10 text-sm font-black text-[#102735]">أكثر الجهات وروداً</h3>
-                <div class="mt-3 grid gap-2 sm:grid-cols-2">@forelse ($topAuthorities as $authority)<div class="flex items-center justify-between rounded-xl bg-[#f3f6f7] px-3 py-2 text-xs"><span class="truncate text-[#53676f]">{{ $authority->authority }}</span><strong class="mr-2 text-[#102735]">{{ $authority->total }}</strong></div>@empty<p class="text-xs text-[#829096]">بانتظار البيانات المنشورة.</p>@endforelse</div>
+                <div class="pm-authority-grid">@forelse ($topAuthorities as $authority)<div class="pm-authority-row"><span class="pm-authority-name" dir="auto" title="{{ $authority->authority ?: 'الجهة غير مذكورة في المصدر' }}">{{ $authority->authority ?: 'الجهة غير مذكورة في المصدر' }}</span><strong class="pm-authority-count">{{ $authority->total }}</strong></div>@empty<p class="text-xs text-[#829096]">بانتظار البيانات المنشورة.</p>@endforelse</div>
             </article>
         </section>
 

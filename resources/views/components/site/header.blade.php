@@ -98,9 +98,9 @@
 
             switch ($type) {
                 case 'logo':
-                    echo '<a href="'.e(route('home')).'" class="flex items-center gap-2 text-base font-extrabold tracking-tight text-ink">';
+                    echo '<a href="'.e(route('home')).'" class="sh-site-brand flex min-w-0 items-center gap-2 text-base font-extrabold tracking-tight text-ink">';
                     if ($showHeaderLogo) {
-                        echo '<img src="'.e($headerLogoUrl).'" alt="'.e($brandName).'" class="h-8 w-8 object-contain" />';
+                        echo '<img src="'.e($headerLogoUrl).'" alt="'.e($brandName).'" class="h-8 w-8 shrink-0 object-contain" />';
                     }
                     echo '<span class="whitespace-nowrap">'.e($brandName).'</span>';
                     echo '</a>';
@@ -315,5 +315,18 @@
             border: 1px solid #e5ebed;
             background: #f8faf9;
         }
+    }
+    @media (max-width: 639px) {
+        .sh-site-header > .bg-surface > div { padding-inline: 10px; }
+        .sh-site-header > .bg-surface > div > div { gap: 7px; }
+        .sh-site-brand { gap: 6px; font-size: 13px; }
+        .sh-site-brand img { width: 28px; height: 28px; }
+        .sh-weather-trigger { min-width: 56px; height: 38px; padding-inline: 7px; }
+        .sh-weather-panel { position: fixed; top: 68px; right: 10px; left: 10px; width: auto; max-height: calc(100vh - 82px); }
+    }
+    @media (max-width: 374px) {
+        .sh-site-brand span { max-width: 82px; overflow: hidden; text-overflow: ellipsis; }
+        .sh-weather-trigger { min-width: 48px; }
+        .sh-weather-trigger .tabular-nums { display: none; }
     }
 </style>

@@ -214,4 +214,19 @@
     .gt-section-heading, .gt-freshness { align-items: flex-start; flex-direction: column; }
     .gt-card { min-height: 0; padding: 19px; }
     .gt-card-details { grid-template-columns: 1fr; }
+    .gt-filter-panel { padding: 16px; border-radius: 18px; }
+    .gt-hero h1 { font-size: clamp(2rem, 12vw, 3rem); }
+    .gt-hero p { font-size: .94rem; line-height: 1.75; }
+    .gt-panel { padding: 19px; border-radius: 18px; }
+    .gt-detail-title { overflow-wrap: anywhere; }
+    .gt-pagination { gap: 6px; }
+    .gt-pagination a, .gt-pagination span { min-height: 40px; padding-inline: 11px; font-size: .78rem; }
+}
+@media (max-width: 460px) {
+    .gt-wrap { width: min(100% - 16px, 1280px); }
+    .gt-filter-grid { grid-template-columns: 1fr; }
+    .gt-counter { border-radius: 17px; }
+    .gt-card-top { align-items: flex-start; flex-direction: column; }
+    .gt-reference { max-width: 100%; overflow-wrap: anywhere; }
+    .gt-pagination a:first-child::before, .gt-pagination a:last-child::after { margin: 0 4px; }
 }

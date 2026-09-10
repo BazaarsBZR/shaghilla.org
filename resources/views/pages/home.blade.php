@@ -1,4 +1,36 @@
 <x-layouts.site :title="__('ui.pages.home')">
+    <style>
+        .sh-news-card, .sh-news-hero { min-width: 0; }
+        .sh-news-card-title, .sh-news-card-summary { overflow-wrap: anywhere; }
+        @media (max-width: 639px) {
+            .sh-home-stack { display: grid; gap: 1rem; }
+            .sh-home-stack.space-y-8 > :not([hidden]) ~ :not([hidden]) { margin-top: 0; }
+            .sh-home-lead { gap: .75rem; }
+            .sh-news-hero { border-radius: 18px; }
+            .sh-news-hero-media { min-height: 230px; aspect-ratio: 4 / 3; }
+            .sh-news-hero-content { padding: 14px; }
+            .sh-news-hero-title { display: -webkit-box; overflow: hidden; font-size: 1.18rem; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+            .sh-news-card { border-radius: 16px; }
+            .sh-news-card.has-media .sh-news-card-link { display: grid; grid-template-columns: 112px minmax(0, 1fr); min-height: 116px; }
+            .sh-news-card-media { width: 112px; height: 100%; min-height: 116px; aspect-ratio: auto; }
+            .sh-news-card-content { gap: 7px; padding: 11px 12px; }
+            .sh-news-card-meta { font-size: 10px; }
+            .sh-news-card-title { font-size: 14px; line-height: 1.55; -webkit-line-clamp: 3; }
+            .sh-news-card-summary { display: none; }
+            .sh-news-card-footer { font-size: 10px; }
+            .sh-news-card-footer > :last-child { display: none; }
+            .sh-news-card.is-text-only .sh-news-card-content { min-height: 132px; padding: 15px; }
+            .sh-home-section-heading { align-items: center; }
+            .sh-home-section-heading h2 { font-size: 1.1rem; }
+            .sh-latest-grid + nav { gap: 6px; }
+            .sh-latest-grid + nav a, .sh-latest-grid + nav span { min-width: 38px; padding-inline: 9px; }
+        }
+        @media (max-width: 374px) {
+            .sh-news-card.has-media .sh-news-card-link { grid-template-columns: 96px minmax(0, 1fr); }
+            .sh-news-card-media { width: 96px; }
+            .sh-news-card-title { font-size: 13px; }
+        }
+    </style>
     <div class="sh-home-stack space-y-8">
         @php
             $newsLayout = in_array(($newsLayout ?? ''), ['mosaic', 'classic', 'grid'], true) ? $newsLayout : 'mosaic';

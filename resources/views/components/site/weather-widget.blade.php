@@ -8,7 +8,7 @@
 @endphp
 
 <div
-    class="relative inline-flex"
+    class="sh-weather-widget relative inline-flex"
     dir="rtl"
     x-data="{
         endpoint: @js($endpoint),
@@ -155,7 +155,7 @@
 >
     <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-control border border-line bg-surface-soft px-2 py-1.5 text-[11px] font-extrabold text-ink shadow-surface transition hover:border-emerald-300 hover:bg-white sm:gap-2 sm:px-3 sm:py-2 sm:text-xs"
+        class="sh-weather-trigger inline-flex items-center justify-center gap-1.5 rounded-control border border-line bg-surface-soft px-2 py-1.5 text-[11px] font-extrabold text-ink shadow-surface transition hover:border-emerald-300 hover:bg-white sm:gap-2 sm:px-3 sm:py-2 sm:text-xs"
         @click="open = !open; if (open) loadAreas()"
         :aria-expanded="open"
         aria-label="اختيار منطقة لعرض الطقس"
@@ -171,7 +171,7 @@
         x-cloak
         x-show="open"
         x-transition.origin.top.left
-        class="absolute left-0 top-full z-[90] mt-2 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-line bg-white text-right shadow-2xl"
+        class="sh-weather-panel absolute left-0 top-full z-[90] mt-2 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-line bg-white text-right shadow-2xl"
     >
         <div class="flex items-center justify-between border-b border-line bg-[#0e2d3b] px-4 py-3 text-white">
             <div><p class="text-sm font-black">الطقس في لبنان</p><p class="mt-0.5 text-[10px] text-white/65">اختر المنطقة التي تريد متابعتها</p></div>

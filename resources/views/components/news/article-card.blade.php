@@ -9,16 +9,17 @@
         trim((string) preg_replace('/[[:space:]]+/u', ' ', strip_tags((string) ($article->excerpt ?: $article->content ?: '')))),
         150,
     );
-    $sourceName = trim((string) ($article->feedSource?->name ?? ''));
 @endphp
 
 <article @class([
-    'group h-full overflow-hidden rounded-card border border-line bg-surface shadow-surface transition hover:-translate-y-0.5 hover:shadow-overlay',
+    'sh-news-card group h-full overflow-hidden rounded-card border border-line bg-surface shadow-surface transition hover:-translate-y-0.5 hover:shadow-overlay',
+    'has-media' => $mediaUrl !== '',
+    'is-text-only' => $mediaUrl === '',
     'border-t-4 border-t-accent' => $mediaUrl === '',
 ])>
-    <a href="{{ route('news.show', $article->slug) }}" class="flex h-full flex-col">
+    <a href="{{ route('news.show', $article->slug) }}" class="sh-news-card-link flex h-full flex-col">
         @if ($mediaUrl !== '')
-            <div class="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-surface-soft">
+            <div class="sh-news-card-media relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-surface-soft">
                 <x-news.image-fallback compact />
 
                 @if ($isVideo)
@@ -44,21 +45,20 @@
             </div>
         @endif
 
-        <div class="flex flex-1 flex-col gap-3 p-4">
-            <div class="flex items-center justify-between gap-3 text-[11px] font-black text-accent">
-                <span>{{ $sourceName !== '' ? $sourceName : 'آخر الأخبار' }}</span>
+        <div class="sh-news-card-content flex min-w-0 flex-1 flex-col gap-3 p-4">
+            <div class="sh-news-card-meta flex items-center justify-end gap-3 text-[11px] font-black text-accent">
                 <span class="font-semibold text-ink-faint">{{ optional($article->published_at)->format('d/m · H:i') }}</span>
             </div>
 
-            <h3 class="line-clamp-3 text-right text-[17px] font-extrabold leading-snug text-ink">
+            <h3 class="sh-news-card-title line-clamp-3 text-right text-[17px] font-extrabold leading-snug text-ink">
                 {{ $article->title }}
             </h3>
 
             @if ($summary !== '')
-                <p class="line-clamp-3 text-right text-sm font-medium leading-6 text-ink-muted">{{ $summary }}</p>
+                <p class="sh-news-card-summary line-clamp-3 text-right text-sm font-medium leading-6 text-ink-muted">{{ $summary }}</p>
             @endif
 
-            <div class="mt-auto flex flex-wrap items-center justify-between gap-2 text-[11px] font-semibold text-ink-muted">
+            <div class="sh-news-card-footer mt-auto flex flex-wrap items-center justify-between gap-2 text-[11px] font-semibold text-ink-muted">
                 <span class="inline-flex items-center gap-1 font-extrabold text-ink">اقرأ الخبر <span aria-hidden="true">←</span></span>
                 <x-news.share-menu :article="$article" />
             </div>
