@@ -18,10 +18,6 @@
       "schedule": "17 * * * *"
     },
     {
-      "path": "/tasks/rss-import?feed=2&limit=3",
-      "schedule": "27 * * * *"
-    },
-    {
       "path": "/tasks/public-money-import/ppa-awards",
       "schedule": "15 3 * * *"
     },
