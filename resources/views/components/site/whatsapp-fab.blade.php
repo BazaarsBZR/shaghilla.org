@@ -4,7 +4,7 @@
     </summary>
     <div class="absolute bottom-14 left-0 w-64 rounded-2xl border border-emerald-100 bg-white p-4 text-right shadow-2xl">
         <p class="font-black text-[#102735]">تواصل معنا عبر واتساب</p>
-        <p class="mt-1 text-sm text-[#708087]">+961 79 333 415</p>
+        <p class="mt-1 text-sm text-[#708087]"><bdi dir="ltr" class="tabular-nums">+961 79 333 415</bdi></p>
         <a href="https://wa.me/96179333415" target="_blank" rel="noopener noreferrer" class="mt-3 block rounded-xl bg-[#16865c] px-4 py-2 text-center text-sm font-black text-white">فتح المحادثة</a>
     </div>
 </details>
