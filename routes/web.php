@@ -61,6 +61,8 @@ Route::get('/admin/membership-applications/{membershipApplication}/id-document',
 Route::match(['GET', 'POST'], '/tasks/import-rss/{secret}', RssImportWebhookController::class)
     ->name('tasks.import-rss')
     ->middleware('throttle:rss-import');
+Route::get('/tasks/rss-import', \App\Http\Controllers\RssCronController::class)
+    ->name('tasks.rss-import');
 
 Route::match(['GET', 'POST'], '/tasks/import-almanar-urgent/{secret}', AlManarUrgentImportWebhookController::class)
     ->name('tasks.import-almanar-urgent')

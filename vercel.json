@@ -10,6 +10,10 @@
   },
   "crons": [
     {
+      "path": "/tasks/rss-import",
+      "schedule": "7 * * * *"
+    },
+    {
       "path": "/tasks/public-money-import/ppa-awards",
       "schedule": "15 3 * * *"
     },
