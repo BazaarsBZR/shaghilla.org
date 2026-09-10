@@ -54,3 +54,11 @@ Schedule::command('news:import-almanar-urgent')
 Schedule::command('public-money:import')
     ->dailyAt('03:15')
     ->withoutOverlapping(15);
+
+\Illuminate\Support\Facades\Schedule::command('government-tenders:import --pages=3 --details=24 --time-budget=300')
+    ->everyThreeHours()
+    ->withoutOverlapping();
+
+\Illuminate\Support\Facades\Schedule::command('financial-status:import')
+    ->dailyAt('02:43')
+    ->withoutOverlapping();

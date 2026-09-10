@@ -69,3 +69,16 @@ Route::match(['GET', 'POST'], '/tasks/import-almanar-urgent/{secret}', AlManarUr
 Route::match(['GET', 'POST'], '/tasks/public-money-import/{source?}', PublicMoneyImportWebhookController::class)
     ->name('tasks.public-money-import')
     ->middleware('throttle:6,1');
+
+Route::get('/government-tenders', [\App\Http\Controllers\GovernmentTenderController::class, 'index'])
+    ->name('government-tenders.index');
+Route::get('/government-tenders/{sourceRecordId}', [\App\Http\Controllers\GovernmentTenderController::class, 'show'])
+    ->whereNumber('sourceRecordId')
+    ->name('government-tenders.show');
+Route::get('/tasks/government-tenders-import', \App\Http\Controllers\GovernmentTenderImportController::class)
+    ->name('tasks.government-tenders-import');
+
+Route::get('/financial-status', [\App\Http\Controllers\FinancialStatusController::class, 'index'])
+    ->name('financial-status.index');
+Route::get('/tasks/financial-status-import', \App\Http\Controllers\FinancialStatusImportController::class)
+    ->name('tasks.financial-status-import');

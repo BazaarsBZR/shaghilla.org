@@ -264,6 +264,8 @@
             @endif
 
             <a href="{{ route('public-money.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.public_money') }}</a>
+<a href="{{ route('government-tenders.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">المناقصات الحكومية</a>
+<a href="{{ route('financial-status.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">الوضع المالي</a>
 
             @if ($showLiveButton && $hasLive)
                 <a
