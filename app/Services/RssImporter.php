@@ -45,14 +45,23 @@ class RssImporter
         ?string $existingItemBehaviorOverride = null,
         ?bool $forceNoSkipOverride = null,
         ?bool $requireImageForHomeOverride = null,
+        ?int $feedOffsetOverride = null,
+        ?int $itemOffsetOverride = null,
     ): array
     {
         $start = microtime(true);
 
-        $activeFeeds = FeedSource::query()
+        $activeFeedsQuery = FeedSource::query()
             ->where('is_active', true)
-            ->orderBy('id')
-            ->get();
+            ->orderBy('id');
+
+        if ($feedOffsetOverride !== null) {
+            $activeFeedsQuery
+                ->offset(max(0, $feedOffsetOverride))
+                ->limit(1);
+        }
+
+        $activeFeeds = $activeFeedsQuery->get();
 
         if ($activeFeeds->isEmpty()) {
             $result = [
@@ -91,6 +100,7 @@ class RssImporter
 
         $itemLimit = $itemLimitOverride ?? (int) (SiteSetting::getValue('rss_item_limit', '10') ?? 10);
         $itemLimit = max(1, min(50, $itemLimit));
+        $itemOffset = max(0, min(100, $itemOffsetOverride ?? 0));
 
         $forceNoSkip = $forceNoSkipOverride ?? SiteSetting::getBool('rss_force_no_skip', false);
         $requireImageForHome = $requireImageForHomeOverride ?? SiteSetting::getBool('rss_require_image_for_home', false);
@@ -120,6 +130,7 @@ class RssImporter
                     $workerKeywords,
                     $breakingKeywords,
                     $itemLimit,
+                    $itemOffset,
                     $existingItemBehavior,
                     $forceNoSkip,
                     $requireImageForHome,
@@ -211,6 +222,7 @@ class RssImporter
         array $workerKeywords,
         array $breakingKeywords,
         int $itemLimit,
+        int $itemOffset,
         string $existingItemBehavior,
         bool $forceNoSkip,
         bool $requireImageForHome,
@@ -266,7 +278,11 @@ class RssImporter
 
         usort($itemsWithTimestamps, static fn (array $a, array $b): int => ($b['ts'] ?? 0) <=> ($a['ts'] ?? 0));
 
-        $items = array_slice(array_map(static fn (array $row): SimpleXMLElement => $row['item'], $itemsWithTimestamps), 0, $itemLimit);
+        $items = array_slice(
+            array_map(static fn (array $row): SimpleXMLElement => $row['item'], $itemsWithTimestamps),
+            $itemOffset,
+            $itemLimit,
+        );
 
         $destination = (string) $feedSource->destination;
 

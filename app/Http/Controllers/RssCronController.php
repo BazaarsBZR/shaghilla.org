@@ -18,10 +18,23 @@ class RssCronController extends Controller
                 ->header('Cache-Control', 'no-store');
         }
 
-        $result = $importer->importAll(20, 'fill_missing', true, null);
+        $feedOffset = max(0, min(20, (int) $request->query('feed', 0)));
+        $itemOffset = max(0, min(100, (int) $request->query('offset', 0)));
+        $limit = max(1, min(4, (int) $request->query('limit', 3)));
+
+        $result = $importer->importAll(
+            $limit,
+            'fill_missing',
+            true,
+            null,
+            $feedOffset,
+            $itemOffset,
+        );
 
         return response()->json([
             'ok' => true,
+            'feed_offset' => $feedOffset,
+            'item_offset' => $itemOffset,
             'result' => $result,
         ])->header('Cache-Control', 'no-store');
     }

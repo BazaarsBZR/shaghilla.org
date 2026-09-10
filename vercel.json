@@ -10,8 +10,16 @@
   },
   "crons": [
     {
-      "path": "/tasks/rss-import",
+      "path": "/tasks/rss-import?feed=0&limit=3",
       "schedule": "7 * * * *"
+    },
+    {
+      "path": "/tasks/rss-import?feed=1&limit=3",
+      "schedule": "17 * * * *"
+    },
+    {
+      "path": "/tasks/rss-import?feed=2&limit=3",
+      "schedule": "27 * * * *"
     },
     {
       "path": "/tasks/public-money-import/ppa-awards",
