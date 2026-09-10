@@ -37,8 +37,9 @@ class PublicMoneyImportWebhookController extends Controller
             'ran_at' => now()->toIso8601String(),
             'result' => $importer->import(
                 $source,
-                max(1, min(500, $request->integer('limit', 50))),
+                max(1, min(500, $request->integer('limit', 20))),
                 $request->boolean('publish_verified'),
+                max(1, min(100, $request->integer('start_page', 1))),
             ),
         ])
             ->header('Cache-Control', 'no-store');

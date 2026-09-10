@@ -21,7 +21,7 @@ final class PublicMoneyImporter
     public function __construct(private readonly OfficialSourceClient $client) {}
 
     /** @return array<string, array<string, int|string|null>> */
-    public function import(?string $onlySource = null, int $limit = 50, bool $publishVerified = false): array
+    public function import(?string $onlySource = null, int $limit = 50, bool $publishVerified = false, int $startPage = 1): array
     {
         $lock = Cache::lock('public-money-import-v2', 75);
         if (! $lock->get()) {
@@ -34,7 +34,7 @@ final class PublicMoneyImporter
                 ->orderBy('id')->get();
             $results = [];
             foreach ($sources as $source) {
-                $results[$source->key] = $this->importSource($source, max(1, min(500, $limit)), $publishVerified);
+                $results[$source->key] = $this->importSource($source, max(1, min(500, $limit)), $publishVerified, max(1, $startPage));
             }
             return $results;
         } finally {
@@ -43,7 +43,7 @@ final class PublicMoneyImporter
     }
 
     /** @return array<string, int|string|null> */
-    private function importSource(PublicMoneySource $source, int $limit, bool $publishVerified): array
+    private function importSource(PublicMoneySource $source, int $limit, bool $publishVerified, int $startPage): array
     {
         $run = PublicMoneyImportRun::create(['source_id' => $source->id, 'status' => 'running', 'started_at' => now()]);
         $counts = ['discovered_count' => 0, 'created_count' => 0, 'updated_count' => 0, 'failed_count' => 0];
@@ -51,7 +51,7 @@ final class PublicMoneyImporter
 
         try {
             $counts = str_starts_with($source->adapter, 'ppa_')
-                ? $this->importPpa($source, $run, $limit, $publishVerified)
+                ? $this->importPpa($source, $run, $limit, $publishVerified, $startPage)
                 : $this->importMof($source, $run, $publishVerified);
             $run->update([...$counts, 'status' => $counts['failed_count'] ? 'partial' : 'succeeded', 'finished_at' => now()]);
             $source->update(['last_success_at' => now(), 'last_error' => null]);
@@ -65,14 +65,17 @@ final class PublicMoneyImporter
     }
 
     /** @return array{discovered_count:int,created_count:int,updated_count:int,failed_count:int} */
-    private function importPpa(PublicMoneySource $source, PublicMoneyImportRun $run, int $limit, bool $publishVerified): array
+    private function importPpa(PublicMoneySource $source, PublicMoneyImportRun $run, int $limit, bool $publishVerified, int $startPage): array
     {
         $rows = [];
-        $nextUrl = $source->discovery_url;
+        $nextUrl = $startPage > 1
+            ? $source->discovery_url.(str_contains($source->discovery_url, '?') ? '&' : '?').'page='.$startPage
+            : $source->discovery_url;
         $visited = [];
-        $page = 1;
+        $page = $startPage;
+        $pagesFetched = 0;
 
-        while ($nextUrl && count($rows) < $limit && $page <= 25 && ! isset($visited[$nextUrl])) {
+        while ($nextUrl && count($rows) < $limit && $pagesFetched < 25 && ! isset($visited[$nextUrl])) {
             $visited[$nextUrl] = true;
             $download = $this->client->get($nextUrl);
             $document = $this->document($source, $run, $download, strtoupper(str_replace('_', ' ', $source->adapter)).' - Page '.$page, 'html');
@@ -87,6 +90,7 @@ final class PublicMoneyImporter
 
             $nextUrl = $this->ppaNextPage($download['body'], $download['url']);
             $page++;
+            $pagesFetched++;
         }
 
         $rows = array_values($rows);
