@@ -46,7 +46,8 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Red,
             ])
             ->assets([
-                Css::make('shaghilla-admin-brand', '/css/admin-brand.css'),
+                Css::make('shaghilla-admin-brand', '/css/admin-brand.css')
+                    ->html('/css/admin-brand.css'),
             ])
             ->plugins($plugins)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
