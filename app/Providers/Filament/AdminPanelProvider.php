@@ -11,6 +11,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Assets\Css;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use App\Http\Middleware\SetLocaleToEnglish;
@@ -37,8 +38,15 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('رابطة الشغيلة')
+            ->brandLogo(asset('website-logo.png'))
+            ->brandLogoHeight('3rem')
+            ->favicon(asset('logo-fav.png'))
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Red,
+            ])
+            ->assets([
+                Css::make('shaghilla-admin-brand', asset('css/admin-brand.css')),
             ])
             ->plugins($plugins)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

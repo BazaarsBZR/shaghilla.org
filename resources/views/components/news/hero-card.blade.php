@@ -3,6 +3,11 @@
     'fill' => false,
 ])
 
+@php
+    $mediaUrl = trim((string) ($article->image_url ?? ''));
+    $isVideo = preg_match('/\.(mp4|webm|mov|m4v)(?:$|[?#])/i', $mediaUrl) === 1;
+@endphp
+
 <a
     href="{{ route('news.show', $article->slug) }}"
     @class([
@@ -18,9 +23,15 @@
     >
         <x-news.image-fallback />
 
-        @if (! empty($article->image_url))
+        @if ($isVideo)
+            <span class="absolute inset-0 flex items-center justify-center">
+                <span class="flex h-16 w-16 items-center justify-center rounded-full bg-night/85 text-white shadow-overlay ring-4 ring-white/70">
+                    <svg class="ms-1 h-7 w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+                </span>
+            </span>
+        @elseif ($mediaUrl !== '')
             <img
-                src="{{ $article->image_url }}"
+                src="{{ $mediaUrl }}"
                 alt=""
                 loading="eager"
                 decoding="async"

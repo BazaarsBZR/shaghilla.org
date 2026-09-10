@@ -128,14 +128,16 @@ class ArticleResource extends Resource
                             ->columnSpanFull(),
 
                         ViewField::make('blob_upload')
-                            ->label('Upload image')
+                            ->label('Upload image or video')
                             ->view('filament.forms.components.blob-image-upload')
-                            ->visible(fn (): bool => (bool) env('VERCEL')),
+                            ->visible(fn (): bool => (bool) env('VERCEL'))
+                            ->columnSpanFull(),
 
                         TextInput::make('image_url')
-                            ->label('Image URL')
+                            ->label('Media URL')
                             ->url()
-                            ->helperText('Optional for imported stories or externally hosted images.')
+                            ->helperText('Advanced fallback for local development. Production editors should use the upload box above.')
+                            ->hidden(fn (): bool => (bool) env('VERCEL'))
                             ->columnSpanFull(),
                     ]),
 
@@ -169,9 +171,10 @@ class ArticleResource extends Resource
                             ->columnSpanFull(),
 
                         TextInput::make('canonical_url')
-                            ->label('Canonical URL')
+                            ->label('Original source URL')
                             ->url()
-                            ->helperText('Leave blank for original Shaghilla articles.')
+                            ->helperText('The original publisher link for an imported story. Original Shaghilla articles do not need this.')
+                            ->visible(fn (?Article $record): bool => filled($record?->canonical_url))
                             ->columnSpanFull(),
 
                         DateTimePicker::make('imported_at')
@@ -191,6 +194,9 @@ class ArticleResource extends Resource
             ->columns([
                 ImageColumn::make('image_url')
                     ->label('Image')
+                    ->getStateUsing(fn (Article $record): ?string => preg_match('/\.(mp4|webm|mov|m4v)(?:$|[?#])/i', (string) $record->image_url) === 1
+                        ? null
+                        : $record->image_url)
                     ->square()
                     ->size(44),
 

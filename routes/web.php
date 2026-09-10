@@ -35,6 +35,10 @@ Route::prefix('public-money')->name('public-money.')->group(function (): void {
     Route::get('/sources', [PublicMoneyController::class, 'sources'])->name('sources');
     Route::get('/reports/{report:slug}', [PublicMoneyController::class, 'report'])->name('report');
 });
+Route::post('/admin/blob-upload/authorize', \App\Http\Controllers\AdminBlobUploadAuthorizationController::class)
+    ->name('admin.blob-upload.authorize')
+    ->middleware(['auth', 'throttle:30,1']);
+
 Route::post('/admin/blob-upload', \App\Http\Controllers\AdminBlobUploadController::class)
     ->middleware(['auth', 'throttle:30,1'])
     ->name('admin.blob-upload');

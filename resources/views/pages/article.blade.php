@@ -1,4 +1,6 @@
 @php
+    $mediaUrl = trim((string) ($article->image_url ?? ''));
+    $isVideo = preg_match('/\.(mp4|webm|mov|m4v)(?:$|[?#])/i', $mediaUrl) === 1;
     $metaDescription = \Illuminate\Support\Str::limit(
         trim(preg_replace('/\\s+/u', ' ', strip_tags($article->excerpt ?: $article->content ?: ''))),
         160,
@@ -18,9 +20,13 @@
         <meta property="og:description" content="{{ $metaDescription }}" />
     @endif
     <meta property="og:url" content="{{ $article->canonical_url ?: request()->url() }}" />
-    @if (! empty($article->image_url))
-        <meta property="og:image" content="{{ $article->image_url }}" />
+    @if ($mediaUrl !== '' && ! $isVideo)
+        <meta property="og:image" content="{{ $mediaUrl }}" />
         <meta name="twitter:card" content="summary_large_image" />
+    @elseif ($isVideo)
+        <meta property="og:video" content="{{ $mediaUrl }}" />
+        <meta property="og:video:type" content="video/mp4" />
+        <meta name="twitter:card" content="player" />
     @else
         <meta name="twitter:card" content="summary" />
     @endif
@@ -40,9 +46,15 @@
             </div>
         </header>
 
-        @if (! empty($article->image_url))
+        @if ($isVideo)
+            <div class="overflow-hidden rounded-2xl bg-black ring-1 ring-black/10">
+                <video src="{{ $mediaUrl }}" controls playsinline preload="metadata" class="max-h-[75vh] w-full bg-black">
+                    Your browser does not support video playback.
+                </video>
+            </div>
+        @elseif ($mediaUrl !== '')
             <div class="overflow-hidden rounded-2xl bg-gray-100 ring-1 ring-black/5">
-                <img src="{{ $article->image_url }}" alt="" class="h-auto w-full" loading="lazy" />
+                <img src="{{ $mediaUrl }}" alt="" class="h-auto w-full" loading="lazy" referrerpolicy="no-referrer" />
             </div>
         @endif
 
