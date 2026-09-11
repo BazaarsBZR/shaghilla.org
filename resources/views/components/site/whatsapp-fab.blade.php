@@ -1,10 +1,12 @@
-<details class="group fixed bottom-5 right-5 z-50" dir="rtl">
-    <summary class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-full bg-[#16865c] text-white shadow-lg ring-2 ring-white transition hover:scale-105" aria-label="فتح واتساب">
-        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.84 9.84 0 0 0-8.45 14.88L2 22l5.25-1.54A9.95 9.95 0 1 0 12.04 2Zm0 17.98a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.11.91.93-3.03-.2-.31A8.08 8.08 0 1 1 12.04 20Zm4.43-6.05c-.24-.12-1.44-.71-1.66-.79-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.52.06-1.42-.71-2.35-1.27-3.29-2.88-.25-.43.25-.4.71-1.32.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62 1.52.65 2.12.71 2.88.6.46-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28Z"/></svg>
-    </summary>
-    <div class="absolute bottom-14 left-0 w-64 rounded-2xl border border-emerald-100 bg-white p-4 text-right shadow-2xl">
-        <p class="font-black text-[#102735]">تواصل معنا عبر واتساب</p>
-        <p class="mt-1 text-sm text-[#708087]"><bdi dir="ltr" class="tabular-nums">+961 79 333 415</bdi></p>
-        <a href="https://wa.me/96179333415" target="_blank" rel="noopener noreferrer" class="mt-3 block rounded-xl bg-[#16865c] px-4 py-2 text-center text-sm font-black text-white">فتح المحادثة</a>
-    </div>
-</details>
+<a
+    href="https://wa.me/96179333415"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="تواصل معنا عبر واتساب"
+    class="fixed bottom-5 right-5 z-50 inline-flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-[#16865c] text-white shadow-[0_12px_30px_rgba(8,42,51,0.28)] transition duration-200 hover:-translate-y-1 hover:bg-[#0f704c] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#16865c]/30"
+>
+    <svg viewBox="0 0 32 32" aria-hidden="true" class="h-8 w-8 fill-current">
+        <path d="M16.04 3.2A12.72 12.72 0 0 0 5.25 22.66L3.2 28.8l6.34-2A12.78 12.78 0 1 0 16.04 3.2Zm0 23.38a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-3.76 1.19 1.23-3.65-.25-.4a10.62 10.62 0 1 1 8.57 4.57Zm5.82-7.94c-.32-.16-1.88-.93-2.17-1.03-.29-.11-.5-.16-.71.16-.21.31-.82 1.03-1 1.24-.18.21-.37.24-.69.08-.31-.16-1.33-.49-2.54-1.57a9.5 9.5 0 0 1-1.76-2.19c-.18-.32-.02-.49.14-.64.14-.14.31-.37.47-.55.16-.19.21-.32.32-.53.1-.21.05-.4-.03-.56-.08-.16-.71-1.72-.98-2.35-.25-.62-.52-.54-.71-.55h-.61c-.21 0-.55.08-.84.4-.29.31-1.11 1.08-1.11 2.64s1.14 3.07 1.29 3.28c.16.21 2.24 3.42 5.42 4.8.76.32 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.37.19-1.5-.08-.13-.29-.21-.61-.37Z"/>
+    </svg>
+    <span class="sr-only">واتساب</span>
+</a>
