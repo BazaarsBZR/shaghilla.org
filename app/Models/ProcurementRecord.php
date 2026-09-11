@@ -84,4 +84,51 @@ class ProcurementRecord extends Model
             default => 'مفتوحة',
         };
     }
+
+    public function publicMoneyStageLabel(): string
+    {
+        return match ($this->stage) {
+            'tender' => 'مناقصة جارية',
+            'award' => 'نتيجة تلزيم',
+            'contract' => 'عقد موقّع',
+            'implementation' => 'قيد التنفيذ',
+            default => 'سجل شراء عام',
+        };
+    }
+
+    public function supplierDisplayLabel(): string
+    {
+        if (filled($this->supplier)) {
+            return $this->supplier;
+        }
+
+        return $this->stage === 'tender'
+            ? 'لم يتم التلزيم بعد'
+            : 'غير مذكور في المصدر';
+    }
+
+    public function amountDisplayLabel(): string
+    {
+        if ($this->amount !== null) {
+            return number_format((float) $this->amount, 2).' '.($this->currency ?: '');
+        }
+
+        if ($this->estimated_value_confidential) {
+            return 'القيمة سرّية في المصدر';
+        }
+
+        if ($this->estimated_value_min !== null || $this->estimated_value_max !== null) {
+            $minimum = $this->estimated_value_min !== null ? number_format((float) $this->estimated_value_min, 2) : null;
+            $maximum = $this->estimated_value_max !== null ? number_format((float) $this->estimated_value_max, 2) : null;
+            $range = $minimum && $maximum && $minimum !== $maximum
+                ? $minimum.' - '.$maximum
+                : ($minimum ?: $maximum);
+
+            return trim($range.' '.($this->currency ?: ''));
+        }
+
+        return $this->stage === 'tender'
+            ? 'غير معلنة في مرحلة المناقصة'
+            : 'غير مذكورة في المصدر';
+    }
 }

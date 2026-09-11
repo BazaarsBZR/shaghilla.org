@@ -353,13 +353,14 @@ class PpaTenderImporter
      */
     private function detailCandidates(PublicMoneySource $source, array $priorityIds, int $limit)
     {
+        $priorityLimit = max(1, min($limit, (int) ceil($limit * 0.67)));
         $records = ProcurementRecord::query()
             ->where('source_id', $source->id)
             ->where('stage', 'tender')
             ->whereIn('id', $priorityIds)
             ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
             ->orderBy('detail_verified_at')
-            ->limit($limit)
+            ->limit($priorityLimit)
             ->get();
 
         if ($records->count() >= $limit) {
@@ -400,6 +401,9 @@ class PpaTenderImporter
         ]));
         $estimatedMinRaw = $this->value($pairs, ['minimum estimated value', 'min estimated value', 'الحد الأدنى للقيمة التقديرية']);
         $estimatedMaxRaw = $this->value($pairs, ['maximum estimated value', 'max estimated value', 'الحد الأقصى للقيمة التقديرية']);
+        $estimatedConfidential = $estimatedConfidential
+            || str_contains(mb_strtolower(($estimatedMinRaw ?? '').' '.($estimatedMaxRaw ?? '')), 'confidential')
+            || str_contains(($estimatedMinRaw ?? '').' '.($estimatedMaxRaw ?? ''), 'سرية');
         $estimatedRaw = $this->value($pairs, ['estimated value', 'القيمة التقديرية']);
         if (! $estimatedMinRaw && ! $estimatedMaxRaw && $estimatedRaw) {
             $estimatedMinRaw = $estimatedRaw;
@@ -410,19 +414,26 @@ class PpaTenderImporter
         $status = $this->normalisedStatus($statusText, $stages);
         $submissionDeadlineRaw = $this->value($pairs, [
             'deadline for submitting offers',
+            'deadline for submission of offers',
             'submission deadline',
             'deadline of submitting offers',
             'آخر موعد لتقديم العروض',
         ]);
-        $announcementRaw = $this->value($pairs, ['announcement date', 'announced date', 'تاريخ الإعلان']);
+        $announcementRaw = $this->value($pairs, ['announcement date', 'announced date', 'date of publish plan', 'تاريخ الإعلان']);
         $administrativeOpeningRaw = $this->value($pairs, [
             'administrative and technical opening date',
             'administrative/technical opening date',
+            'date of the administrative and technical bid opening session',
             'موعد فتح العروض الإدارية',
         ]);
-        $financialOpeningRaw = $this->value($pairs, ['financial opening date', 'موعد فتح العروض المالية']);
+        $financialOpeningRaw = $this->value($pairs, [
+            'financial opening date',
+            'date of the financial bid opening session',
+            'موعد فتح العروض المالية',
+        ]);
         $clarificationRaw = $this->value($pairs, [
             'deadline for clarification',
+            'deadline for clarification of the award result',
             'clarification deadline',
             'deadline of clarification requests',
             'آخر موعد للاستفسارات',
@@ -456,12 +467,13 @@ class PpaTenderImporter
             'administrative_opening_raw' => $administrativeOpeningRaw,
             'financial_opening_raw' => $financialOpeningRaw,
             'responsible_name' => $this->value($pairs, ['responsible name', 'contact name', 'اسم المسؤول']),
-            'responsible_phone' => $this->value($pairs, ['responsible phone', 'phone number', 'رقم الهاتف']),
+            'responsible_phone' => $this->value($pairs, ['responsible phone', 'phone number', 'phone', 'رقم الهاتف']),
             'responsible_email' => $this->value($pairs, ['responsible email', 'email', 'البريد الإلكتروني']),
             'submission_location' => $this->value($pairs, [
                 'offer submission location',
                 'submission method/location',
                 'tender documents receipt location',
+                'place of submission offers',
                 'مكان تقديم العروض',
             ]),
             'eligibility_requirements' => $this->value($pairs, [
@@ -491,6 +503,15 @@ class PpaTenderImporter
     /** @param array<string, mixed> $detail */
     private function applyDetail(ProcurementRecord $record, array $detail): void
     {
+        foreach ($detail as $key => $value) {
+            if (($value === null || $value === '' || $value === []) && $record->getAttribute($key) !== null) {
+                $detail[$key] = $record->getAttribute($key);
+            }
+        }
+        if ($record->estimated_value_confidential) {
+            $detail['estimated_value_confidential'] = true;
+        }
+
         $detailHash = hash('sha256', json_encode($detail, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         $evidence = is_array($record->evidence) ? $record->evidence : [];
         $amountText = $detail['estimated_value_confidential']
