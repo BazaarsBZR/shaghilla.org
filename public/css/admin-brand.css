@@ -220,6 +220,30 @@
     border-radius: 0.85rem !important;
 }
 
+.fi-sidebar-item:not(.fi-sidebar-item-active) .fi-sidebar-item-label {
+    color: #33434a !important;
+    font-weight: 600;
+}
+
+.fi-sidebar-item:not(.fi-sidebar-item-active) svg {
+    color: #65747b !important;
+}
+
+.fi-sidebar-item:not(.fi-sidebar-item-active) a:hover,
+.fi-sidebar-item:not(.fi-sidebar-item-active) a:focus-visible {
+    background: rgba(16, 47, 57, 0.065) !important;
+}
+
+.fi-sidebar-item:not(.fi-sidebar-item-active) a:hover .fi-sidebar-item-label,
+.fi-sidebar-item:not(.fi-sidebar-item-active) a:focus-visible .fi-sidebar-item-label {
+    color: var(--sh-admin-night) !important;
+}
+
+.fi-sidebar-item:not(.fi-sidebar-item-active) a:hover svg,
+.fi-sidebar-item:not(.fi-sidebar-item-active) a:focus-visible svg {
+    color: var(--sh-admin-green) !important;
+}
+
 .fi-sidebar-item-active a {
     color: var(--sh-admin-red-dark) !important;
     background: rgba(217, 39, 46, 0.085) !important;
