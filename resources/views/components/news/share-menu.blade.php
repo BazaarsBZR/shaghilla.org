@@ -7,7 +7,9 @@
 
 @php
     $platforms = \App\Models\SharePlatform::activeCached();
-    $shareUrl = $url ?: ($article ? route('news.show', $article->slug) : url()->current());
+    $shareUrl = $article
+        ? secure_url(route('news.show', $article->slug, false))
+        : secure_url(request()->path());
     $shareTitle = (string) ($title ?: ($article->title ?? config('app.name', '')));
 @endphp
 

@@ -14,14 +14,14 @@
     @if ($metaDescription !== '')
         <meta name="description" content="{{ $metaDescription }}" />
     @endif
-    <link rel="canonical" href="{{ $articlerequest()->url() }}" />
+    <link rel="canonical" href="{{ secure_url(request()->path()) }}" />
 
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ $article->title }}" />
     @if ($metaDescription !== '')
         <meta property="og:description" content="{{ $metaDescription }}" />
     @endif
-    <meta property="og:url" content="{{ $articlerequest()->url() }}" />
+    <meta property="og:url" content="{{ secure_url(request()->path()) }}" />
     @if ($mediaUrl !== '' && ! $isVideo)
         <meta property="og:image" content="{{ $mediaUrl }}" />
         <meta name="twitter:card" content="summary_large_image" />

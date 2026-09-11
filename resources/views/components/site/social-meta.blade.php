@@ -1,7 +1,7 @@
 @php
     $socialTitle = trim((string) ($socialTitle ?? 'رابطة الشغيلة | أخبار لبنان'));
     $socialDescription = trim((string) ($socialDescription ?? 'صوت الناس وأخبار لبنان في منصة عربية واضحة، سريعة ومتجددة.'));
-    $socialUrl = $socialUrl ?? request()->url();
+    $socialUrl = $socialUrl ?? secure_url(request()->path());
     $socialImage = 'https://shaghilla.org/social-preview.png';
 @endphp
 
@@ -23,4 +23,3 @@
 <meta name="twitter:title" content="{{ $socialTitle }}" />
 <meta name="twitter:description" content="{{ $socialDescription }}" />
 <meta name="twitter:image" content="{{ $socialImage }}" />
-
