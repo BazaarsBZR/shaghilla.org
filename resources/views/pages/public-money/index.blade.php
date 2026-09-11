@@ -119,12 +119,12 @@
                     <div class="mt-7 space-y-4">
                         @foreach ($budgetBreakdown as $item)
                             <div>
-                                <div class="mb-1.5 flex items-center justify-between gap-4 text-xs"><span class="truncate font-bold text-[#344a55]">{{ $budgetLabels[$item->category] ?? $item->category }}</span><span class="shrink-0 font-black text-[#102735]">{{ number_format((float) $item->amount) }}</span></div>
+                                <div class="mb-1.5 flex items-end justify-between gap-4 text-xs"><span class="truncate font-bold text-[#344a55]">{{ $budgetLabels[$item->category] ?? $item->category }}</span><span class="shrink-0 text-left"><strong class="block font-black text-[#102735]" dir="rtl">{{ number_format((float) $item->amount) }} مليار ل.ل.</strong><small class="mt-0.5 block font-bold text-[#18784e]" dir="rtl">≈ {{ number_format((float) $item->amount / $lbpPerUsd, 2) }} مليار دولار</small></span></div>
                                 <div class="h-2 overflow-hidden rounded-full bg-[#edf2f3]"><div class="h-full rounded-full bg-gradient-to-l from-[#1f9a68] to-[#73c991]" style="width: {{ max(3, ((float) $item->amount / $budgetMax) * 100) }}%"></div></div>
                             </div>
                         @endforeach
                     </div>
-                    <p class="mt-5 text-[11px] text-[#829096]">القيم بوحدة «مليار ليرة لبنانية» كما وردت في الوثيقة الرسمية.</p>
+                    <p class="mt-5 rounded-xl bg-[#f3f7f5] px-3 py-2 text-[11px] leading-5 text-[#60736b]">كل قيمة أصلية معروضة بمليار ليرة لبنانية، وتحتها تحويل تقريبي بمليار دولار على أساس 89,500 ليرة للدولار.</p>
                 @else
                     <div class="mt-8 rounded-2xl border border-dashed border-[#cfdadd] p-8 text-center text-sm text-[#7e8b91]">ستظهر الأعمدة بعد اكتمال مزامنة وثيقة الموازنة ومراجعتها.</div>
                 @endif
