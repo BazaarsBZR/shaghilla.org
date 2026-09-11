@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AdminRecoveryController;
 use App\Http\Controllers\Admin\MembershipApplicationDocumentController;
 use App\Http\Controllers\AlManarUrgentImportWebhookController;
 use App\Http\Controllers\BreakingApiController;
@@ -42,6 +43,13 @@ Route::post('/admin/blob-upload/authorize', \App\Http\Controllers\AdminBlobUploa
 Route::post('/admin/blob-upload', \App\Http\Controllers\AdminBlobUploadController::class)
     ->middleware(['auth', 'throttle:30,1'])
     ->name('admin.blob-upload');
+
+Route::get('/admin/recovery/{token}', [AdminRecoveryController::class, 'show'])
+    ->name('admin.recovery.show')
+    ->middleware('throttle:6,1');
+Route::post('/admin/recovery/{token}', [AdminRecoveryController::class, 'update'])
+    ->name('admin.recovery.update')
+    ->middleware('throttle:3,1');
 
 Route::get('/pages/{slug}', [SitePageController::class, 'show'])->name('pages.show');
 
