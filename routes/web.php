@@ -19,21 +19,16 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 
-$statelessPublicMiddleware = [
-    \Illuminate\Session\Middleware\StartSession::class,
-    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-];
-
-Route::get('/', HomeController::class)->withoutMiddleware($statelessPublicMiddleware)->name('home');
-Route::get('/home/latest-news', [HomeController::class, 'latest'])->withoutMiddleware($statelessPublicMiddleware)->name('home.latest');
-Route::get('/live', LiveController::class)->withoutMiddleware($statelessPublicMiddleware)->name('live');
-Route::get('/search', SearchController::class)->withoutMiddleware($statelessPublicMiddleware)->name('search');
+Route::get('/', HomeController::class)->name('home');
+Route::get('/home/latest-news', [HomeController::class, 'latest'])->name('home.latest');
+Route::get('/live', LiveController::class)->name('live');
+Route::get('/search', SearchController::class)->name('search');
 Route::get('/membership', [MembershipController::class, 'show'])->name('membership');
 Route::post('/membership', [MembershipController::class, 'store'])->name('membership.store')->middleware('throttle:membership');
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:contact');
 
-Route::prefix('public-money')->name('public-money.')->withoutMiddleware($statelessPublicMiddleware)->group(function (): void {
+Route::prefix('public-money')->name('public-money.')->group(function (): void {
     Route::get('/', [PublicMoneyController::class, 'index'])->name('index');
     Route::get('/procurements', [PublicMoneyController::class, 'procurements'])->name('procurements');
     Route::get('/procurements/{record}', [PublicMoneyController::class, 'procurement'])->name('procurement');
@@ -56,12 +51,12 @@ Route::post('/admin/recovery/{token}', [AdminRecoveryController::class, 'update'
     ->name('admin.recovery.update')
     ->middleware('throttle:3,1');
 
-Route::get('/pages/{slug}', [SitePageController::class, 'show'])->withoutMiddleware($statelessPublicMiddleware)->name('pages.show');
+Route::get('/pages/{slug}', [SitePageController::class, 'show'])->name('pages.show');
 
-Route::get('/news/{slug}', [ArticleController::class, 'show'])->withoutMiddleware($statelessPublicMiddleware)->name('news.show');
+Route::get('/news/{slug}', [ArticleController::class, 'show'])->name('news.show');
 
-Route::get('/videos/{videoItem}', [VideoController::class, 'show'])->withoutMiddleware($statelessPublicMiddleware)->name('videos.show');
-Route::get('/videos/hosted/{hostedVideo:slug}', [HostedVideoController::class, 'show'])->withoutMiddleware($statelessPublicMiddleware)->name('hosted-videos.show');
+Route::get('/videos/{videoItem}', [VideoController::class, 'show'])->name('videos.show');
+Route::get('/videos/hosted/{hostedVideo:slug}', [HostedVideoController::class, 'show'])->name('hosted-videos.show');
 Route::get('/weather-feed', WeatherController::class)->name('api.weather');
 Route::get('/breaking-feed', BreakingApiController::class)->name('api.breaking')->middleware('throttle:api-breaking');
 Route::get('/api/weather', WeatherController::class);
@@ -86,17 +81,14 @@ Route::match(['GET', 'POST'], '/tasks/public-money-import/{source?}', PublicMone
     ->middleware('throttle:6,1');
 
 Route::get('/government-tenders', [\App\Http\Controllers\GovernmentTenderController::class, 'index'])
-    ->withoutMiddleware($statelessPublicMiddleware)
     ->name('government-tenders.index');
 Route::get('/government-tenders/{sourceRecordId}', [\App\Http\Controllers\GovernmentTenderController::class, 'show'])
-    ->withoutMiddleware($statelessPublicMiddleware)
     ->whereNumber('sourceRecordId')
     ->name('government-tenders.show');
 Route::get('/tasks/government-tenders-import', \App\Http\Controllers\GovernmentTenderImportController::class)
     ->name('tasks.government-tenders-import');
 
 Route::get('/financial-status', [\App\Http\Controllers\FinancialStatusController::class, 'index'])
-    ->withoutMiddleware($statelessPublicMiddleware)
     ->name('financial-status.index');
 Route::get('/tasks/financial-status-import', \App\Http\Controllers\FinancialStatusImportController::class)
     ->name('tasks.financial-status-import');
