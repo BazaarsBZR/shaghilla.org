@@ -48,7 +48,6 @@
         ],
         "vercel": [
             "@php artisan package:discover --ansi",
-            "@php artisan config:cache --ansi",
             "@php artisan view:cache --ansi"
         ],
         "post-root-package-install": [
