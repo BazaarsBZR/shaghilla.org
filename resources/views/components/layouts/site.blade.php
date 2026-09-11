@@ -6,6 +6,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
         <title>{{ $title ?? config('app.name') }}</title>
+        @unless (request()->is('news/*'))
+            @include('components.site.social-meta', [
+                'socialTitle' => request()->is('/') ? 'رابطة الشغيلة | أخبار لبنان' : (($title ?? config('app.name')).' | رابطة الشغيلة'),
+            ])
+        @endunless
         <link rel="icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
         <link rel="shortcut icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
         <link rel="apple-touch-icon" href="{{ asset('logo-fav.png') }}" />
