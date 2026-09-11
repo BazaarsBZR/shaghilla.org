@@ -38,8 +38,8 @@
       "schedule": "35 3 * * *"
     },
     {
-      "path": "/tasks/government-tenders-import?pages=3&details=18",
-      "schedule": "17 */3 * * *"
+      "path": "/tasks/government-tenders-import?pages=1&details=4",
+      "schedule": "17,47 * * * *"
     },
     {
       "path": "/tasks/financial-status-import",

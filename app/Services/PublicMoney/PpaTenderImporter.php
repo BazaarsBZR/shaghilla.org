@@ -359,6 +359,8 @@ class PpaTenderImporter
             ->where('stage', 'tender')
             ->whereIn('id', $priorityIds)
             ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
+            ->orderByRaw('CASE WHEN submission_deadline_at IS NOT NULL AND submission_deadline_at >= ? THEN 0 ELSE 1 END', [now()])
+            ->orderBy('submission_deadline_at')
             ->orderBy('detail_verified_at')
             ->limit($priorityLimit)
             ->get();
