@@ -133,8 +133,8 @@
                         }
                     }
                     echo '<a data-prefetch-page href="'.e(route('public-money.index')).'" class="sh-nav-link '.(request()->routeIs('public-money.*') ? 'is-active' : '').'">'.e(__('ui.nav.public_money')).'</a>';
-                    echo '<a data-prefetch-page href="'.e(route('government-tenders.index')).'" class="sh-nav-link '.(request()->routeIs('government-tenders.*') ? 'is-active' : '').'">المناقصات الحكومية</a>';
                     echo '<a data-prefetch-page href="'.e(route('financial-status.index')).'" class="sh-nav-link '.(request()->routeIs('financial-status.*') ? 'is-active' : '').'">الوضع المالي</a>';
+                    echo '<a data-prefetch-page href="'.e(route('government-tenders.index')).'" class="sh-nav-link '.(request()->routeIs('government-tenders.*') ? 'is-active' : '').'">المناقصات الحكومية</a>';
                     echo '</nav>';
                     break;
 
@@ -266,8 +266,8 @@
             @endif
 
             <a data-prefetch-page href="{{ route('public-money.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">{{ __('ui.nav.public_money') }}</a>
-            <a data-prefetch-page href="{{ route('government-tenders.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">المناقصات الحكومية</a>
             <a data-prefetch-page href="{{ route('financial-status.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">الوضع المالي</a>
+            <a data-prefetch-page href="{{ route('government-tenders.index') }}" class="rounded-control px-3 py-2 text-ink-muted hover:bg-surface-soft hover:text-ink">المناقصات الحكومية</a>
 
             @if ($showLiveButton && $hasLive)
                 <a
