@@ -366,9 +366,9 @@ class PpaTenderImporter
                     ->orWhereNull('evidence->detail_page->parser_version')
                     ->orWhere('evidence->detail_page->parser_version', '<', self::DETAIL_PARSER_VERSION);
             })
-            ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
             ->orderByRaw('CASE WHEN submission_deadline_at IS NOT NULL AND submission_deadline_at >= ? THEN 0 ELSE 1 END', [now()])
             ->orderBy('submission_deadline_at')
+            ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
             ->orderBy('detail_verified_at')
             ->limit($priorityLimit)
             ->get();
@@ -387,9 +387,9 @@ class PpaTenderImporter
                     ->orWhereNull('evidence->detail_page->parser_version')
                     ->orWhere('evidence->detail_page->parser_version', '<', self::DETAIL_PARSER_VERSION);
             })
-            ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
             ->orderByRaw('CASE WHEN submission_deadline_at IS NOT NULL AND submission_deadline_at >= ? THEN 0 ELSE 1 END', [now()])
             ->orderBy('submission_deadline_at')
+            ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
             ->orderBy('detail_verified_at')
             ->limit($limit - $records->count())
             ->get();
