@@ -1,107 +1,66 @@
-<footer class="sh-site-footer border-t border-line bg-surface">
-    <div class="mx-auto w-full max-w-6xl px-4 py-10 text-sm text-ink-muted">
-        @php
-            $brandName = \App\Models\SiteSetting::getValue('site_brand_name', config('app.name'));
-            $footerItems = \App\Models\SitePage::footerMenu();
+<footer class="sh-site-footer relative overflow-hidden border-t border-white/10 bg-night text-white">
+    <div class="h-1 bg-gradient-to-l from-accent via-white to-[#16865c]"></div>
+    <div class="pointer-events-none absolute -left-20 top-16 h-56 w-56 rounded-full bg-[#16865c]/10 blur-3xl"></div>
+    <div class="pointer-events-none absolute -right-16 bottom-0 h-48 w-48 rounded-full bg-accent/10 blur-3xl"></div>
 
-            $showSocials = \App\Models\SiteSetting::getBool('footer_show_socials', false);
-            $facebookUrl = trim((string) \App\Models\SiteSetting::getValue('footer_facebook_url', ''));
-            $xUrl = trim((string) \App\Models\SiteSetting::getValue('footer_x_url', ''));
-            $instagramUrl = trim((string) \App\Models\SiteSetting::getValue('footer_instagram_url', ''));
-            $hasSocials = $showSocials && ($facebookUrl !== '' || $xUrl !== '' || $instagramUrl !== '');
-        @endphp
+    @php
+        $brandName = \App\Models\SiteSetting::getValue('site_brand_name', config('app.name'));
+    @endphp
 
-        <div class="grid gap-8 border-b border-line pb-8 {{ $hasSocials ? 'md:grid-cols-4' : 'md:grid-cols-3' }}">
-            <div class="space-y-3">
-                <div class="flex items-center gap-3 text-lg font-extrabold tracking-tight text-ink">
-                    <img src="{{ asset('website-logo.png') }}" alt="" class="h-12 w-12 rounded-full bg-white object-contain p-1 shadow-sm" />
+    <div class="relative mx-auto w-full max-w-7xl px-5 py-12 sm:px-8 lg:py-16">
+        <div class="grid gap-10 border-b border-white/10 pb-10 sm:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1.15fr] lg:gap-12">
+            <section class="space-y-5 sm:col-span-2 lg:col-span-1">
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-3 text-xl font-black tracking-tight text-white">
+                    <img src="{{ asset('website-logo.png') }}" alt="{{ $brandName }}" class="h-16 w-16 rounded-full bg-white object-contain p-1.5 shadow-lg ring-1 ring-white/20" />
                     <span>{{ $brandName }}</span>
-                </div>
-                <p class="max-w-xs text-sm leading-relaxed text-ink-muted">
-                    صوت الناس وأخبار لبنان في منصة عربية واضحة، سريعة، ومتجددة.
+                </a>
+                <p class="max-w-sm text-sm font-medium leading-7 text-white/65">
+                    صوت الناس وأخبار لبنان، مع بيانات المال العام والمناقصات الحكومية في منصة عربية واضحة ومتجددة.
                 </p>
-            </div>
+                <span class="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-white/70">
+                    منصة لبنانية مستقلة
+                </span>
+            </section>
 
-            <div class="space-y-3 md:justify-self-center">
-                <div class="text-xs font-extrabold uppercase tracking-wide text-ink">تواصل معنا</div>
-                <div class="grid gap-2 font-semibold">
-                    <a href="mailto:rabitat@shaghilla.org" dir="ltr" class="w-fit text-ink-muted transition hover:text-accent">rabitat@shaghilla.org</a>
-                    <a href="tel:+96179333415" dir="ltr" class="w-fit text-ink-muted transition hover:text-accent">+961 79 333 415</a>
+            <section>
+                <h2 class="mb-5 text-sm font-black text-white">الأقسام الرئيسية</h2>
+                <nav class="grid gap-3 text-sm font-bold" aria-label="روابط الموقع الرئيسية">
+                    <a href="{{ route('home') }}" class="text-white/65 transition hover:text-white">الرئيسية</a>
+                    <a href="{{ route('home') }}#latest-news" class="text-white/65 transition hover:text-white">آخر الأخبار</a>
+                    <a href="{{ route('public-money.index') }}" class="text-white/65 transition hover:text-white">{{ __('ui.nav.public_money') }}</a>
+                    <a href="{{ route('financial-status.index') }}" class="text-white/65 transition hover:text-white">الوضع المالي</a>
+                    <a href="{{ route('government-tenders.index') }}" class="text-white/65 transition hover:text-white">المناقصات الحكومية</a>
+                </nav>
+            </section>
+
+            <section>
+                <h2 class="mb-5 text-sm font-black text-white">الخدمات والمشاركة</h2>
+                <nav class="grid gap-3 text-sm font-bold" aria-label="روابط الخدمات">
+                    <a href="{{ route('membership') }}" class="text-white/65 transition hover:text-white">الانتساب إلى الرابطة</a>
+                    <a href="{{ route('contact') }}" class="text-white/65 transition hover:text-white">طلب خدمة</a>
+                    <a href="{{ route('government-tenders.index') }}" class="text-white/65 transition hover:text-white">استكشف فرص المناقصات</a>
+                    <a href="{{ route('public-money.index') }}" class="text-white/65 transition hover:text-white">تابع المال العام</a>
+                </nav>
+            </section>
+
+            <section>
+                <h2 class="mb-5 text-sm font-black text-white">تواصل معنا</h2>
+                <div class="grid gap gap-3 text-sm font-bold">
+                    <a href="mailto:rabitat@shaghilla.org" dir="ltr" class="w-fit text-white/70 transition hover:text-white">rabitat@shaghilla.org</a>
+                    <a href="tel:+96179333415" dir="ltr" class="w-fit text-white/70 transition hover:text-white">+961 79 333 415</a>
+                    <a href="https://wa.me/96179333415" target="_blank" rel="noopener noreferrer" class="mt-2 inline-flex w-fit items-center justify-center rounded-full bg-[#16865c] px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:bg-[#0f704c]">
+                        تواصل عبر واتساب
+                    </a>
                 </div>
-            </div>
-
-            <div class="space-y-3 md:justify-self-center">
-                <div class="grid grid-cols-2 gap-x-6 gap-y-3 font-semibold">
-                    @if ($footerItems->isEmpty())
-                        <a href="{{ route('home') }}" class="text-ink-muted transition hover:text-ink">{{ __('ui.nav.home') }}</a>
-                        <a href="{{ route('live') }}" class="text-ink-muted transition hover:text-ink">{{ __('ui.nav.live') }}</a>
-                        <a href="{{ route('membership') }}" class="text-ink-muted transition hover:text-ink">{{ __('ui.nav.membership') }}</a>
-                        <a href="{{ route('contact') }}" class="text-ink-muted transition hover:text-ink">{{ __('ui.nav.contact') }}</a>
-                    @else
-                        @foreach ($footerItems as $item)
-                            <a
-                                href="{{ $item->url() }}"
-                                class="text-ink-muted transition hover:text-ink"
-                                @if ($item->target()) target="{{ $item->target() }}" rel="{{ $item->rel() }}" @endif
-                            >
-                                {{ $item->displayTitle() }}
-                            </a>
-                        @endforeach
-                    @endif
-                </div>
-            </div>
-
-            @if ($hasSocials)
-                <div class="space-y-5 md:justify-self-end">
-                    <div class="space-y-2">
-                        <div class="text-xs font-extrabold uppercase tracking-wide text-ink">
-                            {{ __('ui.footer.follow_us') }}
-                        </div>
-                        <div class="flex items-center gap-3">
-                            @if ($facebookUrl !== '')
-                                <a
-                                    href="{{ $facebookUrl }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inline-flex h-10 w-10 items-center justify-center rounded-pill border border-line bg-surface text-ink-muted shadow-surface transition hover:bg-surface-soft hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/25"
-                                >
-                                    <span class="sr-only">{{ __('ui.footer.facebook') }}</span>
-                                    <span class="text-sm font-black">f</span>
-                                </a>
-                            @endif
-
-                            @if ($xUrl !== '')
-                                <a
-                                    href="{{ $xUrl }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inline-flex h-10 w-10 items-center justify-center rounded-pill border border-line bg-surface text-ink-muted shadow-surface transition hover:bg-surface-soft hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/25"
-                                >
-                                    <span class="sr-only">{{ __('ui.footer.x') }}</span>
-                                    <span class="text-sm font-black">X</span>
-                                </a>
-                            @endif
-
-                            @if ($instagramUrl !== '')
-                                <a
-                                    href="{{ $instagramUrl }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inline-flex h-10 w-10 items-center justify-center rounded-pill border border-line bg-surface text-ink-muted shadow-surface transition hover:bg-surface-soft hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/25"
-                                >
-                                    <span class="sr-only">{{ __('ui.footer.instagram') }}</span>
-                                    <span class="text-xs font-black">IG</span>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            @endif
+                <p class="mt-5 max-w-xs text-xs font-semibold leading-6 text-white/45">
+                    للاستفسارات، طلب الخدمات، والمساعدة في فهم فرص المناقصات.
+                </p>
+            </section>
         </div>
 
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-5 text-xs font-semibold text-ink-faint">
-            <div>© {{ now()->year }}</div>
-            <div>{{ $brandName }}</div>
+        <div class="flex flex-col gap-2 pt-6 text-xs font-semibold text-white/45 sm:flex-row sm:items-center sm:justify-between">
+            <div>© {{ now()->year }} {{ $brandName }}. جميع الحقوق محفوظة.</div>
+            <div>بيروت، لبنان</div>
         </div>
     </div>
 </footer>
