@@ -5,6 +5,8 @@
 .vercel
 node_modules
 /vendor
+cpanel_upload
+shaghilla_cpanel_upload_*.zip
 bootstrap/cache/*.php
 storage/logs/*
 storage/framework/cache/*
