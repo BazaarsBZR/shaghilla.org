@@ -56,8 +56,13 @@ class EditArticle extends EditRecord
     {
         app(BreakingNewsLimiter::class)->keepLatest();
         Cache::forget('news.breaking.ticker');
+        Cache::forget('news.breaking.ticker.v2');
         Cache::forget('news.home.hero');
         Cache::forget('news.home.latest');
+
+        foreach (range(1, 10) as $page) {
+            Cache::forget("home.page.data.v1.{$page}");
+        }
     }
 
     protected function getHeaderActions(): array

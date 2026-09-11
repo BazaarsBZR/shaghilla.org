@@ -98,6 +98,7 @@
                     </dl>
                     <p class="gt-source-note">يعرض شغيلة فقط المتطلبات المنشورة في المصدر الرسمي. يمكن لفريقنا مساعدتك على فهم الخطوات، لكن تقديم العروض لا يتم عبر شغيلة.</p>
                     <a class="gt-button is-whatsapp" href="{{ $whatsAppUrl('معلومات عن المشاركة وطريقة التقديم') }}" target="_blank" rel="noopener noreferrer">
+                        <x-icons.social name="fa-whatsapp" class="h-5 w-5 shrink-0" />
                         اطلب معلومات عبر واتساب
                     </a>
                 </section>
@@ -107,7 +108,7 @@
                     @if($tender->tender_documents)
                         <ul class="gt-documents">
                             @foreach($tender->tender_documents as $document)
-                                <li><a href="{{ $whatsAppUrl('مستند المناقصة: '.($document['name'] ?? $missing)) }}" target="_blank" rel="noopener noreferrer"><span>{{ $document['name'] }}</span><b>اطلبه عبر واتساب</b></a></li>
+                                <li><a href="{{ $whatsAppUrl('مستند المناقصة: '.($document['name'] ?? $missing)) }}" target="_blank" rel="noopener noreferrer"><span>{{ $document['name'] }}</span><b class="gt-whatsapp-label"><x-icons.social name="fa-whatsapp" class="h-4 w-4 shrink-0" />اطلبه عبر واتساب</b></a></li>
                             @endforeach
                         </ul>
                     @else
@@ -119,16 +120,16 @@
             <aside class="gt-stack">
                 <section class="gt-panel">
                     <h2>مسار الشراء</h2>
-                    <div class="gt-stage-line">
-                        <div class="gt-stage"><strong>المناقصة</strong><span>الإعلان الرسمي الحالي</span></div>
-                        @foreach($tender->procurement_stages ?: [] as $stage)
-                            <div class="gt-stage"><strong>{{ $stage['label'] }}</strong><a href="{{ $whatsAppUrl('سجل مرحلة الشراء: '.($stage['label'] ?? $missing)) }}" target="_blank" rel="noopener noreferrer">استفسر عبر واتساب</a></div>
-                        @endforeach
+                        <div class="gt-stage-line">
+                            <div class="gt-stage"><strong>المناقصة</strong><span>الإعلان الرسمي الحالي</span></div>
+                            @foreach($tender->procurement_stages ?: [] as $stage)
+                            <div class="gt-stage"><strong>{{ $stage['label'] }}</strong><a class="gt-whatsapp-label" href="{{ $whatsAppUrl('سجل مرحلة الشراء: '.($stage['label'] ?? $missing)) }}" target="_blank" rel="noopener noreferrer"><x-icons.social name="fa-whatsapp" class="h-4 w-4 shrink-0" />استفسر عبر واتساب</a></div>
+                            @endforeach
                         @foreach($relatedStages as $stage)
                             <div class="gt-stage">
                                 <strong>{{ $stageLabels[$stage->stage] ?? $stage->stage }}</strong>
                                 <span>{{ $stage->supplier ?: $stage->title ?: 'سجل رسمي مرتبط' }}</span>
-                                <a href="{{ $whatsAppUrl('المرحلة اللاحقة: '.($stageLabels[$stage->stage] ?? $stage->stage)) }}" target="_blank" rel="noopener noreferrer">استفسر عبر واتساب</a>
+                                <a class="gt-whatsapp-label" href="{{ $whatsAppUrl('المرحلة اللاحقة: '.($stageLabels[$stage->stage] ?? $stage->stage)) }}" target="_blank" rel="noopener noreferrer"><x-icons.social name="fa-whatsapp" class="h-4 w-4 shrink-0" />استفسر عبر واتساب</a>
                             </div>
                         @endforeach
                         @if(empty($tender->procurement_stages) && $relatedStages->isEmpty())

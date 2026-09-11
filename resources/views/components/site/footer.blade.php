@@ -46,7 +46,8 @@
                 <div class="grid gap-3 text-sm font-bold">
                     <a href="mailto:rabitat@shaghilla.org" dir="ltr" class="w-fit text-white/70 transition hover:text-white">rabitat@shaghilla.org</a>
                     <a href="tel:+96179333415" dir="ltr" class="w-fit text-white/70 transition hover:text-white">+961 79 333 415</a>
-                    <a href="https://wa.me/96179333415" target="_blank" rel="noopener noreferrer" class="mt-1 inline-flex w-fit items-center justify-center rounded-full bg-[#16865c] px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:bg-[#0f704c]">
+                    <a href="https://wa.me/96179333415" target="_blank" rel="noopener noreferrer" class="mt-1 inline-flex w-fit items-center justify-center gap-2 rounded-full bg-[#16865c] px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:bg-[#0f704c]">
+                        <x-icons.social name="fa-whatsapp" class="h-5 w-5 shrink-0" />
                         تواصل عبر واتساب
                     </a>
                 </div>

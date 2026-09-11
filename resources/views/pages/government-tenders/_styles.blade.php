@@ -115,7 +115,7 @@
 .gt-button:hover { background: #056443; }
 .gt-button.is-outline { border: 1px solid currentColor; color: var(--gt-green); background: transparent; }
 .gt-button.is-official { background: var(--gt-red); }
-.gt-button.is-whatsapp { background: #16865c; }
+.gt-button.is-whatsapp { gap: 9px; background: #16865c; }
 .gt-button.is-whatsapp:hover { background: #0f704c; }
 .gt-filter-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
 .gt-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin: 34px 0 17px; }
@@ -191,6 +191,7 @@
 .gt-documents { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
 .gt-documents a { display: flex; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 12px; color: var(--gt-ink); background: #f3f7f5; text-decoration: none; overflow-wrap: anywhere; }
 .gt-documents a:hover { color: var(--gt-green); }
+.gt-whatsapp-label { display: inline-flex !important; align-items: center; gap: 6px; color: #16865c !important; white-space: nowrap; }
 .gt-stage-line { display: grid; gap: 12px; }
 .gt-stage { position: relative; padding: 0 25px 17px 0; border-right: 2px solid #c9d8d4; }
 .gt-stage::before { position: absolute; top: 3px; right: -7px; width: 12px; height: 12px; border-radius: 50%; background: var(--gt-green); content: ""; }
