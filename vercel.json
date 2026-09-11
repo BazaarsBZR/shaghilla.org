@@ -44,6 +44,10 @@
     {
       "path": "/tasks/financial-status-import",
       "schedule": "43 2 * * *"
+    },
+    {
+      "path": "/tasks/public-cache-warm",
+      "schedule": "*/5 * * * *"
     }
   ],
   "routes": [

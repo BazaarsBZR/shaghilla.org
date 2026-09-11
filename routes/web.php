@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LiveController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PublicMoneyController;
+use App\Http\Controllers\PublicCacheWarmController;
 use App\Http\Controllers\PublicMoneyImportWebhookController;
 use App\Http\Controllers\RssImportWebhookController;
 use App\Http\Controllers\SearchController;
@@ -92,3 +93,5 @@ Route::get('/financial-status', [\App\Http\Controllers\FinancialStatusController
     ->name('financial-status.index');
 Route::get('/tasks/financial-status-import', \App\Http\Controllers\FinancialStatusImportController::class)
     ->name('tasks.financial-status-import');
+Route::get('/tasks/public-cache-warm', PublicCacheWarmController::class)
+    ->name('tasks.public-cache-warm');
