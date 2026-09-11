@@ -38,7 +38,7 @@
       "schedule": "35 3 * * *"
     },
     {
-      "path": "/tasks/government-tenders-import?pages=1&details=4",
+      "path": "/tasks/government-tenders-import?pages=1&details=30",
       "schedule": "17,47 * * * *"
     },
     {

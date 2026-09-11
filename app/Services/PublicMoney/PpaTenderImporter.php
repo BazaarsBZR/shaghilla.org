@@ -95,7 +95,7 @@ class PpaTenderImporter
             if ($detailLimit > 0 && ! $this->timeExceeded($startedAt, $timeBudgetSeconds)) {
                 $detailRecords = $this->detailCandidates($source, $priorityIds, $detailLimit);
                 $urls = $detailRecords->pluck('source_url')->filter()->values()->all();
-                $responses = $this->client->getMany($urls, 6);
+                $responses = $this->client->getMany($urls, 10);
 
                 foreach ($detailRecords as $record) {
                     if ($this->timeExceeded($startedAt, $timeBudgetSeconds)) {
@@ -358,6 +358,10 @@ class PpaTenderImporter
             ->where('source_id', $source->id)
             ->where('stage', 'tender')
             ->whereIn('id', $priorityIds)
+            ->where(function ($query): void {
+                $query->whereNull('detail_verified_at')
+                    ->orWhere('detail_verified_at', '<', now()->subDay());
+            })
             ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
             ->orderByRaw('CASE WHEN submission_deadline_at IS NOT NULL AND submission_deadline_at >= ? THEN 0 ELSE 1 END', [now()])
             ->orderBy('submission_deadline_at')
@@ -378,7 +382,8 @@ class PpaTenderImporter
                     ->orWhere('detail_verified_at', '<', now()->subDay());
             })
             ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
-            ->orderByDesc('submission_deadline_at')
+            ->orderByRaw('CASE WHEN submission_deadline_at IS NOT NULL AND submission_deadline_at >= ? THEN 0 ELSE 1 END', [now()])
+            ->orderBy('submission_deadline_at')
             ->orderBy('detail_verified_at')
             ->limit($limit - $records->count())
             ->get();
