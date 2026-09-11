@@ -276,8 +276,8 @@ class PpaTenderImporter
                 'reference_number' => $this->column($headers, $cells, ['purchase code', 'procurement reference', 'مرجع', 'رمز الشراء']) ?? ($cells[2] ?? null),
                 'title' => $this->column($headers, $cells, ['tender title', 'title', 'عنوان']) ?? ($cells[3] ?? null),
                 'procurement_method' => $this->column($headers, $cells, ['procurement method', 'طريقة الشراء']) ?? ($cells[4] ?? null),
-                'announcement_raw' => $this->column($headers, $cells, ['announced date', 'announcement date', 'تاريخ الإعلان']) ?? ($cells[5] ?? null),
-                'opening_raw' => $this->column($headers, $cells, ['opening offers date', 'opening date', 'موعد فتح']) ?? ($cells[6] ?? null),
+                'announcement_raw' => $this->column($headers, $cells, ['announced in at', 'announced date', 'announcement date', 'تاريخ الإعلان']) ?? ($cells[5] ?? null),
+                'opening_raw' => $this->column($headers, $cells, ['opening offers in', 'opening offers date', 'opening date', 'موعد فتح']) ?? ($cells[6] ?? null),
                 'source_url' => $this->absoluteUrl($href, $pageUrl),
             ];
         }
@@ -319,6 +319,7 @@ class PpaTenderImporter
             'event_on' => $opening?->toDateString(),
             'publication_on' => $announcement?->toDateString(),
             'announcement_at' => $announcement,
+            'submission_deadline_at' => $record->submission_deadline_at ?: $opening,
             'administrative_opening_at' => $record->administrative_opening_at ?: $opening,
             'source_url' => $item['source_url'],
             'source_status' => $record->source_status ?: 'published',
@@ -336,6 +337,7 @@ class PpaTenderImporter
                     'record_id' => $item['source_record_id'],
                     'announcement_date' => $item['announcement_raw'],
                     'opening_date' => $item['opening_raw'],
+                    'operational_deadline_basis' => 'PPA listing: Opening offers in',
                     'verified_at' => now()->toIso8601String(),
                 ],
             ]),
@@ -516,11 +518,15 @@ class PpaTenderImporter
             'amount_text' => $amountText ?: $record->amount_text,
             'currency' => $detail['currency'] ?: $record->currency,
             'announcement_at' => $detail['announcement_at'] ?: $record->announcement_at,
-            'submission_deadline_at' => $detail['submission_deadline_at'],
+            'submission_deadline_at' => $detail['submission_deadline_at']
+                ?: $record->submission_deadline_at
+                ?: $record->administrative_opening_at,
             'clarification_deadline_at' => $detail['clarification_deadline_at'],
             'administrative_opening_at' => $detail['administrative_opening_at'] ?: $record->administrative_opening_at,
             'financial_opening_at' => $detail['financial_opening_at'],
-            'event_on' => $detail['submission_deadline_at']?->toDateString() ?: $record->event_on,
+            'event_on' => ($detail['submission_deadline_at']
+                ?: $record->submission_deadline_at
+                ?: $record->administrative_opening_at)?->toDateString() ?: $record->event_on,
             'publication_on' => $detail['announcement_at']?->toDateString() ?: $record->publication_on,
             'responsible_name' => $detail['responsible_name'],
             'responsible_phone' => $detail['responsible_phone'],

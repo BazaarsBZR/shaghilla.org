@@ -56,15 +56,22 @@ class ProcurementRecord extends Model
             return $this->status_normalized;
         }
 
-        if ($this->submission_deadline_at?->isPast()) {
+        $deadline = $this->effectiveTenderDeadline();
+
+        if ($deadline?->isPast()) {
             return 'expired';
         }
 
-        if ($this->submission_deadline_at?->lte(now()->addDays(7))) {
+        if ($deadline?->lte(now()->addDays(7))) {
             return 'closing_soon';
         }
 
         return 'open';
+    }
+
+    public function effectiveTenderDeadline()
+    {
+        return $this->submission_deadline_at ?: $this->administrative_opening_at;
     }
 
     public function tenderStatusLabel(): string

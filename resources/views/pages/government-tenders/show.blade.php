@@ -41,8 +41,8 @@
     <div class="gt-wrap">
         <section class="gt-detail-summary">
             <article class="gt-panel gt-deadline-panel">
-                <small>آخر موعد لتقديم العروض</small>
-                <strong>{{ $sourceDate('submission_deadline', $tender->submission_deadline_at) }}</strong>
+                <small>{{ filled(data_get($tender->evidence, 'detail_page.source_values.submission_deadline')) ? 'آخر موعد لتقديم العروض' : 'موعد فتح العروض الرسمي' }}</small>
+                <strong>{{ $sourceDate('submission_deadline', $tender->effectiveTenderDeadline()) }}</strong>
             </article>
             <article class="gt-panel">
                 <h2>هل تريد المشاركة؟</h2>
@@ -82,7 +82,7 @@
                         <div class="gt-participation-row"><dt>المستندات المطلوبة</dt><dd>{{ $tender->required_documents ?: $missing }}</dd></div>
                         <div class="gt-participation-row"><dt>ضمان العرض</dt><dd>{{ $tender->offer_guarantee_text ?: $missing }}</dd></div>
                         <div class="gt-participation-row"><dt>طريقة أو مكان تقديم العرض</dt><dd>{{ $tender->submission_location ?: $missing }}</dd></div>
-                        <div class="gt-participation-row"><dt>آخر موعد لتقديم العرض</dt><dd>{{ $sourceDate('submission_deadline', $tender->submission_deadline_at) }}</dd></div>
+                        <div class="gt-participation-row"><dt>{{ filled(data_get($tender->evidence, 'detail_page.source_values.submission_deadline')) ? 'آخر موعد لتقديم العرض' : 'موعد فتح العروض الرسمي' }}</dt><dd>{{ $sourceDate('submission_deadline', $tender->effectiveTenderDeadline()) }}</dd></div>
                         <div class="gt-participation-row"><dt>آخر موعد للاستفسارات</dt><dd>{{ $sourceDate('clarification_deadline', $tender->clarification_deadline_at) }}</dd></div>
                     </dl>
                     <p class="gt-source-note">يعرض شغيلة فقط المتطلبات المنشورة في المصدر الرسمي. تقديم العروض لا يتم عبر شغيلة.</p>

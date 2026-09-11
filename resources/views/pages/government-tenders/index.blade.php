@@ -105,7 +105,8 @@
             @forelse($tenders as $tender)
                 @php
                     $statusKey = $tender->tenderStatusKey();
-                    $deadlineRaw = data_get($tender->evidence, 'detail_page.source_values.submission_deadline');
+                    $hasExplicitSubmissionDeadline = filled(data_get($tender->evidence, 'detail_page.source_values.submission_deadline'));
+                    $effectiveDeadline = $tender->effectiveTenderDeadline();
                     $announcementRaw = data_get($tender->evidence, 'detail_page.source_values.announcement_date')
                         ?: data_get($tender->evidence, 'list_page.announcement_date');
                 @endphp
@@ -121,9 +122,9 @@
                     </h3>
                     <p class="gt-entity">{{ $tender->authority ?: 'غير مذكور في المصدر' }}</p>
                     <div class="gt-card-details">
-                        <div class="gt-deadline">
-                            <small>آخر موعد لتقديم العروض</small>
-                            <strong>{{ $deadlineRaw ?: ($tender->submission_deadline_at?->timezone('Asia/Beirut')->format('Y-m-d H:i') ?: 'غير مذكور في المصدر') }}</strong>
+                        <div class="gt-deadline {{ $statusKey === 'closing_soon' ? 'is-urgent' : '' }}">
+                            <small>{{ $hasExplicitSubmissionDeadline ? 'آخر موعد لتقديم العروض' : 'موعد فتح العروض الرسمي' }}</small>
+                            <strong>{{ $effectiveDeadline?->timezone('Asia/Beirut')->format('Y-m-d H:i') ?: 'غير مذكور في المصدر' }}</strong>
                         </div>
                         <div>
                             <small>تاريخ الإعلان</small>
@@ -133,10 +134,17 @@
                             <small>طريقة الشراء</small>
                             <strong>{{ $tender->procurement_method ?: 'غير مذكور في المصدر' }}</strong>
                         </div>
-                        <div>
-                            <small>موعد فتح العروض</small>
-                            <strong>{{ $tender->administrative_opening_at?->timezone('Asia/Beirut')->format('Y-m-d H:i') ?: 'غير مذكور في المصدر' }}</strong>
-                        </div>
+                        @if($hasExplicitSubmissionDeadline)
+                            <div>
+                                <small>موعد فتح العروض</small>
+                                <strong>{{ $tender->administrative_opening_at?->timezone('Asia/Beirut')->format('Y-m-d H:i') ?: 'غير مذكور في المصدر' }}</strong>
+                            </div>
+                        @else
+                            <div>
+                                <small>المصدر</small>
+                                <strong>هيئة الشراء العام</strong>
+                            </div>
+                        @endif
                     </div>
                     <a class="gt-card-link" href="{{ route('government-tenders.show', $tender->source_record_id) }}">عرض التفاصيل وكيفية المشاركة ←</a>
                 </article>
@@ -606,12 +614,22 @@
     }
 
     .gt-card-details .gt-deadline {
-        border: 1px solid #f3d2d5;
-        background: #fff3f4;
+        border: 1px solid #c7e7dc;
+        background: #f1faf7;
     }
 
     .gt-card-details .gt-deadline small,
     .gt-card-details .gt-deadline strong {
+        color: #0b7254;
+    }
+
+    .gt-card-details .gt-deadline.is-urgent {
+        border-color: #f3d2d5;
+        background: #fff3f4;
+    }
+
+    .gt-card-details .gt-deadline.is-urgent small,
+    .gt-card-details .gt-deadline.is-urgent strong {
         color: #ac2731;
     }
 

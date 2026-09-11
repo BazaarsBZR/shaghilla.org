@@ -44,7 +44,10 @@ class GovernmentTenderController extends Controller
         }
 
         if ($request->filled('closing_date') && preg_match('/^\d{4}-\d{2}-\d{2}$/', $request->string('closing_date')->toString())) {
-            $query->whereDate('submission_deadline_at', $request->string('closing_date')->toString());
+            $query->whereRaw(
+                'DATE('.$this->deadlineSql().') = ?',
+                [$request->string('closing_date')->toString()],
+            );
         }
 
         $this->applyStatus($query, $status);
@@ -52,20 +55,23 @@ class GovernmentTenderController extends Controller
         if ($request->string('sort')->toString() === 'newest') {
             $query->orderByDesc('announcement_at')->orderByDesc('source_imported_at');
         } else {
-            $query->orderByRaw('CASE WHEN submission_deadline_at IS NULL THEN 1 ELSE 0 END')
-                ->orderBy('submission_deadline_at')
+            $query->orderByRaw('CASE WHEN '.$this->deadlineSql().' IS NULL THEN 1 ELSE 0 END')
+                ->orderByRaw($this->deadlineSql().' ASC')
                 ->orderByDesc('announcement_at');
         }
 
         $tenders = $query->paginate(18)->withQueryString();
         $now = now();
-        $metadata = Cache::remember('government-tenders.metadata.v2', now()->addMinutes(15), function () use ($base, $now): array {
+        $metadata = Cache::remember('government-tenders.metadata.v3', now()->addMinutes(15), function () use ($base, $now): array {
             return [
                 'source' => PublicMoneySource::query()->where('key', 'ppa-tenders')->first(),
                 'counters' => [
                     'open' => $this->openQuery(clone $base)->count(),
                     'closing_week' => $this->openQuery(clone $base)
-                        ->whereBetween('submission_deadline_at', [$now, $now->copy()->addDays(7)])
+                        ->whereRaw(
+                            $this->deadlineSql().' BETWEEN ? AND ?',
+                            [$now, $now->copy()->addDays(7)],
+                        )
                         ->count(),
                     'recent' => (clone $base)->where(function (Builder $builder) use ($now): void {
                         $builder->where('announcement_at', '>=', $now->copy()->subDays(7))
@@ -151,10 +157,10 @@ class GovernmentTenderController extends Controller
     {
         match ($status) {
             'closing' => $this->openQuery($query)
-                ->whereBetween('submission_deadline_at', [now(), now()->addDays(7)]),
+                ->whereRaw($this->deadlineSql().' BETWEEN ? AND ?', [now(), now()->addDays(7)]),
             'expired' => $query->whereNotIn('status_normalized', ['cancelled', 'awarded'])
-                ->whereNotNull('submission_deadline_at')
-                ->where('submission_deadline_at', '<', now()),
+                ->whereRaw($this->deadlineSql().' IS NOT NULL')
+                ->whereRaw($this->deadlineSql().' < ?', [now()]),
             'cancelled' => $query->where('status_normalized', 'cancelled'),
             'awarded' => $query->where('status_normalized', 'awarded'),
             'all' => null,
@@ -165,9 +171,14 @@ class GovernmentTenderController extends Controller
     private function openQuery(Builder $query): Builder
     {
         return $query->whereNotIn('status_normalized', ['cancelled', 'awarded'])
-            ->where(function (Builder $builder): void {
-                $builder->whereNull('submission_deadline_at')
-                    ->orWhere('submission_deadline_at', '>=', now());
-            });
+            ->whereRaw(
+                '('.$this->deadlineSql().' IS NULL OR '.$this->deadlineSql().' >= ?)',
+                [now()],
+            );
+    }
+
+    private function deadlineSql(): string
+    {
+        return 'COALESCE(submission_deadline_at, administrative_opening_at)';
     }
 }

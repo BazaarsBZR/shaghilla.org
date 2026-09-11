@@ -58,6 +58,22 @@ class GovernmentTenderFeatureTest extends TestCase
         $this->assertDatabaseCount('public_money_procurements', 1);
     }
 
+    public function test_listing_opening_date_is_used_when_detail_has_no_separate_submission_deadline(): void
+    {
+        $this->fakePpa();
+
+        app(PpaTenderImporter::class)->import(pageLimit: 1, detailLimit: 0, timeBudgetSeconds: 30);
+
+        $tender = ProcurementRecord::firstOrFail();
+        $this->assertSame('2030-10-10 09:00:00', $tender->submission_deadline_at->format('Y-m-d H:i:s'));
+        $this->assertSame('2030-10-10 09:00:00', $tender->administrative_opening_at->format('Y-m-d H:i:s'));
+
+        $this->get('/government-tenders')
+            ->assertOk()
+            ->assertSee('موعد فتح العروض الرسمي')
+            ->assertDontSee('غير مذكور في المصدر');
+    }
+
     public function test_arabic_rtl_list_and_complete_detail_are_publicly_available(): void
     {
         $this->fakePpa();
