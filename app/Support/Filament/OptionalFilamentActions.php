@@ -6,7 +6,7 @@ class OptionalFilamentActions
 {
     public static function exportAction(): mixed
     {
-        $exportActionClass = 'pxlrbt\\FilamentExcel\\Actions\\Tables\\ExportAction';
+        $exportActionClass = 'pxlrbt\\FilamentExcel\\Actions\\Pages\\ExportAction';
 
         if (! class_exists($exportActionClass)) {
             return null;

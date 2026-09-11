@@ -1,6 +1,6 @@
 @php
     $mediaStatePath = str_replace('blob_upload', 'image_url', $getStatePath());
-    $currentUrl = (string) ($get('image_url') ?? '');
+    $currentUrl = (string) ($field->getRecord()?->image_url ?? '');
     $currentIsVideo = preg_match('/\.(mp4|webm|mov|m4v)(?:$|[?#])/i', $currentUrl) === 1;
     $mediaUploaderAsset = \Illuminate\Support\Facades\Vite::asset('resources/js/admin-media-upload.js');
 @endphp

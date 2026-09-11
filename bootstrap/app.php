@@ -23,6 +23,22 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->report(function (\Throwable $exception): bool|null {
+            if (! app()->runningInConsole() && request()->is('admin/*')) {
+                error_log(sprintf(
+                    '[shaghilla-admin-error] %s: %s at %s:%d',
+                    $exception::class,
+                    $exception->getMessage(),
+                    $exception->getFile(),
+                    $exception->getLine(),
+                ));
+
+                return false;
+            }
+
+            return null;
+        });
+
         $exceptions->render(function (TokenMismatchException $exception, Request $request) {
             if ($request->isMethod('post') && $request->routeIs('membership.store')) {
                 return redirect()
