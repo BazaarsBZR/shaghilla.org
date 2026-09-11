@@ -58,7 +58,7 @@
 
         <div class="flex flex-col gap-2 pt-6 text-xs font-semibold text-white/45 sm:flex-row sm:items-center sm:justify-between">
             <div>© {{ now()->year }} {{ $brandName }}. جميع الحقوق محفوظة.</div>
-            <div>بيروت، لبنان</div>
+            <div>لبنان</div>
         </div>
     </div>
 </footer>
