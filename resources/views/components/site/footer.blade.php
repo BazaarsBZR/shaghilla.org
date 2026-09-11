@@ -11,7 +11,7 @@
             $hasSocials = $showSocials && ($facebookUrl !== '' || $xUrl !== '' || $instagramUrl !== '');
         @endphp
 
-        <div class="grid gap-8 border-b border-line pb-8 {{ $hasSocials ? 'md:grid-cols-3' : 'md:grid-cols-2' }}">
+        <div class="grid gap-8 border-b border-line pb-8 {{ $hasSocials ? 'md:grid-cols-4' : 'md:grid-cols-3' }}">
             <div class="space-y-3">
                 <div class="flex items-center gap-3 text-lg font-extrabold tracking-tight text-ink">
                     <img src="{{ asset('website-logo.png') }}" alt="" class="h-12 w-12 rounded-full bg-white object-contain p-1 shadow-sm" />
@@ -20,6 +20,14 @@
                 <p class="max-w-xs text-sm leading-relaxed text-ink-muted">
                     صوت الناس وأخبار لبنان في منصة عربية واضحة، سريعة، ومتجددة.
                 </p>
+            </div>
+
+            <div class="space-y-3 md:justify-self-center">
+                <div class="text-xs font-extrabold uppercase tracking-wide text-ink">تواصل معنا</div>
+                <div class="grid gap-2 font-semibold">
+                    <a href="mailto:rabitat@shaghilla.org" dir="ltr" class="w-fit text-ink-muted transition hover:text-accent">rabitat@shaghilla.org</a>
+                    <a href="tel:+96179333415" dir="ltr" class="w-fit text-ink-muted transition hover:text-accent">+961 79 333 415</a>
+                </div>
             </div>
 
             <div class="space-y-3 md:justify-self-center">
