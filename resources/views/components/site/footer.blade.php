@@ -1,4 +1,4 @@
-<footer class="sh-site-footer relative overflow-hidden border-t border-white/10 bg-night text-white">
+<footer class="relative overflow-hidden border-t border-white/10 text-white" style="background-color: #082a33; color: #ffffff;">
     <div class="h-1 bg-gradient-to-l from-accent via-white to-[#16865c]"></div>
     <div class="pointer-events-none absolute -left-20 top-10 h-48 w-48 rounded-full bg-[#16865c]/10 blur-3xl"></div>
     <div class="pointer-events-none absolute -right-16 bottom-0 h-44 w-44 rounded-full bg-accent/10 blur-3xl"></div>
