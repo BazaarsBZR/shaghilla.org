@@ -65,8 +65,13 @@
                         throw new Error(payload.message || 'Could not authorize upload.');
                     }
 
-                    const { uploadArticleMedia } = await import(@js($mediaUploaderAsset));
-                    const blob = await uploadArticleMedia(file, payload.authorization, (percentage) => {
+                    await import(@js($mediaUploaderAsset));
+
+                    if (typeof window.uploadArticleMedia !== 'function') {
+                        throw new Error('The media uploader could not be loaded. Please refresh and try again.');
+                    }
+
+                    const blob = await window.uploadArticleMedia(file, payload.authorization, (percentage) => {
                         this.progress = Math.round(percentage);
                     });
 

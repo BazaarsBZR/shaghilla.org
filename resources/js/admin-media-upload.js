@@ -8,7 +8,7 @@ function safeFilename(name) {
         .slice(-120) || 'media';
 }
 
-export async function uploadArticleMedia(file, authorization, onProgress = () => {}) {
+async function uploadArticleMedia(file, authorization, onProgress = () => {}) {
     const pathname = `news/manual/${Date.now()}-${crypto.randomUUID()}-${safeFilename(file.name)}`;
 
     return upload(pathname, file, {
@@ -20,3 +20,5 @@ export async function uploadArticleMedia(file, authorization, onProgress = () =>
         onUploadProgress: ({ percentage }) => onProgress(percentage),
     });
 }
+
+window.uploadArticleMedia = uploadArticleMedia;
