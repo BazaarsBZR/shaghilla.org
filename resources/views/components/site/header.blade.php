@@ -139,7 +139,7 @@
                     break;
 
                 case 'live':
-                    if ($showLiveButton && $hasLive) {
+                    if ($showLiveButton) {
                         echo '<a href="'.e(route('live')).'" class="inline-flex shrink-0 items-center justify-center rounded-control bg-accent px-3 py-1.5 text-[11px] font-extrabold text-white shadow-surface transition hover:bg-accent-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 sm:px-4 sm:py-2 sm:text-sm">';
                         echo '<span class="sm:hidden">'.e(__('ui.nav.live')).'</span>';
                         echo '<span class="hidden sm:inline">'.e('البث المباشر').'</span>';
