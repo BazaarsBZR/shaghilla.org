@@ -69,6 +69,20 @@ class EditArticle extends EditRecord
 
         foreach (range(1, 10) as $page) {
             Cache::forget("home.page.data.v1.{$page}");
+            Cache::forget("home.page.data.v2.{$page}");
+        }
+    }
+
+    protected function afterDelete(): void
+    {
+        Cache::forget('news.breaking.ticker');
+        Cache::forget('news.breaking.ticker.v2');
+        Cache::forget('news.home.hero');
+        Cache::forget('news.home.latest');
+
+        foreach (range(1, 10) as $page) {
+            Cache::forget("home.page.data.v1.{$page}");
+            Cache::forget("home.page.data.v2.{$page}");
         }
     }
 

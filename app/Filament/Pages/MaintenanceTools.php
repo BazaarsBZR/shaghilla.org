@@ -155,6 +155,11 @@ class MaintenanceTools extends Page
                     Cache::forget('news.home.hero');
                     Cache::forget('news.home.latest');
 
+                    foreach (range(1, 10) as $page) {
+                        Cache::forget("home.page.data.v1.{$page}");
+                        Cache::forget("home.page.data.v2.{$page}");
+                    }
+
                     SiteSetting::setValues([
                         'last_placeholder_clear_at' => now()->toIso8601String(),
                         'last_placeholder_clear_result' => json_encode([

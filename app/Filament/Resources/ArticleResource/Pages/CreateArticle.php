@@ -57,6 +57,7 @@ class CreateArticle extends CreateRecord
 
         foreach (range(1, 10) as $page) {
             Cache::forget("home.page.data.v1.{$page}");
+            Cache::forget("home.page.data.v2.{$page}");
         }
     }
 }

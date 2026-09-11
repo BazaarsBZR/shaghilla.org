@@ -25,8 +25,8 @@ class HomeController extends Controller
     {
         $latestPage = min(10, max(1, (int) $request->integer('latest_page', 1)));
         $viewData = Cache::flexible(
-            "home.page.data.v1.{$latestPage}",
-            [300, 86400],
+            "home.page.data.v2.{$latestPage}",
+            [60, 300],
             function () use ($latestPage): array {
         $tickerLimit = (int) (SiteSetting::getValue('ticker_limit', '10') ?? 10);
         $tickerLimit = max(1, min(50, $tickerLimit));
