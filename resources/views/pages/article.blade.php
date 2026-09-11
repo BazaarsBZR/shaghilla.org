@@ -59,8 +59,8 @@
                 </video>
             </div>
         @elseif ($mediaUrl !== '')
-            <div class="overflow-hidden rounded-[2rem] bg-gray-100 shadow-surface ring-1 ring-black/5">
-                <img src="{{ $mediaUrl }}" alt="{{ $article->title }}" width="960" height="540" class="h-auto w-full" decoding="async" referrerpolicy="no-referrer" />
+            <div class="mx-auto w-fit max-w-full overflow-hidden rounded-[2rem] bg-gray-100 shadow-surface ring-1 ring-black/5">
+                <img src="{{ $mediaUrl }}" alt="{{ $article->title }}" class="mx-auto h-auto max-w-full" decoding="async" referrerpolicy="no-referrer" />
             </div>
         @endif
 
