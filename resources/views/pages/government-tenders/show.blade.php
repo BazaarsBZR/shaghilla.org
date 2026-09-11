@@ -23,6 +23,17 @@
         'contract' => 'العقد الموقّع',
         'implementation' => 'تنفيذ العقد',
     ];
+    $whatsAppUrl = static function (?string $request = null) use ($tender, $missing): string {
+        $message = "مرحباً شغيلة، أريد المساعدة بخصوص المناقصة التالية:\n";
+        $message .= ($tender->title ?: $missing)."\n";
+        $message .= 'المرجع: '.($tender->reference_number ?: $missing)."\n";
+        if (filled($request)) {
+            $message .= 'الطلب: '.$request."\n";
+        }
+        $message .= 'صفحة المناقصة على شغيلة: '.route('government-tenders.show', $tender);
+
+        return 'https://wa.me/96179333415?text='.rawurlencode($message);
+    };
 @endphp
 
 <section class="gt-hero gt-detail-hero">
@@ -85,8 +96,10 @@
                         <div class="gt-participation-row"><dt>{{ filled(data_get($tender->evidence, 'detail_page.source_values.submission_deadline')) ? 'آخر موعد لتقديم العرض' : 'موعد فتح العروض الرسمي' }}</dt><dd>{{ $sourceDate('submission_deadline', $tender->effectiveTenderDeadline()) }}</dd></div>
                         <div class="gt-participation-row"><dt>آخر موعد للاستفسارات</dt><dd>{{ $sourceDate('clarification_deadline', $tender->clarification_deadline_at) }}</dd></div>
                     </dl>
-                    <p class="gt-source-note">يعرض شغيلة فقط المتطلبات المنشورة في المصدر الرسمي. تقديم العروض لا يتم عبر شغيلة.</p>
-                    <a class="gt-button is-official" href="{{ $tender->source_url }}" target="_blank" rel="noopener noreferrer">عرض المناقصة على الموقع الرسمي</a>
+                    <p class="gt-source-note">يعرض شغيلة فقط المتطلبات المنشورة في المصدر الرسمي. يمكن لفريقنا مساعدتك على فهم الخطوات، لكن تقديم العروض لا يتم عبر شغيلة.</p>
+                    <a class="gt-button is-whatsapp" href="{{ $whatsAppUrl('معلومات عن المشاركة وطريقة التقديم') }}" target="_blank" rel="noopener noreferrer">
+                        اطلب معلومات عبر واتساب
+                    </a>
                 </section>
 
                 <section class="gt-panel">
@@ -94,7 +107,7 @@
                     @if($tender->tender_documents)
                         <ul class="gt-documents">
                             @foreach($tender->tender_documents as $document)
-                                <li><a href="{{ $document['url'] }}" target="_blank" rel="noopener noreferrer"><span>{{ $document['name'] }}</span><b>فتح المستند ↗</b></a></li>
+                                <li><a href="{{ $whatsAppUrl('مستند المناقصة: '.($document['name'] ?? $missing)) }}" target="_blank" rel="noopener noreferrer"><span>{{ $document['name'] }}</span><b>اطلبه عبر واتساب</b></a></li>
                             @endforeach
                         </ul>
                     @else
@@ -109,12 +122,13 @@
                     <div class="gt-stage-line">
                         <div class="gt-stage"><strong>المناقصة</strong><span>الإعلان الرسمي الحالي</span></div>
                         @foreach($tender->procurement_stages ?: [] as $stage)
-                            <div class="gt-stage"><strong>{{ $stage['label'] }}</strong><a href="{{ $stage['url'] }}" target="_blank" rel="noopener noreferrer">فتح السجل الرسمي</a></div>
+                            <div class="gt-stage"><strong>{{ $stage['label'] }}</strong><a href="{{ $whatsAppUrl('سجل مرحلة الشراء: '.($stage['label'] ?? $missing)) }}" target="_blank" rel="noopener noreferrer">استفسر عبر واتساب</a></div>
                         @endforeach
                         @foreach($relatedStages as $stage)
                             <div class="gt-stage">
                                 <strong>{{ $stageLabels[$stage->stage] ?? $stage->stage }}</strong>
-                                <a href="{{ $stage->source_url }}" target="_blank" rel="noopener noreferrer">{{ $stage->supplier ?: $stage->title ?: 'فتح السجل' }}</a>
+                                <span>{{ $stage->supplier ?: $stage->title ?: 'سجل رسمي مرتبط' }}</span>
+                                <a href="{{ $whatsAppUrl('المرحلة اللاحقة: '.($stageLabels[$stage->stage] ?? $stage->stage)) }}" target="_blank" rel="noopener noreferrer">استفسر عبر واتساب</a>
                             </div>
                         @endforeach
                         @if(empty($tender->procurement_stages) && $relatedStages->isEmpty())

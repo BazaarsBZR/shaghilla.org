@@ -115,6 +115,8 @@
 .gt-button:hover { background: #056443; }
 .gt-button.is-outline { border: 1px solid currentColor; color: var(--gt-green); background: transparent; }
 .gt-button.is-official { background: var(--gt-red); }
+.gt-button.is-whatsapp { background: #16865c; }
+.gt-button.is-whatsapp:hover { background: #0f704c; }
 .gt-filter-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
 .gt-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin: 34px 0 17px; }
 .gt-section-heading h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); }
