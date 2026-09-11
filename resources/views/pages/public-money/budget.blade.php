@@ -59,7 +59,7 @@
                         @foreach ($items as $item)
                             @php($pageReference = str_replace(['Table ', 'p. ', ' and ', '; '], ['الجدول ', 'ص. ', ' و', '؛ '], $item->page_reference ?? ''))
                             <tr class="{{ $item->is_total ? 'font-black' : '' }}">
-                                <td class="px-4 py-4">{{ $categoryLabels[$item->category] ?? $item->category }}</td>
+                                <td class="px-4 py-4">{{ collect($categoryLabels)->first(fn ($label, $category) => mb_strtolower($category) === mb_strtolower($item->category)) ?? $item->category }}</td>
                                 <td class="whitespace-nowrap px-4 py-4">{{ number_format((float) $item->amount) }} مليار ليرة لبنانية</td>
                                 <td class="whitespace-nowrap px-4 py-4 text-emerald-700">≈ {{ $formatUsd((float) $item->amount) }}</td>
                                 <td class="px-4 py-4"><a class="font-bold text-accent" href="{{ $item->source_url }}" target="_blank" rel="noopener noreferrer">{{ $pageReference ?: __('ui.public_money.source') }}</a></td>
