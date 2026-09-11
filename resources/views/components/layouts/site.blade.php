@@ -14,9 +14,6 @@
         <link rel="icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
         <link rel="shortcut icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
         <link rel="apple-touch-icon" href="{{ asset('logo-fav.png') }}" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" />
 
         @php
             $deployBuildId = null;
@@ -53,6 +50,29 @@
 
         <x-site.footer />
 
-        @include('components.site.navigation-prefetch')
+        <script>
+            (() => {
+                const prefetched = new Set();
+                const prefetch = (link) => {
+                    const url = link?.href;
+                    if (!url || prefetched.has(url)) return;
+                    prefetched.add(url);
+                    fetch(url, { credentials: 'omit', priority: 'low' }).catch(() => prefetched.delete(url));
+                };
+
+                document.addEventListener('pointerover', (event) => {
+                    const link = event.target.closest?.('[data-prefetch-page]');
+                    if (link) prefetch(link);
+                }, { passive: true });
+                document.addEventListener('focusin', (event) => {
+                    const link = event.target.closest?.('[data-prefetch-page]');
+                    if (link) prefetch(link);
+                });
+                document.addEventListener('touchstart', (event) => {
+                    const link = event.target.closest?.('[data-prefetch-page]');
+                    if (link) prefetch(link);
+                }, { passive: true });
+            })();
+        </script>
     </body>
 </html>

@@ -22,9 +22,6 @@ class PublicCacheWarmController extends Controller
         $responses = Http::pool(fn (Pool $pool): array => [
             'home' => $pool->as('home')->timeout(50)->get($baseUrl.'/'),
             'public_money' => $pool->as('public_money')->timeout(50)->get($baseUrl.'/public-money'),
-            'public_money_budget' => $pool->as('public_money_budget')->timeout(50)->get($baseUrl.'/public-money/budget'),
-            'public_money_procurements' => $pool->as('public_money_procurements')->timeout(50)->get($baseUrl.'/public-money/procurements'),
-            'public_money_sources' => $pool->as('public_money_sources')->timeout(50)->get($baseUrl.'/public-money/sources'),
             'government_tenders' => $pool->as('government_tenders')->timeout(50)->get($baseUrl.'/government-tenders'),
             'financial_status' => $pool->as('financial_status')->timeout(50)->get($baseUrl.'/financial-status'),
         ]);
