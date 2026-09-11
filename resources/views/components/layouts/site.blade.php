@@ -3,7 +3,9 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="csrf-token" content="{{ csrf_token() }}" />
+        @if (request()->hasSession())
+            <meta name="csrf-token" content="{{ csrf_token() }}" />
+        @endif
 
         <title>{{ $title ?? config('app.name') }}</title>
         <link rel="icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
