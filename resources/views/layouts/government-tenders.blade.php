@@ -9,6 +9,9 @@
         'socialTitle' => ($pageTitle ?? 'المناقصات الحكومية').' | رابطة الشغيلة',
         'socialDescription' => 'تابع المناقصات الحكومية في لبنان ومواعيدها وتفاصيل المشاركة عبر رابطة الشغيلة.',
     ])
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>@include('pages.government-tenders._styles')</style>
 </head>
@@ -17,5 +20,6 @@
     <x-site.data-navigation />
     @yield('content')
     @includeIf('components.site.footer')
+    @include('components.site.navigation-prefetch')
 </body>
 </html>
