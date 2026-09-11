@@ -40,6 +40,10 @@
         <x-site.header />
         <x-news.breaking-ticker />
 
+        @if (request()->routeIs('public-money.*'))
+            <x-site.data-navigation />
+        @endif
+
         <main class="sh-site-main mx-auto w-full max-w-6xl px-4 pb-10 pt-6">
             {{ $slot }}
         </main>
