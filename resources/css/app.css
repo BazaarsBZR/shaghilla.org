@@ -421,3 +421,8 @@
         transition: none;
     }
 }
+
+/* Keep the primary header navigation limited to the four active sections. */
+header nav a[href$="/live"] {
+    display: none !important;
+}
