@@ -8,7 +8,7 @@
         ?: ($date?->timezone('Asia/Beirut')->format('Y-m-d H:i') ?: $missing);
     $estimate = $missing;
     if ($tender->estimated_value_confidential) {
-        $estimate = 'القيمة التقديرية غير معلنة';
+        $estimate = 'القيمة التقديرية سرّية وفق المصدر الرسمي';
     } elseif (data_get($sourceValues, 'estimated_value_min')) {
         $estimate = data_get($sourceValues, 'estimated_value_min');
         if (data_get($sourceValues, 'estimated_value_max') && data_get($sourceValues, 'estimated_value_max') !== $estimate) {
