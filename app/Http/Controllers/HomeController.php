@@ -23,6 +23,11 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request): View
     {
+        $latestPage = min(10, max(1, (int) $request->integer('latest_page', 1)));
+        $viewData = Cache::flexible(
+            "home.page.data.v1.{$latestPage}",
+            [300, 86400],
+            function () use ($latestPage): array {
         $tickerLimit = (int) (SiteSetting::getValue('ticker_limit', '10') ?? 10);
         $tickerLimit = max(1, min(50, $tickerLimit));
 
@@ -60,7 +65,6 @@ class HomeController extends Controller
             },
         );
 
-        $latestPage = max(1, (int) $request->integer('latest_page', 1));
         $newsData = $this->buildHomeNewsData(
             layout: $newsLayout,
             topSmallCount: $newsTopSmallCount,
@@ -187,7 +191,7 @@ class HomeController extends Controller
         }
         $contact['button_href'] = $contactButtonHref;
 
-        return view('pages.home', [
+                return [
             'breakingItems' => $breakingItems,
             'hero' => $newsData['heroArticle'],
             'latestArticles' => $newsData['latestPaginator']->getCollection(),
@@ -201,7 +205,11 @@ class HomeController extends Controller
             'homeVideosLayout' => $homeVideosLayout,
             'membershipSection' => $membership,
             'contactSection' => $contact,
-        ]);
+                ];
+            },
+        );
+
+        return view('pages.home', $viewData);
     }
 
     public function latest(Request $request): JsonResponse
