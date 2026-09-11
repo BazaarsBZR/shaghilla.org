@@ -1,5 +1,5 @@
 @php
-    $mediaStatePath = str_replace('blob_upload', 'image_url', $getStatePath());
+    $mediaStatePath = $getStatePath();
     $currentUrl = (string) ($field->getRecord()?->image_url ?? '');
     $currentIsVideo = preg_match('/\.(mp4|webm|mov|m4v)(?:$|[?#])/i', $currentUrl) === 1;
     $mediaUploaderAsset = \Illuminate\Support\Facades\Vite::asset('resources/js/admin-media-upload.js');
@@ -89,7 +89,7 @@
                 this.url = '';
                 this.isVideo = false;
                 this.progress = 0;
-                $wire.set(@js($mediaStatePath), null);
+                $wire.set(@js($mediaStatePath), '__REMOVE_MEDIA__');
             },
         }"
         class="space-y-4"

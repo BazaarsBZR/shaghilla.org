@@ -22,6 +22,13 @@ class EditArticle extends EditRecord
     {
         $record = $this->getRecord();
 
+        if (! empty($data['blob_upload'])) {
+            $data['image_url'] = $data['blob_upload'] === '__REMOVE_MEDIA__'
+                ? null
+                : $data['blob_upload'];
+        }
+        unset($data['blob_upload']);
+
         if (! empty($data['manual_image'])) {
             $data['image_url'] = Storage::disk('public_uploads')->url($data['manual_image']);
         }
