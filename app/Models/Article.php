@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Schema;
@@ -67,6 +68,43 @@ class Article extends Model
                 $article->setAttribute('show_on_home', true);
             }
         });
+    }
+
+    protected function content(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value): ?string => self::withoutAdvertisementMarkers($value),
+            set: fn (?string $value): ?string => self::withoutAdvertisementMarkers($value),
+        );
+    }
+
+    protected function excerpt(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value): ?string => self::withoutAdvertisementMarkers($value),
+            set: fn (?string $value): ?string => self::withoutAdvertisementMarkers($value),
+        );
+    }
+
+    private static function withoutAdvertisementMarkers(?string $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return $value;
+        }
+
+        $cleaned = preg_replace(
+            '/(?<![\p{L}\p{N}])Advertisements?(?![\p{L}\p{N}])/iu',
+            '',
+            $value,
+        ) ?? $value;
+
+        $cleaned = preg_replace(
+            '/<(p|div|span)\b[^>]*>(?:\s|&nbsp;|&#160;)*<\/\1>/iu',
+            '',
+            $cleaned,
+        ) ?? $cleaned;
+
+        return trim($cleaned);
     }
 
     private static function uniqueSlugFor(Article $article): string
