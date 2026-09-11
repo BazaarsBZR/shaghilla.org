@@ -3,7 +3,6 @@
     $isVideo = preg_match('/\.(mp4|webm|mov|m4v)(?:$|[?#])/i', $mediaUrl) === 1;
     $articleText = trim((string) preg_replace('/[[:space:]]+/u', ' ', strip_tags((string) ($article->content ?: $article->excerpt ?: ''))));
     $hasReadableBody = \Illuminate\Support\Str::length($articleText) >= 45;
-    $sourceUrl = filter_var($article->canonical_url, FILTER_VALIDATE_URL) ? $article->canonical_url : null;
     $metaDescription = \Illuminate\Support\Str::limit(
         trim(preg_replace('/\\s+/u', ' ', strip_tags($article->excerpt ?: $article->content ?: ''))),
         160,
@@ -80,13 +79,5 @@
             </div>
         @endif
 
-        @if ($sourceUrl)
-            <div class="flex justify-center pt-2">
-                <a href="{{ $sourceUrl }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 font-black text-white shadow-surface transition hover:bg-night">
-                    قراءة الخبر على الموقع الأصلي
-                    <span aria-hidden="true">↗</span>
-                </a>
-            </div>
-        @endif
     </article>
 </x-layouts.site>
