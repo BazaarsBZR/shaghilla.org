@@ -22,6 +22,8 @@ class PpaTenderImporter
 
     private const SOURCE_TIMEZONE = 'Asia/Beirut';
 
+    private const DETAIL_PARSER_VERSION = 2;
+
     /** @var array<int, string>|null */
     private ?array $runColumns = null;
 
@@ -360,7 +362,9 @@ class PpaTenderImporter
             ->whereIn('id', $priorityIds)
             ->where(function ($query): void {
                 $query->whereNull('detail_verified_at')
-                    ->orWhere('detail_verified_at', '<', now()->subDay());
+                    ->orWhere('detail_verified_at', '<', now()->subDay())
+                    ->orWhereNull('evidence->detail_page->parser_version')
+                    ->orWhere('evidence->detail_page->parser_version', '<', self::DETAIL_PARSER_VERSION);
             })
             ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
             ->orderByRaw('CASE WHEN submission_deadline_at IS NOT NULL AND submission_deadline_at >= ? THEN 0 ELSE 1 END', [now()])
@@ -379,7 +383,9 @@ class PpaTenderImporter
             ->whereNotIn('id', $records->pluck('id'))
             ->where(function ($query): void {
                 $query->whereNull('detail_verified_at')
-                    ->orWhere('detail_verified_at', '<', now()->subDay());
+                    ->orWhere('detail_verified_at', '<', now()->subDay())
+                    ->orWhereNull('evidence->detail_page->parser_version')
+                    ->orWhere('evidence->detail_page->parser_version', '<', self::DETAIL_PARSER_VERSION);
             })
             ->orderByRaw('CASE WHEN detail_verified_at IS NULL THEN 0 ELSE 1 END')
             ->orderByRaw('CASE WHEN submission_deadline_at IS NOT NULL AND submission_deadline_at >= ? THEN 0 ELSE 1 END', [now()])
@@ -573,6 +579,7 @@ class PpaTenderImporter
             'fingerprint' => $detailHash,
             'evidence' => array_merge($evidence, [
                 'detail_page' => [
+                    'parser_version' => self::DETAIL_PARSER_VERSION,
                     'source_values' => $detail['source_values'],
                     'verified_at' => now()->toIso8601String(),
                 ],
