@@ -13,7 +13,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Assets\Css;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use App\Http\Middleware\SetLocaleToEnglish;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -67,7 +66,6 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 NewsroomStatsOverview::class,
                 NewsroomQuickActions::class,
-                Widgets\AccountWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
