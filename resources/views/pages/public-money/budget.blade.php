@@ -30,10 +30,13 @@
         'Non-tax revenue' => 'الإيرادات غير الضريبية',
         'Total expenditures (budget and treasury)' => 'إجمالي النفقات (الموازنة والخزينة)',
         'Total revenues (budget and treasury)' => 'إجمالي الإيرادات (الموازنة والخزينة)',
+        'Total Budget and Treasury Receipts' => 'إجمالي إيرادات الموازنة والخزينة',
         'Budget revenues' => 'إيرادات الموازنة',
         'Tax revenues' => 'الإيرادات الضريبية',
         'Non-tax revenues' => 'الإيرادات غير الضريبية',
         'Treasury receipts' => 'مقبوضات الخزينة',
+        'Total (Deficit)/Surplus' => 'إجمالي العجز أو الفائض',
+        'Inflation rate' => 'معدل التضخم',
     ];
 @endphp
 
@@ -57,7 +60,7 @@
                     <thead class="bg-surface-soft"><tr><th class="px-4 py-3 text-start">{{ __('ui.public_money.category') }}</th><th class="px-4 py-3 text-start">{{ __('ui.public_money.amount') }}</th><th class="px-4 py-3 text-start">القيمة التقديرية بالدولار</th><th class="px-4 py-3 text-start">{{ __('ui.public_money.evidence') }}</th></tr></thead>
                     <tbody class="divide-y divide-line">
                         @foreach ($items as $item)
-                            @php($pageReference = str_replace(['Table ', 'p. ', ' and ', '; '], ['الجدول ', 'ص. ', ' و', '؛ '], $item->page_reference ?? ''))
+                            @php($pageReference = str_ireplace(['Table ', 'PDF page ', 'page ', 'p. ', ' and ', '; '], ['الجدول ', 'صفحة PDF ', 'الصفحة ', 'ص. ', ' و', '؛ '], $item->page_reference ?? ''))
                             <tr class="{{ $item->is_total ? 'font-black' : '' }}">
                                 <td class="px-4 py-4">{{ collect($categoryLabels)->first(fn ($label, $category) => mb_strtolower($category) === mb_strtolower($item->category)) ?? $item->category }}</td>
                                 <td class="whitespace-nowrap px-4 py-4">{{ number_format((float) $item->amount) }} مليار ليرة لبنانية</td>
