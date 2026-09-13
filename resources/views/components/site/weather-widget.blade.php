@@ -76,31 +76,6 @@
                     url.searchParams.set('latitude', String(selectedArea.latitude));
                     url.searchParams.set('longitude', String(selectedArea.longitude));
                     weatherEndpoint = url.toString();
-                } else try {
-                    const locationResponse = await fetch('https://ipapi.co/json/', {
-                        headers: { 'Accept': 'application/json' },
-                    });
-
-                    if (locationResponse.ok) {
-                        const location = await locationResponse.json();
-                        const latitude = Number(location?.latitude);
-                        const longitude = Number(location?.longitude);
-
-                        if (
-                            String(location?.country_code || '').toUpperCase() === 'LB'
-                            && Number.isFinite(latitude)
-                            && Number.isFinite(longitude)
-                        ) {
-                            const url = new URL(this.endpoint, window.location.origin);
-                            url.searchParams.set('country', 'LB');
-                            url.searchParams.set('city', String(location?.city || ''));
-                            url.searchParams.set('latitude', String(latitude));
-                            url.searchParams.set('longitude', String(longitude));
-                            weatherEndpoint = url.toString();
-                        }
-                    }
-                } catch (_) {
-                    // Location is optional; the configured Lebanon weather remains the fallback.
                 }
 
                 const res = await fetch(weatherEndpoint, { headers: { 'Accept': 'application/json' } });
@@ -150,7 +125,7 @@
             } catch (_) {}
         },
     }"
-    x-init="load()"
+    x-init="const startWeather = () => load(); if ('requestIdleCallback' in window) { window.requestIdleCallback(startWeather, { timeout: 1800 }) } else { window.setTimeout(startWeather, 600) }"
     @click.outside="open = false"
 >
     <button

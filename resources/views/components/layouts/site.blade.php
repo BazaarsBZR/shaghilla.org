@@ -14,6 +14,9 @@
         <link rel="icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
         <link rel="shortcut icon" href="{{ asset('logo-fav.png') }}" type="image/png" />
         <link rel="apple-touch-icon" href="{{ asset('logo-fav.png') }}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" />
 
         @php
             $deployBuildId = null;

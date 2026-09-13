@@ -146,17 +146,82 @@
         <section class="grid gap-5 px-4 pt-5 sm:px-6 lg:grid-cols-[.9fr_1.1fr]">
             <article class="overflow-hidden rounded-[1.75rem] border border-[#dbe3e7] bg-white">
                 <div class="bg-[#0e2d3b] p-6 text-white"><p class="text-xs font-black text-[#55c592]">خريطة التغطية الفعلية</p><h2 class="mt-1 text-2xl font-black">الإشارات الجغرافية في السجلات</h2><p class="mt-2 max-w-xl text-xs leading-6 text-white/65">خريطة لبنان الحقيقية. العلامات تعني أن اسم المنطقة ورد في عنوان السجل أو الجهة، ولا تدّعي تحديد موقع المشروع.</p></div>
-                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-                <div id="public-money-map" class="h-[390px] w-full" aria-label="خريطة لبنان التفاعلية"></div>
-                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                <div class="relative min-h-[390px] bg-[#e8efec]">
+                    <div id="public-money-map" class="h-[390px] w-full" aria-label="خريطة لبنان التفاعلية"></div>
+                    <div data-public-money-map-status class="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-bold text-[#667b82]">
+                        تُحمّل الخريطة عند الوصول إليها
+                    </div>
+                </div>
                 <script>
                     (() => {
                         const mapElement = document.getElementById('public-money-map');
-                        if (!mapElement || typeof L === 'undefined') return;
-                        const map = L.map(mapElement, { scrollWheelZoom: false }).setView([33.8547, 35.8623], 8);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+                        if (!mapElement) return;
+
+                        const status = mapElement.parentElement.querySelector('[data-public-money-map-status]');
                         const places = @json($mapPlaces);
-                        places.forEach((place) => L.circleMarker([place.lat, place.lng], { radius: Math.min(13, 6 + place.count), color: '#ffffff', weight: 2, fillColor: '#c99a28', fillOpacity: 0.95 }).bindPopup(`<strong>${place.name}</strong><br>${place.count} سجل`).addTo(map));
+                        let started = false;
+
+                        const loadLeaflet = () => new Promise((resolve, reject) => {
+                            if (typeof L !== 'undefined') {
+                                resolve();
+                                return;
+                            }
+
+                            if (!document.querySelector('link[data-leaflet-styles]')) {
+                                const stylesheet = document.createElement('link');
+                                stylesheet.rel = 'stylesheet';
+                                stylesheet.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                                stylesheet.dataset.leafletStyles = '1';
+                                document.head.appendChild(stylesheet);
+                            }
+
+                            const existing = document.querySelector('script[data-leaflet-script]');
+                            if (existing) {
+                                existing.addEventListener('load', resolve, { once: true });
+                                existing.addEventListener('error', reject, { once: true });
+                                return;
+                            }
+
+                            const script = document.createElement('script');
+                            script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                            script.dataset.leafletScript = '1';
+                            script.onload = resolve;
+                            script.onerror = reject;
+                            document.head.appendChild(script);
+                        });
+
+                        const startMap = async () => {
+                            if (started) return;
+                            started = true;
+                            if (status) status.textContent = 'جارٍ تجهيز الخريطة…';
+
+                            try {
+                                await loadLeaflet();
+                                const map = L.map(mapElement, { scrollWheelZoom: false, zoomControl: true }).setView([33.8547, 35.8623], 8);
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    maxZoom: 18,
+                                    attribution: '&copy; OpenStreetMap contributors',
+                                    updateWhenIdle: true,
+                                    keepBuffer: 1,
+                                    detectRetina: false,
+                                }).addTo(map);
+                                places.forEach((place) => L.circleMarker([place.lat, place.lng], { radius: Math.min(13, 6 + place.count), color: '#ffffff', weight: 2, fillColor: '#c99a28', fillOpacity: 0.95 }).bindPopup(`<strong>${place.name}</strong><br>${place.count} سجل`).addTo(map));
+                                status?.remove();
+                            } catch (_) {
+                                if (status) status.textContent = 'تعذّر تحميل الخريطة حالياً';
+                            }
+                        };
+
+                        if ('IntersectionObserver' in window) {
+                            const observer = new IntersectionObserver((entries) => {
+                                if (!entries.some((entry) => entry.isIntersecting)) return;
+                                observer.disconnect();
+                                startMap();
+                            }, { rootMargin: '500px 0px' });
+                            observer.observe(mapElement);
+                        } else {
+                            startMap();
+                        }
                     })();
                 </script>
             </article>

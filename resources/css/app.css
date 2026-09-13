@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -646,14 +644,15 @@ html {
     position: relative;
     margin-top: 2.5rem;
     overflow: hidden;
-    background: radial-gradient(circle at 90% 20%, rgb(var(--sh-success) / 0.08), transparent 20rem), linear-gradient(180deg, #ffffff, #f1f6f4);
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 88% 16%, rgb(22 134 92 / 0.2), transparent 22rem),
+        radial-gradient(circle at 8% 95%, rgb(220 38 38 / 0.12), transparent 20rem),
+        linear-gradient(135deg, #082a33, #0a343b 58%, #071f29);
 }
 
 .sh-site-footer::before {
-    display: block;
-    height: 0.22rem;
-    background: linear-gradient(90deg, rgb(var(--sh-success)), #ffffff 50%, rgb(var(--sh-accent)));
-    content: '';
+    content: none;
 }
 
 @keyframes sh-rise-in {

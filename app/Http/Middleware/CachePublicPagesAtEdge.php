@@ -22,10 +22,19 @@ class CachePublicPagesAtEdge
             return $response;
         }
 
-        // These pages contain no user-specific state. Keep browsers revalidating while
-        // Vercel serves a fast shared copy and refreshes stale content in the background.
+        // Data pages change on scheduled imports, so a short browser cache makes repeat
+        // tab visits instant without hiding new records for long. Editorial pages keep
+        // a much shorter window because they can update throughout the day.
+        $browserMaxAge = $request->is('public-money')
+            || $request->is('public-money/*')
+            || $request->is('government-tenders')
+            || $request->is('government-tenders/*')
+            || $request->is('financial-status')
+                ? 300
+                : 30;
+
         $response->headers->remove('Set-Cookie');
-        $response->headers->set('Cache-Control', 'public, max-age=0, must-revalidate');
+        $response->headers->set('Cache-Control', "public, max-age={$browserMaxAge}, stale-while-revalidate=60");
         $response->headers->set('CDN-Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
         $response->headers->set('Vercel-CDN-Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
 
