@@ -1,4 +1,4 @@
-<footer class="relative overflow-hidden border-t border-white/10 text-white" style="background-color: #082a33; color: #ffffff;">
+<footer class="sh-site-footer relative overflow-hidden border-t border-white/10 text-white" style="background-color: #082a33; color: #ffffff;">
     <div class="h-1 bg-gradient-to-l from-accent via-white to-[#16865c]"></div>
     <div class="pointer-events-none absolute -left-20 top-10 h-48 w-48 rounded-full bg-[#16865c]/10 blur-3xl"></div>
     <div class="pointer-events-none absolute -right-16 bottom-0 h-44 w-44 rounded-full bg-accent/10 blur-3xl"></div>
@@ -35,8 +35,8 @@
                 <h2 class="mb-4 text-sm font-black text-white">الخدمات والمشاركة</h2>
                 <nav class="grid gap-3 text-sm font-bold" aria-label="روابط الخدمات">
                     <a href="{{ route('membership') }}" class="text-white/65 transition hover:text-white">الانتساب إلى الرابطة</a>
-                    <a href="{{ route('contact') }}" class="text-white/65 transition hover:text-white">طلب خدمة</a>
-                    <a href="{{ route('government-tenders.index') }}" class="text-white/65 transition hover:text-white">فرص المناقصات</a>
+                    <a href="{{ route('contact') }}" class="text-white/65 transition hover:text-white">طلب خدمة أو مساعدة</a>
+                    <a href="{{ route('government-tenders.index') }}" class="text-white/65 transition hover:text-white">المناقصات المتاحة</a>
                     <a href="{{ route('public-money.index') }}" class="text-white/65 transition hover:text-white">متابعة المال العام</a>
                 </nav>
             </section>
@@ -46,7 +46,7 @@
                 <div class="grid gap-3 text-sm font-bold">
                     <a href="mailto:rabitat@shaghilla.org" dir="ltr" class="w-fit text-white/70 transition hover:text-white">rabitat@shaghilla.org</a>
                     <a href="tel:+96179333415" dir="ltr" class="w-fit text-white/70 transition hover:text-white">+961 79 333 415</a>
-                    <a href="https://wa.me/96179333415" target="_blank" rel="noopener noreferrer" class="mt-1 inline-flex w-fit items-center justify-center gap-2 rounded-full bg-[#16865c] px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:bg-[#0f704c]">
+                    <a href="https://wa.me/96179333415" target="_blank" rel="noopener noreferrer" class="sh-whatsapp-button mt-1 inline-flex min-h-12 w-fit items-center justify-center gap-2 rounded-full bg-[#16865c] px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#0f704c]">
                         <x-icons.social name="fa-whatsapp" class="h-5 w-5 shrink-0" />
                         تواصل عبر واتساب
                     </a>

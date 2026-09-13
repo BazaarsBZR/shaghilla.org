@@ -87,8 +87,8 @@
                     <h1 class="mt-3 text-4xl font-black leading-[1.08] sm:text-6xl">أين يذهب<br><span class="text-[#e6bd55]">مالنا العام؟</span></h1>
                     <p class="mt-5 max-w-xl text-base leading-8 text-white/70">تتبّع التلزيمات والعقود والموازنة والإنفاق من المصدر الرسمي إلى سجل واضح قابل للتدقيق.</p>
                     <div class="mt-7 flex flex-wrap gap-3">
-                        <a href="{{ route('public-money.procurements') }}" class="rounded-full bg-[#25a869] px-5 py-3 text-sm font-black text-white shadow-lg shadow-black/15">استكشف السجلات</a>
-                        <a href="{{ route('public-money.sources') }}" class="rounded-full border border-white/25 bg-white/5 px-5 py-3 text-sm font-black text-white">كيف نتحقق؟</a>
+                        <a href="{{ route('public-money.procurements') }}" class="sh-action sh-action--primary">تصفّح السجلات الرسمية</a>
+                        <a href="{{ route('public-money.sources') }}" class="sh-action sh-action--glass">منهجية التحقق</a>
                     </div>
                 </div>
                 <div class="pm-hero-visual relative mx-auto hidden h-64 w-full max-w-md lg:block">

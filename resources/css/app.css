@@ -67,6 +67,286 @@
     display: none !important;
 }
 
+/* Shared public-site polish */
+html {
+    scroll-behavior: smooth;
+}
+
+:where(.sh-site-body, .financial-status-shell, .government-tenders-shell) {
+    min-width: 320px;
+}
+
+:where(.sh-site-body, .financial-status-shell, .government-tenders-shell) :is(h1, h2, h3) {
+    text-wrap: balance;
+}
+
+:where(.sh-site-body, .financial-status-shell, .government-tenders-shell) p {
+    text-wrap: pretty;
+}
+
+:where(.sh-site-body, .financial-status-shell, .government-tenders-shell) ::selection {
+    color: #062a25;
+    background: #bcebd5;
+}
+
+:where(.sh-site-body, .financial-status-shell, .government-tenders-shell) :is(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid rgb(22 134 92 / 0.28);
+    outline-offset: 3px;
+}
+
+.sh-site-header {
+    border-bottom-color: rgb(var(--sh-line) / 0.86);
+}
+
+.sh-site-brand,
+.sh-site-brand img,
+.sh-primary-nav a,
+#mobile-menu a {
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.sh-site-brand:hover {
+    color: #0d6b50;
+}
+
+.sh-site-brand:hover img {
+    transform: rotate(-2deg) scale(1.04);
+}
+
+.sh-primary-nav a {
+    min-height: 40px;
+    padding-inline: 11px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+}
+
+.sh-primary-nav a::after {
+    display: none;
+}
+
+.sh-primary-nav a:hover {
+    border-color: #dce8e3;
+    color: #0d654d;
+    background: #f1f8f5;
+}
+
+.sh-primary-nav .sh-nav-link.is-active {
+    border-color: #cce2d9;
+    color: #0a5f48;
+    background: #e7f4ee;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.72);
+}
+
+.sh-live-button {
+    min-height: 42px;
+    gap: 8px;
+    box-shadow: 0 10px 24px -14px rgb(185 28 28 / 0.85);
+}
+
+.sh-live-button::before {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgb(255 255 255 / 0.18);
+    content: '';
+}
+
+#mobile-menu {
+    box-shadow: 0 24px 40px -34px rgb(15 23 42 / 0.65);
+}
+
+#mobile-menu a {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    border: 1px solid transparent;
+    padding-inline: 14px;
+}
+
+#mobile-menu a:hover {
+    border-color: #dce8e3;
+    color: #0d654d;
+    background: #f1f8f5;
+}
+
+.sh-breaking-ticker {
+    min-height: 42px;
+}
+
+.sh-action {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 11px 20px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 900;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 12px 28px -18px rgb(7 29 45 / 0.8);
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.sh-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px -18px rgb(7 29 45 / 0.78);
+}
+
+.sh-action:active {
+    transform: translateY(0);
+}
+
+.sh-action--primary {
+    color: #fff;
+    background: linear-gradient(135deg, #1d9a65, #13744f);
+}
+
+.sh-action--primary:hover {
+    background: linear-gradient(135deg, #24aa72, #0f6545);
+}
+
+.sh-action--glass {
+    border-color: rgb(255 255 255 / 0.28);
+    color: #fff;
+    background: rgb(255 255 255 / 0.07);
+    backdrop-filter: blur(10px);
+}
+
+.sh-action--glass:hover {
+    border-color: rgb(255 255 255 / 0.46);
+    background: rgb(255 255 255 / 0.13);
+}
+
+.sh-whatsapp-button {
+    border: 1px solid rgb(255 255 255 / 0.18);
+    box-shadow: 0 14px 30px -18px rgb(0 0 0 / 0.8);
+}
+
+.sh-site-main :is(input, select, textarea) {
+    min-height: 46px;
+    transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.sh-site-main :is(input, select, textarea):hover {
+    border-color: #c9d8d3;
+}
+
+.sh-site-main :is(input, select, textarea):focus {
+    border-color: #63ad91;
+    box-shadow: 0 0 0 4px rgb(22 134 92 / 0.1);
+}
+
+.sh-site-main table tbody tr {
+    transition: background-color 160ms ease;
+}
+
+.sh-site-main table tbody tr:hover {
+    background: rgb(237 247 242 / 0.72);
+}
+
+.sh-site-main table th {
+    color: #526872;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+}
+
+.sh-site-main table td {
+    line-height: 1.7;
+}
+
+.pm-dashboard > section,
+.sh-site-main > article,
+.sh-site-main > section {
+    animation: sh-surface-enter 420ms ease both;
+}
+
+.financial-status-shell :is(article, section),
+.government-tenders-shell :is(.gt-panel, .gt-card) {
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.government-tenders-shell .gt-button {
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border-radius: 14px;
+    font-weight: 900;
+    box-shadow: 0 12px 28px -20px rgb(7 29 45 / 0.85);
+}
+
+.government-tenders-shell .gt-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 32px -20px rgb(7 29 45 / 0.75);
+}
+
+.government-tenders-shell .gt-field,
+.government-tenders-shell .gt-participation-row {
+    text-wrap: pretty;
+}
+
+.sh-site-footer nav a {
+    position: relative;
+    width: fit-content;
+    padding-inline-start: 14px;
+}
+
+.sh-site-footer nav a::before {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: #4bc48d;
+    content: '';
+    opacity: 0.48;
+    transform: translateY(-50%);
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.sh-site-footer nav a:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.35);
+}
+
+@keyframes sh-surface-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+    .sh-action {
+        min-height: 50px;
+        padding-inline: 18px;
+    }
+
+    .sh-site-main table th,
+    .sh-site-main table td {
+        padding-inline: 14px;
+    }
+}
+
+@media (hover: none) {
+    .sh-action:hover,
+    .government-tenders-shell .gt-button:hover {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .pm-dashboard > section,
+    .sh-site-main > article,
+    .sh-site-main > section { animation: none; }
+}
+
 /* Breaking ticker (JS-driven, inspired by yeg2799/breaking-news-ticker) */
 .sh-breaking-track {
     display: flex;
